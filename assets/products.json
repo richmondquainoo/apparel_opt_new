@@ -1,0 +1,28 @@
+{
+    "products": [
+        {
+            "name": "T-Shirt",
+            "imageURL": "https://www.alphabroder.com/prodimg/large/g500_08_p.jpg",
+            "brand": "Gildan Adult Heavy Cotton",
+            "size": "S - 4XL"
+        },
+        {
+            "name": "Cotton Sweatshirt",
+            "imageURL": "https://www.alphabroder.com/prodimg/large/g500_21_p.jpg",
+            "brand": "Gildan Adult Heavy Cotton",
+            "size": "S - 5XL"
+        },
+        {
+            "name": "Cotton Pant",
+            "imageURL": "https://www.alphabroder.com/prodimg/large/6010_19_p.jpg",
+            "brand": "Gildan Adult Heavy Cotton",
+            "size": "L - 4XL"
+        },
+        {
+            "name": "Green Sweater",
+            "imageURL": "https://www.alphabroder.com/prodimg/large/g840_66_p.jpg",
+            "brand": "Gildan Adult Heavy Cotton",
+            "size": "S - 4XL"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+import 'dart:ui';
+
+const kBackgroundColor = Color(0xFFF9F9F9);
+const kDarkOrangeShade = Color(0xFFCF5017);
+const kYellowShade = Color(0xFFEBB944);
+const kPrimaryDarkColor = Color(0xFF5EAAA8);
+const kPrimaryLightColor = Color(0xFFB5EAEA);
+const kPrimaryTextColor = Color(0xFF262A53);
+const kButtonColor = Color(0xFF5e70e4);
+const kSecondaryColor = Color(0xFFFFC069);
+const BLUE_COLOR = Color(0xFF2668D1);
+const BLACK_COLOR = Color(0xFF232425);
+const RED_COLOR = Color(0xFFFF2123);
+const LIGHT_RED = Color(0xFFFABDC9);
+const BACKGROUND_COLOR = Color(0xFFe7eaf3);
+const LIGHT_BLUE_COLOR = Color(0xFF9ADCFF);
+const YELLOW_COLOR = Color(0xFFFFD365);
+const BLUE_BLACK_COLOR = Color(0xFF000B49);
+const LABEL_COLOR = Color(0xFF162899);
+const LABEL_BACKGROUND = Color(0xFFEFF0F8);
+const LABEL_GREEN = Color(0xFF4AD15B);
+const LABEL_GREEN_BACKGROUND = Color(0xFFF2FCF4);
