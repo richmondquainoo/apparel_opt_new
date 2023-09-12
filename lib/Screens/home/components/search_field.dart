@@ -4,13 +4,13 @@ import '../../../Model/size_config.dart';
 
 class SearchField extends StatelessWidget {
   const SearchField({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth * 0.6,
+      width: SizeConfig.screenWidth !* 0.6,
       decoration: BoxDecoration(
         color: Colors.teal.withOpacity(0.1),
         borderRadius: BorderRadius.circular(15),

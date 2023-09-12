@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class NetworkUtility {
-  Future<Response> getData(String url) async {
+  Future<Response?> getData(String url) async {
     try {
       Response response = await http.get(Uri.parse(url));
       return response;
@@ -14,10 +14,10 @@ class NetworkUtility {
     }
   }
 
-  Future<Response> getDataWithAuth({String url, String auth}) async {
-    Map<String, String> headers = {HttpHeaders.authorizationHeader: auth};
+  Future<Response?> getDataWithAuth({String? url, String? auth}) async {
+    Map<String, String> headers = {HttpHeaders.authorizationHeader: auth!};
     try {
-      Response response = await http.get(Uri.parse(url), headers: headers);
+      Response? response = await http.get(Uri.parse(url!), headers: headers);
       return response;
     } catch (e) {
       print('Network Service Error: ${e.toString()}');
@@ -25,10 +25,10 @@ class NetworkUtility {
     }
   }
 
-  Future<Response> postData({String url, String body}) async {
+  Future<Response?> postData({String? url, String? body}) async {
     Map<String, String> headers = {"Content-type": "application/json"};
     try {
-      Response response = await http.post(Uri.parse(url), headers: headers, body: body);
+      Response response = await http.post(Uri.parse(url!), headers: headers, body: body);
       return response;
     } catch (e) {
       print('Network Service Error: ${e.toString()}');
@@ -36,14 +36,14 @@ class NetworkUtility {
     }
   }
 
-  Future<Response> postDataWithAuth(
-      {String url, String body, String auth}) async {
+  Future<Response?> postDataWithAuth(
+      {String? url, String? body, String? auth}) async {
     Map<String, String> headers = {
       "Content-type": "application/json",
-      HttpHeaders.authorizationHeader: auth
+      HttpHeaders.authorizationHeader: auth!
     };
     try {
-      Response response = await http.post(Uri.parse(url), headers: headers, body: body);
+      Response response = await http.post(Uri.parse(url!), headers: headers, body: body);
       return response;
     } catch (e) {
       print('Network Service Error: ${e.toString()}');

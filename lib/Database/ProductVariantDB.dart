@@ -69,7 +69,7 @@ class ProductVariantDB{
       );
     } catch (e) {
       print('Fetch Error(getProductVariantById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -96,7 +96,7 @@ class ProductVariantDB{
       );
     } catch (e) {
       print('Fetch Error(getAllProductVariants): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -123,7 +123,7 @@ class ProductVariantDB{
       );
     } catch (e) {
       print('Fetch Error(getAllVariants): $e');
-      return null;
+      return null!;
     }
   }
 

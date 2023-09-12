@@ -63,7 +63,7 @@ class DeliveryCostDB {
       );
     } catch (e) {
       print('Fetch Error(getAlldelcost): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -88,7 +88,7 @@ class DeliveryCostDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getAlldelcost): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -115,7 +115,7 @@ class DeliveryCostDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getAlldelcost): $e');
-      return null;
+      return null!;
     }
   }
 

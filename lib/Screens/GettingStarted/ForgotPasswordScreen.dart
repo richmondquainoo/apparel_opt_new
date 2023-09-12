@@ -14,7 +14,7 @@ import '../../Utils/paths.dart';
 import 'OtpVerify.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key key}) : super(key: key);
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -23,7 +23,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   var emailController = TextEditingController();
 
-  String email;
+  String? email;
 
   @override
   Widget build(BuildContext context) {
@@ -238,10 +238,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
       var jsonBody = jsonEncode(userProfileModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: RESET_PASSWORD, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
-      print('email response: ${response.body}');
+      print('email response: ${response!.body}');
 
       Navigator.of(context, rootNavigator: true).pop();
       if (response == null) {

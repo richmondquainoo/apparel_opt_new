@@ -1,5 +1,5 @@
 class BranchModel {
-  String branch;
+  String? branch;
 
   BranchModel({this.branch});
 

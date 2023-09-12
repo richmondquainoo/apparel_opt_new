@@ -7,10 +7,10 @@ import 'ProductNew.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
-    Key key,
+    Key? key,
     this.width = 140,
     this.aspectRetio = 1.02,
-    @required this.product,
+    required this.product,
   }) : super(key: key);
 
   final double width, aspectRetio;
@@ -41,13 +41,13 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Hero(
                     tag: product.id.toString(),
-                    child: Image.asset(product.images[0]),
+                    child: Image.asset(product.images![0]),
                   ),
                 ),
               ),
               const SizedBox(height: 10),
               Text(
-                product.title,
+                product.title!,
                 style: TextStyle(color: Colors.black),
                 maxLines: 2,
               ),
@@ -70,14 +70,14 @@ class ProductCard extends StatelessWidget {
                       height: getProportionateScreenWidth(28),
                       width: getProportionateScreenWidth(28),
                       decoration: BoxDecoration(
-                        color: product.isFavourite
+                        color: product.isFavourite!
                             ? Colors.teal.withOpacity(0.15)
                             : Colors.teal.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: SvgPicture.asset(
                         "assets/icons/Heart Icon_2.svg",
-                        color: product.isFavourite
+                        color: product!.isFavourite!
                             ? Color(0xFFFF4848)
                             : Color(0xFFDBDEE4),
                       ),

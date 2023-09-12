@@ -11,7 +11,7 @@ import '../../Model/MenuModel.dart';
 import 'ProductDetailsScreen.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  const FavoritesScreen({Key key}) : super(key: key);
+  const FavoritesScreen({Key? key}) : super(key: key);
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
@@ -39,7 +39,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       List<LikeModel> list = await likesDB.getAllLikes();
       if (list.isNotEmpty) {
         for (LikeModel li in list) {
-          MenuModel menuModel = await menuDB.getMenuByIdOnly(li.menuId);
+          MenuModel menuModel = await menuDB.getMenuByIdOnly(li.menuId!);
           if (menuModel != null) {
             setState(() {
               menuList.add(menuModel);
@@ -69,7 +69,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     } else {
       results = menuList
           .where((item) => item.product
-              .toLowerCase()
+              !.toLowerCase()
               .contains(enteredKeyword.toLowerCase()))
           .toList();
       setState(() {
@@ -224,7 +224,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                     children: [
                                       Container(
                                         child: Text(
-                                            menuList[index].product,
+                                            menuList[index].product!,
                                             style: GoogleFonts.raleway(
                                                 fontSize: 13,
                                                 color: Colors.black,
@@ -252,7 +252,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                                 FontWeight.w600)),
                                       ),
                                       Container(
-                                        child: Text(menuList[index].price,
+                                        child: Text(menuList[index].price!,
                                             style: GoogleFonts.lato(
                                                 fontSize: 13,
                                                 color: primaryColor,

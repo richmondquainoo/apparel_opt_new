@@ -6,7 +6,7 @@ import '../../Constants/myColors.dart';
 import '../../animation/FadeAnimation.dart';
 
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({Key key}) : super(key: key);
+  const FilterScreen({Key? key}) : super(key: key);
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -46,59 +46,53 @@ class _FilterScreenState extends State<FilterScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FadeAnimation(
-              0,
-              Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 40,
-                      width: 160,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.teal),
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white),
-                      child: Center(
-                        child: Text(
-                          "Discard",
-                          style: GoogleFonts.raleway(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            letterSpacing: 0.7,
-                            color: Colors.black,
-                          ),
+            Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    height: 40,
+                    width: 160,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.teal),
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    child: Center(
+                      child: Text(
+                        "Discard",
+                        style: GoogleFonts.raleway(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          letterSpacing: 0.7,
+                          color: Colors.black,
                         ),
                       ),
                     ),
-                  )),
-            ),
-            FadeAnimation(
-              0,
-              Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 40,
-                      width: 160,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.black),
-                      child: Center(
-                        child: Text(
-                          "Apply",
-                          style: GoogleFonts.raleway(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            letterSpacing: 0.7,
-                            color: Colors.white,
-                          ),
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    height: 40,
+                    width: 160,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.black),
+                    child: Center(
+                      child: Text(
+                        "Apply",
+                        style: GoogleFonts.raleway(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          letterSpacing: 0.7,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  )),
-            ),
+                  ),
+                )),
           ],
         )
       ],

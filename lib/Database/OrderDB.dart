@@ -132,7 +132,7 @@ class OrderDB {
       );
     } catch (e) {
       print('Fetch Error(getAllOrders): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -183,7 +183,7 @@ class OrderDB {
       );
     } catch (e) {
       print('Fetch Error(getOrdersByPhone): $e');
-      return null;
+      return null!;
     }
   }
 

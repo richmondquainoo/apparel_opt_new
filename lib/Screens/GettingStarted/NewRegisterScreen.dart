@@ -16,7 +16,7 @@ import 'NewLoginScreen.dart';
 import 'OtpVerify.dart';
 
 class NewRegisterScreen extends StatefulWidget {
-  const NewRegisterScreen({Key key}) : super(key: key);
+  const NewRegisterScreen({Key? key}) : super(key: key);
 
   @override
   State<NewRegisterScreen> createState() => _NewRegisterScreenState();
@@ -31,445 +31,449 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
   var passwordConfirmController = TextEditingController();
   var phoneController = TextEditingController();
 
-  String username;
-  String email;
-  String password;
-  String phone;
-  String passwordConfirm;
+  String? username;
+  String? email;
+  String? password;
+  String? phone;
+  String? passwordConfirm;
 
   bool checkBoxValue = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: FIRSTBLACK,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        actions: [
-          InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20.0, right: 20),
-                child: Container(
-                  child: Text('Sign In',
-                      style: GoogleFonts.raleway(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white)),
-                ),
-              )),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 130,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: Center(
-                    child: Text(
-                      "Apparel",
-                      style: GoogleFonts.aBeeZee(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: DEEP_YELLOW,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Center(
-                    child: Text(
-                      "Options",
-                      style: GoogleFonts.raleway(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.60,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: SECONDBLACK,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(
-                              0.2,
-                              0.4,
-                            )),
-                      ]),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-
-                          SizedBox(
-                            height: 13,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                child: Center(
-                                  child: Text(
-                                    "Sign up to get access to product info!",
-                                    style: GoogleFonts.raleway(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white,
-                                      letterSpacing: 0.3,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            height: 48,
-                            margin: EdgeInsets.all(3),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  10.0)), // set rounded corner radius
-                            ),
-                            child: Center(
-                              child: TextField(
-                                obscureText: false,
-                                style: const TextStyle(color: Colors.white),
-                                controller: usernameController,
-                                onChanged: (value) {
-                                  username = value;
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.white, width: 0.5),
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        color: Colors.amber, width: 0.7),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.person,
-                                    color: Colors.white,
-                                  ),
-                                  labelText: "Username",
-                                  labelStyle: const TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: 48,
-                            margin: EdgeInsets.all(3),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  10.0)), // set rounded corner radius
-                            ),
-                            child: Center(
-                              child: TextField(
-                                obscureText: false,
-                                style: const TextStyle(color: Colors.white),
-                                controller: emailController,
-                                onChanged: (value) {
-                                  email = value;
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.white, width: 0.5),
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        color: Colors.amber, width: 0.7),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.mail,
-                                    color: Colors.white,
-                                  ),
-                                  labelText: "Email",
-                                  labelStyle: const TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: 48,
-                            margin: EdgeInsets.all(3),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  10.0)), // set rounded corner radius
-                            ),
-                            child: Center(
-                              child: TextField(
-                                obscureText: true,
-                                style: const TextStyle(color: Colors.white),
-                                controller: passwordController,
-                                onChanged: (value) {
-                                  password = value;
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.white, width: 0.5),
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        color: Colors.amber, width: 0.7),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.lock,
-                                    color: Colors.white,
-                                  ),
-                                  labelText: "Password",
-                                  labelStyle: const TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: 48,
-                            margin: EdgeInsets.all(3),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  10.0)), // set rounded corner radius
-                            ),
-                            child: Center(
-                              child: TextField(
-                                keyboardType: TextInputType.numberWithOptions(),
-                                obscureText: false,
-                                style: const TextStyle(color: Colors.white),
-                                controller: phoneController,
-                                onChanged: (value) {
-                                  phone = value;
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.white, width: 0.5),
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        color: Colors.amber, width: 0.7),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.phone,
-                                    color: Colors.white,
-                                  ),
-                                  labelText: "Phone",
-                                  labelStyle: const TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Checkbox(
-                                checkColor: Colors.black,
-                                value: checkBoxValue,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    checkBoxValue = value;
-                                  });
-                                },
-                                activeColor: Colors.white,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    child: const Text(
-                                      "I have accepted the",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                      // overflow: TextOverflow.fade,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: const Text(
-                                      "Terms & Conditions",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: Colors.amber,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      // overflow: TextOverflow.fade,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              bool canProceed = isValidEntries(context);
-                              const CircularProgressIndicator();
-                              if (canProceed) {
-                                bool canProceed = isValidEntries(context);
-                                if (canProceed) {
-                                  OTPModel model = OTPModel(
-                                    name: username.trim(),
-                                    email: email.trim(),
-                                    // pin: pin,
-                                    phone: phone.trim(),
-                                  );
-                                  new UtilityService().confirmationBox(
-                                      title: 'Confirmation',
-                                      message:
-                                          'Are you sure you want to proceed with the registration?',
-                                      context: context,
-                                      yesButtonColor: Colors.teal,
-                                      noButtonColor: LABEL_COLOR,
-                                      // color: Colors.blueAccent,
-                                      onYes: () {
-                                        Navigator.pop(context);
-                                        checkForEmail(
-                                            context: context, dataModel: model);
-                                      },
-                                      onNo: () {
-                                        Navigator.pop(context);
-                                      });
-                                }
-                              }
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(5)),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Colors.white,
-                                      offset: const Offset(0.05, 0.07),
-                                      blurRadius: 1,
-                                      spreadRadius: 0)
-                                ],
-                                gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: [Colors.amber, Colors.amber],
-                                ),
-                              ),
-                              child: Text(
-                                'Sign Up',
-                                style: GoogleFonts.raleway(
-                                    fontSize: 17,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: FIRSTBLACK,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          actions: [
             InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const NewLoginScreen()));
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 14),
-                padding: EdgeInsets.all(15),
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Already have an account?",
-                      style: GoogleFonts.lato(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                          color: Colors.white),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0, right: 20),
+                  child: Container(
+                    child: Text('Sign In',
+                        style: GoogleFonts.raleway(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
+                  ),
+                )),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 130,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: Center(
+                      child: Text(
+                        "Apparel",
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: DEEP_YELLOW,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
                     ),
-                    const SizedBox(
-                      width: 5,
+                  ),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        "Options",
+                        style: GoogleFonts.raleway(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
                     ),
-                    Text(
-                      "Sign In",
-                      style: GoogleFonts.lato(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.amber),
+                  ),
+                ],
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.60,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: SECONDBLACK,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black,
+                              offset: Offset(
+                                0.2,
+                                0.4,
+                              )),
+                        ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+
+                            SizedBox(
+                              height: 13,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: Center(
+                                    child: Text(
+                                      "Sign up to get access to product info!",
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Container(
+                              height: 48,
+                              margin: EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    10.0)), // set rounded corner radius
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  obscureText: false,
+                                  style: const TextStyle(color: Colors.white),
+                                  controller: usernameController,
+                                  onChanged: (value) {
+                                    username = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white, width: 0.5),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(
+                                          color: Colors.amber, width: 0.7),
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                    ),
+                                    labelText: "Username",
+                                    labelStyle: const TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 48,
+                              margin: EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    10.0)), // set rounded corner radius
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  obscureText: false,
+                                  style: const TextStyle(color: Colors.white),
+                                  controller: emailController,
+                                  onChanged: (value) {
+                                    email = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white, width: 0.5),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(
+                                          color: Colors.amber, width: 0.7),
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.mail,
+                                      color: Colors.white,
+                                    ),
+                                    labelText: "Email",
+                                    labelStyle: const TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 48,
+                              margin: EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    10.0)), // set rounded corner radius
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  obscureText: true,
+                                  style: const TextStyle(color: Colors.white),
+                                  controller: passwordController,
+                                  onChanged: (value) {
+                                    password = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white, width: 0.5),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(
+                                          color: Colors.amber, width: 0.7),
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.lock,
+                                      color: Colors.white,
+                                    ),
+                                    labelText: "Password",
+                                    labelStyle: const TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 48,
+                              margin: EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    10.0)), // set rounded corner radius
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  keyboardType: TextInputType.numberWithOptions(),
+                                  obscureText: false,
+                                  style: const TextStyle(color: Colors.white),
+                                  controller: phoneController,
+                                  onChanged: (value) {
+                                    phone = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white, width: 0.5),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(
+                                          color: Colors.amber, width: 0.7),
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.phone,
+                                      color: Colors.white,
+                                    ),
+                                    labelText: "Phone",
+                                    labelStyle: const TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Checkbox(
+                                  checkColor: Colors.black,
+                                  value: checkBoxValue,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      checkBoxValue = value!;
+                                    });
+                                  },
+                                  activeColor: Colors.white,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      child: const Text(
+                                        "I have accepted the",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                        // overflow: TextOverflow.fade,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: const Text(
+                                        "Terms & Conditions",
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.amber,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        // overflow: TextOverflow.fade,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                bool canProceed = isValidEntries(context);
+                                const CircularProgressIndicator();
+                                if (canProceed) {
+                                  bool canProceed = isValidEntries(context);
+                                  if (canProceed) {
+                                    OTPModel model = OTPModel(
+                                      name: username!.trim(),
+                                      email: email!.trim(),
+                                      // pin: pin,
+                                      phone: phone!.trim(),
+                                    );
+                                    new UtilityService().confirmationBox(
+                                        title: 'Confirmation',
+                                        message:
+                                            'Are you sure you want to proceed with the registration?',
+                                        context: context,
+                                        yesButtonColor: Colors.teal,
+                                        noButtonColor: LABEL_COLOR,
+                                        // color: Colors.blueAccent,
+                                        onYes: () {
+                                          print("+++++++");
+                                          Navigator.pop(context);
+                                          checkForEmail(context: context, dataModel: model);
+                                        },
+                                        onNo: () {
+                                          Navigator.pop(context);
+                                        });
+                                  }
+                                }
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.symmetric(vertical: 15),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      const BorderRadius.all(Radius.circular(5)),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: Colors.white,
+                                        offset: const Offset(0.05, 0.07),
+                                        blurRadius: 1,
+                                        spreadRadius: 0)
+                                  ],
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: [Colors.amber, Colors.amber],
+                                  ),
+                                ),
+                                child: Text(
+                                  'Sign Up',
+                                  style: GoogleFonts.raleway(
+                                      fontSize: 17,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NewLoginScreen()));
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.all(15),
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Already have an account?",
+                        style: GoogleFonts.lato(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                            color: Colors.white),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "Sign In",
+                        style: GoogleFonts.lato(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: Colors.amber),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -543,18 +547,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
     }
   }
 
-  void checkForEmail({OTPModel dataModel, BuildContext context}) async {
+  void checkForEmail({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Please wait...');
         },
       );
-      String url = '$GET_CUSTOMER_BY_EMAIL/${dataModel.email}';
+      print("******");
+      String url = '$GET_CUSTOMER_BY_EMAIL/${dataModel!.email}';
+      print("URL: $url");
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
+
+      Response? response = await networkUtility.getDataWithAuth(
           url: url, auth: 'Bearer $ACCESS_TOKEN');
+      print("RESPONSE: ${response!.body.toString()}");
 
       int status = response.statusCode;
       Navigator.of(context, rootNavigator: true).pop();
@@ -580,41 +588,31 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 
-  void createOTP({OTPModel dataModel, BuildContext context}) async {
+  void createOTP({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Please wait...');
         },
       );
       var jsonBody = jsonEncode(dataModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: OTP_URL, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
-      print('Response: ${response.body}');
+      print('Response Code: ${response!.statusCode}');
 
-      if (response == null) {
-        //error handling
-        new UtilityService().showMessage(
-          context: context,
-          message: 'An error has occurred. Please try again',
-          icon: Icon(
-            Icons.error_outline,
-            color: Colors.red,
-          ),
-        );
-      } else {
         // //when there is a response to handle
         // int status = response.statusCode;
         var data = jsonDecode(response.body);
+      print('Response ***: ${response.statusCode}');
 
-        int status = data['status'];
+        int status = response.statusCode;
         print('Status: $status');
         // Handle network error
         if (status == 500 || status == 404 || status == 403) {
@@ -626,7 +624,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
             ),
             context: context,
           );
-        } else {
+        } else if(status == 201) {
+
+
           print('Body: ${response.body}');
           OTPModel otpModel = new OTPModel(
             name: data['name'],
@@ -649,7 +649,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
             ),
           );
         }
-      }
+
     } catch (e) {
       print('postUserData error: $e');
       new UtilityService().showMessage(
@@ -660,7 +660,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 }

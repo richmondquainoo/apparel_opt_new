@@ -6,11 +6,11 @@ import '../../../Model/size_config.dart';
 
 class ColorDots extends StatelessWidget {
   const ColorDots({
-    Key key,
+    Key? key,
     @required this.product,
   }) : super(key: key);
 
-  final ProductNew product;
+  final ProductNew? product;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class ColorDots extends StatelessWidget {
       child: Row(
         children: [
           ...List.generate(
-            product.colors.length,
+            product!.colors!.length,
             (index) => ColorDot(
-              color: product.colors[index],
+              color: product!.colors![index],
               isSelected: index == selectedColor,
             ),
           ),
@@ -47,13 +47,13 @@ class ColorDots extends StatelessWidget {
 
 class ColorDot extends StatelessWidget {
   const ColorDot({
-    Key key,
+    Key? key,
     @required this.color,
     this.isSelected = false,
   }) : super(key: key);
 
-  final Color color;
-  final bool isSelected;
+  final Color? color;
+  final bool? isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class ColorDot extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         border:
-            Border.all(color: isSelected ? Colors.teal : Colors.transparent),
+            Border.all(color: isSelected! ? Colors.teal : Colors.transparent),
         shape: BoxShape.circle,
       ),
       child: DecoratedBox(

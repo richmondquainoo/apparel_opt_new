@@ -20,12 +20,12 @@ class DeliveryCost {
     this.cost,
   });
 
-  int id;
-  String organization;
-  String branch;
-  double minDistance;
-  double maxDistance;
-  double cost;
+  int? id;
+  String? organization;
+  String? branch;
+  double? minDistance;
+  double? maxDistance;
+  double? cost;
 
   factory DeliveryCost.fromJson(Map<String, dynamic> json) => DeliveryCost(
         id: json["id"],

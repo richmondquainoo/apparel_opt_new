@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ListTileMenuComponent extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Function onTap;
-  final Color labelColor;
-  final Color iconColor;
+  final IconData? icon;
+  final String? label;
+  final Function()? onTap;
+  final Color? labelColor;
+  final Color? iconColor;
 
   const ListTileMenuComponent(
       {this.icon, this.label, this.onTap, this.labelColor, this.iconColor});
@@ -25,14 +25,14 @@ class ListTileMenuComponent extends StatelessWidget {
           ),
           Container(
             child: Text(
-              label,
+              label!,
               style: GoogleFonts.raleway(
                   fontSize: 14, fontWeight: FontWeight.w400, color: labelColor),
             ),
           ),
         ],
       ),
-      onTap: onTap,
+      onTap:onTap
     );
   }
 }

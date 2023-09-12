@@ -6,30 +6,30 @@ import 'MenuModel.dart';
 import 'ProductVariantModel.dart';
 
 class FullCartModel {
-  int id;
-  String type;
-  String price;
-  String size;
-  String imageUrl;
-  String tagName;
-  String description;
-  String ratingFrequency;
-  String cumulativeRating;
-  String branch;
-  String category;
-  String menuItem;
-  String likes;
-  String organization;
-  String publish;
-  int quantity;
-  String product;
-  String brand;
-  String manufacturer;
-  String newArrivals;
-  List<ProductVariantModel> productVariants;
-  double total;
-  String color;
-  String productCategory;
+  int? id;
+  String? type;
+  String? price;
+  String? size;
+  String? imageUrl;
+  String? tagName;
+  String? description;
+  String? ratingFrequency;
+  String? cumulativeRating;
+  String? branch;
+  String? category;
+  String? menuItem;
+  String? likes;
+  String? organization;
+  String? publish;
+  int? quantity;
+  String? product;
+  String? brand;
+  String? manufacturer;
+  String? newArrivals;
+  late List<ProductVariantModel> productVariants;
+  double? total;
+  String? color;
+  String? productCategory;
 
   FullCartModel({
     this.id,
@@ -52,7 +52,7 @@ class FullCartModel {
     this.brand,
     this.manufacturer,
     this.newArrivals,
-    this.productVariants,
+    required this.productVariants,
     this.total,
     this.color,
     this.productCategory
@@ -137,7 +137,7 @@ class FullCartModel {
         newArrivals = res["newArrivals"],
         total = res['total'],
         color = res['color'],
-        productVariants = List<dynamic>.from(res["productVariants"].map((x) => x));
+        productVariants = List<ProductVariantModel>.from(res["productVariants"].map((x) => x));
 
   FullCartModel.fromMap(Map<dynamic, dynamic> res)
       : id = res['id'],
@@ -162,7 +162,7 @@ class FullCartModel {
         newArrivals = res["newArrivals"],
         total = res['total'],
         color = res['color'],
-        productVariants = List<dynamic>.from(res["productVariants"].map((x) => x));
+        productVariants = List<ProductVariantModel>.from(res["productVariants"].map((x) => x));
 
   @override
   String toString() {

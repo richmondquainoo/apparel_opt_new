@@ -23,7 +23,7 @@ import '../../Utils/Utility.dart';
 import '../../Utils/paths.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -34,8 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
   var passwordController = TextEditingController();
   var passwordConfirmController = TextEditingController();
 
-  String email;
-  String password;
+  String? email;
+  String? password;
 
   bool showPassword = true;
 
@@ -285,9 +285,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         Checkbox(
                           // checkColor:Colors.blueAccent,
                           value: checkBoxValue,
-                          onChanged: (bool value) {
+                          onChanged: (bool? value) {
                             setState(() {
-                              checkBoxValue = value;
+                              checkBoxValue = value!;
                             });
                           },
                           activeColor: Colors.black54,
@@ -319,8 +319,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         const CircularProgressIndicator();
                         if (canProceed) {
                           OTPModel model = OTPModel(
-                            email: email.trim(),
-                            password: password.trim(),
+                            email: email!.trim(),
+                            password: password!.trim(),
                           );
                           serverAuthentication(model);
                         }
@@ -384,7 +384,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const RegisterScreen()));
+                                            RegisterScreen()));
                               },
                               child: Text(
                                 "Register",
@@ -455,12 +455,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       var jsonBody = jsonEncode(userProfileModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: AUTH_USER_URL, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
       print("THE URL : $AUTH_USER_URL");
       print("THE request body : $jsonBody");
 
-      print('auth response: ${response.body}');
+      print('auth response: ${response!.body}');
 
       Navigator.of(context, rootNavigator: true).pop();
       if (response == null) {

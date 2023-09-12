@@ -16,18 +16,18 @@ class ProductModel {
 
   });
 
-  int id;
-  int productId;
-  String color;
-  String colorCode;
-  String imageUrl;
-  int quantity;
-  String sizes;
-  int productVariantId;
-  String productName;
-  String productCategory;
-  double price;
-  double total;
+  int? id;
+  int? productId;
+  String? color;
+  String? colorCode;
+  String? imageUrl;
+  int? quantity;
+  String? sizes;
+  int? productVariantId;
+  String? productName;
+  String? productCategory;
+  double? price;
+  double? total;
   // bool selected;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(

@@ -1,5 +1,5 @@
 import 'package:apparel_options/Screens/LandingPage/ProductDetailsScreen.dart';
-import 'package:badges/badges.dart';
+// import 'package:badges/badges.dart' as bg;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,28 +18,28 @@ import '../CartScreen.dart';
 import '../ProductDetails.dart';
 
 class MenuInfoScreen extends StatefulWidget {
-  final String category;
+  final String? category;
   const MenuInfoScreen({
-    Key key,
+    Key? key,
     this.category,
   }) : super(key: key);
 
   @override
   State<MenuInfoScreen> createState() => _MenuInfoScreenState(
-        category: category,
+        category: category!,
       );
 }
 
 class _MenuInfoScreenState extends State<MenuInfoScreen> {
-  final String category;
+  final String? category;
   List<MenuModel> menuList = [];
   MenuDB menuDB = MenuDB();
   DBHelper dbHelper = DBHelper();
   UserDB userDB = UserDB();
   UserProfileModel user = UserProfileModel();
   int selectedIndex = -1;
-  List<CartModel> cartList;
-  List<CategoryModel> categoryList;
+  late List<CartModel?> cartList;
+  late List<CategoryModel?> categoryList;
 
   bool checkBoxValue = false;
   _MenuInfoScreenState({this.category});
@@ -60,12 +60,12 @@ class _MenuInfoScreenState extends State<MenuInfoScreen> {
         user = list.first;
       });
     }
-    List<MenuModel> menuItems = await menuDB.getByCategory(category);
+    List<MenuModel> menuItems = await menuDB.getByCategory(category!);
     setState(() {
       menuList = menuItems;
     });
-    List<MenuModel> menus = await menuDB.getAllMenu();
-    print("All menuList on load up: ${menus.length}");
+    List<MenuModel>? menus = await menuDB.getAllMenu();
+    print("All menuList on load up: ${menus!.length}");
   }
 
   @override
@@ -97,31 +97,31 @@ class _MenuInfoScreenState extends State<MenuInfoScreen> {
           ),
         ),
         actions: [
-          Center(
-            child: Badge(
-              badgeContent: Consumer<AppData>(builder: (context, value, child) {
-                return Text(
-                  value.getCartCount().toString(),
-                  style: TextStyle(color: Colors.white),
-                );
-              }),
-              animationDuration: Duration(milliseconds: 300),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CartScreen(),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.shopping_cart,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
+          // Center(
+          //   child: bg.Badge(
+          //     badgeContent: Consumer<AppData>(builder: (context, value, child) {
+          //       return Text(
+          //         value.getCartCount().toString(),
+          //         style: TextStyle(color: Colors.white),
+          //       );
+          //     }),
+          //     animationDuration: Duration(milliseconds: 300),
+          //     child: IconButton(
+          //       onPressed: () {
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => CartScreen(),
+          //           ),
+          //         );
+          //       },
+          //       icon: const Icon(
+          //         Icons.shopping_cart,
+          //         color: Colors.black,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           SizedBox(
             width: 20,
           ),
@@ -129,7 +129,7 @@ class _MenuInfoScreenState extends State<MenuInfoScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          List<MenuModel> menuItems = await menuDB.getByCategory(category);
+          List<MenuModel> menuItems = await menuDB.getByCategory(category!);
           setState(() {
             menuList = menuItems;
           });
@@ -183,7 +183,7 @@ class _MenuInfoScreenState extends State<MenuInfoScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Container(
-                                            child: Text(menuModel.product,
+                                            child: Text(menuModel.product!,
                                                 style: GoogleFonts.raleway(
                                                     fontSize: 13,
                                                     color: Colors.black,
@@ -211,7 +211,7 @@ class _MenuInfoScreenState extends State<MenuInfoScreen> {
                                                         FontWeight.w600)),
                                           ),
                                           Container(
-                                            child: Text(menuModel.price,
+                                            child: Text(menuModel.price!,
                                                 style: GoogleFonts.lato(
                                                     fontSize: 13,
                                                     color: primaryColor,
@@ -338,7 +338,7 @@ class _MenuInfoScreenState extends State<MenuInfoScreen> {
       return list;
     } catch (e) {
       debugPrint('Error pizza list: $e');
-      return null;
+      return null!;
     }
   }
 

@@ -9,20 +9,20 @@ import '../Model/ProductNew.dart';
 import '../animation/FadeAnimation.dart';
 
 class ProductDetails extends StatefulWidget {
-  final ProductNew product;
-  final MenuModel menuItem;
-  const ProductDetails({Key key, this.product, this.menuItem})
+  final ProductNew ?product;
+  final MenuModel? menuItem;
+  const ProductDetails({Key? key, this.product, this.menuItem})
       : super(key: key);
 
   @override
   _ProductDetailsState createState() =>
-      _ProductDetailsState(product: product, menuItem: menuItem);
+      _ProductDetailsState(product: product!, menuItem: menuItem!);
 }
 
 class _ProductDetailsState extends State<ProductDetails>
     with TickerProviderStateMixin {
-  final ProductNew product;
-  final MenuModel menuItem;
+  final ProductNew? product;
+  final MenuModel? menuItem;
 
   int selectedImage = 0;
 
@@ -89,8 +89,8 @@ class _ProductDetailsState extends State<ProductDetails>
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: Hero(
-                      tag: widget.menuItem.id.toString(),
-                      child: Image.network(widget.menuItem.imageUrl),
+                      tag: widget.menuItem!.id.toString(),
+                      child: Image.network(widget.menuItem!.imageUrl!),
                     ),
                   ),
                 ),
@@ -100,7 +100,7 @@ class _ProductDetailsState extends State<ProductDetails>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ...List.generate(widget.menuItem.imageUrl.length,
+                    ...List.generate(widget.menuItem!.imageUrl!.length,
                         (index) => buildSmallProductPreview(index)),
                   ],
                 )
@@ -135,7 +135,7 @@ class _ProductDetailsState extends State<ProductDetails>
                                 height: 10,
                               ),
                               Text(
-                                widget.menuItem.product,
+                                widget.menuItem!.product!,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
@@ -146,7 +146,7 @@ class _ProductDetailsState extends State<ProductDetails>
                                 height: 5,
                               ),
                               Text(
-                                "GHC " + widget.menuItem.price.toString(),
+                                "GHC " + widget.menuItem!.price.toString(),
                                 // "Pricing upon request",
                                 style: GoogleFonts.lato(
                                   color: Colors.teal,
@@ -303,21 +303,19 @@ class _ProductDetailsState extends State<ProductDetails>
                           padding: const EdgeInsets.only(top: 0),
                           height: 260,
                           child: Column(children: [
-                            FadeAnimation(
-                                1.4,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Similar Products',
-                                      style: GoogleFonts.lato(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                )),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Similar Products',
+                                  style: GoogleFonts.lato(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
                             const SizedBox(
                               height: 10,
                             ),
@@ -365,108 +363,106 @@ class _ProductDetailsState extends State<ProductDetails>
   productCart(ProductNew product) {
     return AspectRatio(
       aspectRatio: 1 / 1,
-      child: FadeAnimation(
-          1.0,
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProductDetails(product: product)));
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 10, bottom: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(5, 10),
-                    blurRadius: 15,
-                    color: Colors.grey.shade200,
-                  )
-                ],
-              ),
-              padding: EdgeInsets.all(6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 150,
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(product.images[0],
-                                  color: Colors.black12,
-                                  colorBlendMode: BlendMode.darken,
-                                  fit: BoxFit.cover)),
-                        ),
-                        // Add to cart button
-                        Positioned(
-                          right: 5,
-                          bottom: 5,
-                          child: MaterialButton(
-                            color: Colors.teal,
-                            minWidth: 40,
-                            height: 40,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            onPressed: () {
-                              addToCartModal();
-                            },
-                            padding: EdgeInsets.all(5),
-                            child: const Center(
-                                child: Icon(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProductDetails(product: product)));
+        },
+        child: Container(
+          margin: const EdgeInsets.only(right: 10, bottom: 0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(5, 10),
+                blurRadius: 15,
+                color: Colors.grey.shade200,
+              )
+            ],
+          ),
+          padding: EdgeInsets.all(6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 150,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(product.images![0],
+                              color: Colors.black12,
+                              colorBlendMode: BlendMode.darken,
+                              fit: BoxFit.cover)),
+                    ),
+                    // Add to cart button
+                    Positioned(
+                      right: 5,
+                      bottom: 5,
+                      child: MaterialButton(
+                        color: Colors.teal,
+                        minWidth: 40,
+                        height: 40,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50)),
+                        onPressed: () {
+                          addToCartModal();
+                        },
+                        padding: EdgeInsets.all(5),
+                        child: const Center(
+                            child: Icon(
                               Icons.shopping_cart,
                               color: Colors.white,
                               size: 20,
                             )),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 13.0),
-                    child: Text(
-                      product.title,
-                      style: GoogleFonts.lato(
-                          color: LABEL_COLOR,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          letterSpacing: 0.3),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 13.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "GHc " + product.price.toString(),
-                          style: GoogleFonts.lato(
-                            color: LABEL_COLOR,
-                            fontWeight: FontWeight.w300,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          )),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: Text(
+                  product.title!,
+                  style: GoogleFonts.lato(
+                      color: LABEL_COLOR,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      letterSpacing: 0.3),
+                ),
+              ),
+              const SizedBox(
+                height: 6,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "GHc " + product.price.toString(),
+                      style: GoogleFonts.lato(
+                        color: LABEL_COLOR,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
     );
   }
 
@@ -700,7 +696,7 @@ class _ProductDetailsState extends State<ProductDetails>
           border: Border.all(
               color: Colors.teal.withOpacity(selectedImage == index ? 1 : 0)),
         ),
-        child: Image.network(widget.menuItem.imageUrl[index]),
+        child: Image.network(widget.menuItem!.imageUrl![index]),
       ),
     );
   }
@@ -724,7 +720,7 @@ class _ProductDetailsState extends State<ProductDetails>
           border: Border.all(
               color: Colors.teal.withOpacity(selectedImage == index ? 1 : 0)),
         ),
-        child: Image.network(widget.product.images[index]),
+        child: Image.network(widget.product!.images![index]),
       ),
     );
   }

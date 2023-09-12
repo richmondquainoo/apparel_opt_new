@@ -1,11 +1,11 @@
 class UserModel {
-  String username;
-  String email;
-  String password;
-  String firstname;
-  String lastname;
-  String phone;
-  int pin;
+  String? username;
+  String? email;
+  String? password;
+  String? firstname;
+  String? lastname;
+  String? phone;
+  int? pin;
 
   UserModel(
       {this.username,

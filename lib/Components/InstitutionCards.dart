@@ -4,10 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../Constants/Colors.dart';
 
 class InstitutionCards extends StatelessWidget {
-  final String institutionName;
-  final String industry;
-  final String imageURL;
-  final Function onTapped;
+  final String? institutionName;
+  final String? industry;
+  final String? imageURL;
+  final Function? onTapped;
   const InstitutionCards(
       {@required this.institutionName,
       @required this.industry,
@@ -21,17 +21,19 @@ class InstitutionCards extends StatelessWidget {
         height: 70,
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
-          onTap: onTapped,
+          onTap: (){
+            onTapped;
+          },
           child: ListTile(
             title: Text(
-              institutionName,
+              institutionName!,
               style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w500,
                   color: APPBAR_GREEN,
                   fontSize: 14),
             ),
             subtitle: Text(
-              industry,
+              industry!,
               style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w200,
                   color: APPBAR_GREEN,
@@ -43,7 +45,7 @@ class InstitutionCards extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: NetworkImage(imageURL),
+                  image: NetworkImage(imageURL!),
                 ),
               ),
             ),

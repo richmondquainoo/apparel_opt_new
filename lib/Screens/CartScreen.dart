@@ -17,7 +17,7 @@ import '../animation/FadeAnimation.dart';
 import 'ProductDetails.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({Key key}) : super(key: key);
+  const CartScreen({Key? key}) : super(key: key);
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -28,6 +28,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
   List<dynamic> cartItems = [];
   List<int> cartItemCount = [1, 1, 1, 1];
   double totalPrice = 0;
+  int? cartQty;
 
   Future<void> fetchItems() async {
     final String response = await rootBundle.loadString('assets/products.json');
@@ -56,6 +57,8 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final cartItems = Provider.of<AppData>(context).cartItemNew;
+    cartQty = cartItems.length;
     return Scaffold(
         backgroundColor: kBackgroundTheme,
         persistentFooterButtons: [
@@ -71,127 +74,128 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                   SizedBox(
                     height: 5,
                   ),
-                  FadeAnimation(
-                      0,
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10),
-                        child: MaterialButton(
-                          onPressed: () {
-                            // debugPrint("Day: ${product}");
-                            // dbHelper.getCartSummary();
-                            // new UtilityService().confirmationBox(
-                            //     title: 'Confirmation',
-                            //     message:
-                            //         'Are you sure you want to proceed with purchase?',
-                            //     context: context,
-                            //     yesButtonColor: Colors.amber,
-                            //     noButtonColor: Colors.amber,
-                            //     // color: Colors.blueAccent,
-                            //     onYes: () {
-                            //       Navigator.pop(context);
-                            //       Navigator.push(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //           builder: (context) => CheckOutScreen(),
-                            //         ),
-                            //       );
-                            //     },
-                            //     onNo: () {
-                            //       Navigator.pop(context);
-                            //     });
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, right: 10),
+                    child: MaterialButton(
+                      onPressed: () {
+                        // debugPrint("Day: ${product}");
+                        // dbHelper.getCartSummary();
+                        // new UtilityService().confirmationBox(
+                        //     title: 'Confirmation',
+                        //     message:
+                        //         'Are you sure you want to proceed with purchase?',
+                        //     context: context,
+                        //     yesButtonColor: Colors.amber,
+                        //     noButtonColor: Colors.amber,
+                        //     // color: Colors.blueAccent,
+                        //     onYes: () {
+                        //       Navigator.pop(context);
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => CheckOutScreen(),
+                        //         ),
+                        //       );
+                        //     },
+                        //     onNo: () {
+                        //       Navigator.pop(context);
+                        //     });
 
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Center(
-                                      child: Text(
-                                        "Confirmation",
-                                        style: GoogleFonts.raleway(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                          letterSpacing: 0.3,
-                                        ),
-                                      ),
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Center(
+                                  child: Text(
+                                    "Confirmation",
+                                    style: GoogleFonts.raleway(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                      letterSpacing: 0.3,
                                     ),
-                                    content: Text(
-                                      "Are you sure you want to proceed to checkout?",
-                                      style: GoogleFonts.raleway(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                        letterSpacing: 0.3,
+                                  ),
+                                ),
+                                content: Text(
+                                  "Are you sure you want to proceed to checkout?",
+                                  style: GoogleFonts.raleway(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child:ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.teal,
                                       ),
-                                    ),
-                                    actions: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 8.0),
-                                        child: FlatButton(
-                                          height: 34,
-                                          color: Colors.teal.shade400,
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => CheckOutScreen(),
-                                              ),
-                                            );
-                                          },
-                                          child: Text(
-                                            "Yes",
-                                            style: GoogleFonts.raleway(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white,
-                                              letterSpacing: 0.0,
-                                            ),
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CheckOutScreen(),
                                           ),
+                                        );
+                                      },
+                                      child: Text(
+                                        "Yes",
+                                        style: GoogleFonts.raleway(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 8.0, right: 8),
-                                        child: FlatButton(
-                                            height: 34,
-                                            color: LABEL_COLOR,
-                                            onPressed: () {
-                                              Navigator.pop(context); //close Dialog
-                                            },
-                                            child: Text(
-                                              "No",
-                                              style: GoogleFonts.raleway(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white,
-                                                letterSpacing: 0.0,
-                                              ),
-                                            )),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                    const EdgeInsets.only(bottom: 8.0, right: 8),
+                                    child:ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black,
                                       ),
-                                      SizedBox(width: 35,),
-                                    ],
-                                  );
-                                });
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        "No",
+                                        style: GoogleFonts.raleway(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 35,),
+                                ],
+                              );
+                            });
 
-                          },
-                          height: 50,
-                          elevation: 0,
-                          splashColor: Colors.yellow[700],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: Colors.black,
-                          child: Center(
-                            child: Text(
-                              "Next",
-                              style: GoogleFonts.raleway(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
+                      },
+                      height: 50,
+                      elevation: 0,
+                      splashColor: Colors.yellow[700],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      color: Colors.black,
+                      child: Center(
+                        child: Text(
+                          "Next",
+                          style: GoogleFonts.raleway(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
                         ),
-                      )),
+                      ),
+                    ),
+                  )
                 ],
               ),
             );
@@ -204,15 +208,13 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
           backgroundColor: Colors.grey.shade50,
           elevation: 0.5,
           automaticallyImplyLeading: false,
-          title: Center(
-            child: Text(
-              "Cart",
-              style: GoogleFonts.raleway(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-                letterSpacing: .75,
-              ),
+          title: Text(
+            "CART",
+            style: GoogleFonts.raleway(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+              letterSpacing: .75,
             ),
           ),
           leading: IconButton(
@@ -228,7 +230,38 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
         ),
         body: SingleChildScrollView(
             child: Column(
-          children: loadCartListNew(context, 1),
+          children: [
+            Container(
+              child: cartQty !<1
+                  ?Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      height: 70,
+                      decoration:
+                      BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/emptyCart.png"))),
+                    ),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Empty Cart.",
+                        style: GoogleFonts.raleway(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+                  :Column(children: loadCartListNew(context, 1),)
+            )
+          ]
         )));
   }
 
@@ -265,41 +298,63 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                                 SizedBox(
                                   height: 35,
                                 ),
-                                CachedNetworkImage(
-                                  imageUrl: cart.imageUrl.toString(),
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(58),
-                                      border: Border.all(
-                                        color: Colors
-                                            .black12, //                   <--- border color
-                                        width: 1.0,
-                                      ),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CachedNetworkImage(
+                                    imageUrl: cart.imageUrl.toString(),
+                                    imageBuilder: (context, imageProvider) => Image.network(cart.imageUrl.toString()),
+                                    height: 100,
+                                    width: 130,
+                                    fit: BoxFit.cover,
+                                    color: Colors.black12,
+                                    colorBlendMode: BlendMode.darken,
+                                    placeholder: (context, url) => Container(
+                                      height: 10,
+                                      width: 20,
+                                      child: Image.asset("assets/images/defaultCartImage.png"),
+                                    ),
+                                    errorWidget: (context, url, error) => Image.asset(
+                                      "assets/images/defaultCartImage.png",
+                                      height: 20,
+                                      width: 20,
                                     ),
                                   ),
-                                  height: 90,
-                                  width: 90,
-                                  fit: BoxFit.cover,
-                                  color: Colors.black12,
-                                  colorBlendMode: BlendMode.darken,
-                                  placeholder: (context, url) => Container(
-                                    height: 30,
-                                    width: 30,
-                                    child: Image.asset(
-                                        "assets/images/cachedShirt.png"),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                    "assets/images/cachedShirt.png",
-                                    height: 30,
-                                    width: 30,
-                                  ),
                                 )
+                                // CachedNetworkImage(
+                                //   imageUrl: cart.imageUrl.toString(),
+                                //   imageBuilder: (context, imageProvider) =>
+                                //       Container(
+                                //     decoration: BoxDecoration(
+                                //       borderRadius: BorderRadius.circular(58),
+                                //       border: Border.all(
+                                //         color: Colors
+                                //             .black12, //                   <--- border color
+                                //         width: 1.0,
+                                //       ),
+                                //       image: DecorationImage(
+                                //         image: imageProvider,
+                                //         fit: BoxFit.cover,
+                                //       ),
+                                //     ),
+                                //   ),
+                                //   height: 90,
+                                //   width: 90,
+                                //   fit: BoxFit.cover,
+                                //   color: Colors.black12,
+                                //   colorBlendMode: BlendMode.darken,
+                                //   placeholder: (context, url) => Container(
+                                //     height: 30,
+                                //     width: 30,
+                                //     child: Image.asset(
+                                //         "assets/images/cachedShirt.png"),
+                                //   ),
+                                //   errorWidget: (context, url, error) =>
+                                //       Image.asset(
+                                //     "assets/images/cachedShirt.png",
+                                //     height: 30,
+                                //     width: 30,
+                                //   ),
+                                // )
                                 // Container(
                                 //   child: CircleAvatar(
                                 //     radius: 41,
@@ -329,11 +384,11 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                                       child: Row(
                                         children: [
                                           Container(
-                                            child: Text(cart.productName,
+                                            child: Text(cart.productName!,
                                                 style: GoogleFonts.raleway(
-                                                    fontSize: 12  ,
+                                                    fontSize: 14,
                                                     color: Colors.black,
-                                                    fontWeight: FontWeight.w500)),
+                                                    fontWeight: FontWeight.w600)),
                                           ),
                                         ],
                                       ),
@@ -373,7 +428,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                                                           FontWeight.w500)),
                                                 ),
                                                 Container(
-                                                  child: Text(cart.sizes,
+                                                  child: Text(cart.sizes!,
                                                       style: GoogleFonts.lato(
                                                           fontSize: 15,
                                                           color: Colors.black,
@@ -401,7 +456,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                                             ),
                                             Container(
                                               child: Text(
-                                                "${cart.quantity.toString()} x ${cart.price} | GHS ${cart.total.toStringAsFixed(2)}",
+                                                "${cart.quantity.toString()} x ${cart.price} | GHS ${cart.total!.toStringAsFixed(2)}",
                                                 style: GoogleFonts.lato(
                                                     fontSize: 13,
                                                     color: Colors.black,
@@ -421,97 +476,96 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                                 Row(
                                   children: [
                                     Container(
-                                      height: 36,
+                                      height: 46,
                                       padding: EdgeInsets.all(3),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.teal.shade100),
+                                          borderRadius: BorderRadius.circular(0),
+                                          border: Border.all(color: Colors.black54),
+                                          color: Colors.white),
                                       child: Row(
                                         children: [
                                           cart.quantity != 1
                                               ? IconButton(
-                                                  icon: new Icon(
-                                                    Icons.remove,
-                                                    size: 15,
-                                                  ),
-                                                  onPressed: () {
-                                                    cart.quantity -= 1;
-                                                    cart.total = cart.quantity * cart.price;
-                                                    Provider.of<AppData>(
-                                                            context,
-                                                            listen: false)
-                                                        .updateCartItem(cart);
-                                                  })
+                                              icon: new Icon(
+                                                Icons.remove,
+                                                size: 17,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  cart.quantity = cart.quantity! - 1;
+                                                  cart.total = cart.quantity! * cart.price!;
+                                                });
+                                                // Provider.of<AppData>(
+                                                //     context,
+                                                //     listen: false)
+                                                //     .updateCartItem(cart);
+                                              })
                                               : Text(""),
                                           Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 3),
+                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(3),
-                                                color: Colors.white),
+                                                borderRadius: BorderRadius.circular(3), color: Colors.white),
                                             child: Text(
                                               cart.quantity.toString(),
                                               style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
+                                                  color: Colors.black, fontWeight: FontWeight.w600, fontSize: 18),
                                             ),
                                           ),
                                           IconButton(
                                               icon: Icon(
                                                 Icons.add,
-                                                size: 15,
+                                                size: 17,
                                               ),
                                               onPressed: () {
-                                                cart.quantity += 1;
-                                                cart.total =
-                                                    cart.quantity * cart.price;
-                                                Provider.of<AppData>(context,
-                                                        listen: false)
-                                                    .updateCartItem(cart);
+                                                setState(() {
+                                                  cart.quantity = cart.quantity! + 1;
+                                                  cart.total = cart.quantity! * cart.price!;
+                                                });
+                                                // Provider.of<AppData>(context,
+                                                //     listen: false)
+                                                //     .updateCartItem(cart);
                                               }),
                                         ],
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 6,
+                                      width: 20,
                                     ),
                                     Expanded(
                                       flex: 1,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Provider.of<AppData>(context,
-                                                      listen: false)
-                                                  .removeCartItem(cart);
-                                              final snackBar = SnackBar(
-                                                content: const Text(
-                                                    "Item removed from cart"),
-                                                duration: Duration(seconds: 2),
-                                                action: SnackBarAction(
-                                                  label: "",
-                                                  textColor: Colors.black,
-                                                  onPressed: () {},
-                                                ),
-                                              );
+                                          Container(
+                                            height: 47,
+                                            width: 60,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(color: Colors.black54),
+                                            ),
+                                            child: InkWell(
+                                              onTap: () {
+                                                Provider.of<AppData>(context, listen: false).removeCartItem(cart);
+                                                final snackBar = SnackBar(
+                                                  content: const Text("Item removed from cart"),
+                                                  duration: Duration(seconds: 2),
+                                                  action: SnackBarAction(
+                                                    label: "",
+                                                    textColor: Colors.black,
+                                                    onPressed: () {},
+                                                  ),
+                                                );
 
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-                                            },
-                                            child: Icon(
-                                              Icons.delete,
-                                              color: Colors.redAccent.shade100,
+                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                              },
+                                              child: Icon(
+                                                Icons.delete_forever,
+                                                size: 29,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 16,
                                     ),
                                   ],
                                 ),
@@ -532,7 +586,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
       return list;
     } catch (e) {
       debugPrint('Error pizza list: $e');
-      return null;
+      return null!;
     }
   }
 
@@ -567,7 +621,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  product.images[0],
+                  product.images![0],
                   fit: BoxFit.contain,
                   height: 90,
                   width: 100,
@@ -583,7 +637,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                       height: 7,
                     ),
                     Text(
-                      product.brand,
+                      product.brand!,
                       style: GoogleFonts.raleway(
                         color: LABEL_COLOR,
                         fontWeight: FontWeight.w300,
@@ -594,7 +648,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                       height: 7,
                     ),
                     Text(
-                      product.title,
+                      product.title!,
                       style: GoogleFonts.raleway(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
@@ -621,7 +675,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                     setState(() {
                       if (cartItemCount[index] > 1) {
                         cartItemCount[index]--;
-                        totalPrice = totalPrice - product.price;
+                        totalPrice = totalPrice - product.price!;
                       }
                     });
                   },
@@ -648,7 +702,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                   onPressed: () {
                     setState(() {
                       cartItemCount[index]++;
-                      totalPrice = totalPrice + product.price;
+                      totalPrice = totalPrice + product.price!;
                     });
                   },
                   shape: CircleBorder(),
@@ -667,7 +721,7 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
 }
 
 class ReusableWidget extends StatelessWidget {
-  final String title, value;
+  final String? title, value;
   const ReusableWidget({this.title, this.value});
 
   @override

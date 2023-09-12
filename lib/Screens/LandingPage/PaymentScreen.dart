@@ -15,25 +15,24 @@ import '../../Utils/Utility.dart';
 import '../../Utils/paths.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final CheckoutModel checkoutModel;
-  final String clientReference;
+  final CheckoutModel? checkoutModel;
+  final String? clientReference;
 
   const PaymentScreen({this.checkoutModel, this.clientReference});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState(
-      checkoutModel: checkoutModel, clientReference: clientReference);
+      checkoutModel: checkoutModel!, clientReference: clientReference!);
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  final CheckoutModel checkoutModel;
-  final String clientReference;
-  UserDB userDB = UserDB();
-  UserProfileModel user = UserProfileModel();
+  final CheckoutModel? checkoutModel;
+  final String? clientReference;
+  UserDB? userDB = UserDB();
+  UserProfileModel? user = UserProfileModel();
 
   _PaymentScreenState({this.checkoutModel, this.clientReference});
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
   @override
   void initState() {
     debugPrint("Check out: $checkoutModel");
@@ -42,9 +41,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void initDB() async {
-    await userDB.initialize();
+    await userDB!.initialize();
 
-    List<UserProfileModel> list = await userDB.getAllUsers();
+    List<UserProfileModel> list = await userDB!.getAllUsers();
     if (list.isNotEmpty) {
       setState(() {
         user = list.first;
@@ -87,7 +86,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         style: ElevatedButton.styleFrom(primary: Colors.black),
                         onPressed: () {
                           // Navigator.pop(context);
-                          checkPaymentStatus(context, widget.clientReference);
+                          checkPaymentStatus(context, widget.clientReference!);
                         },
                         child: Text(
                           "Tap to Return",
@@ -117,7 +116,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
         leading: IconButton(
           onPressed: () {
-            checkPaymentStatus(context, widget.clientReference);
+            checkPaymentStatus(context, widget.clientReference!);
           },
           icon: const Icon(Icons.arrow_back_ios_outlined,
               size: 19, color: Colors.black
@@ -129,15 +128,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
           NavigationControls(_controller.future),
         ],
       ),
-      body: WebView(
-        initialUrl: (checkoutModel != null && checkoutModel.checkoutURL != null)
-            ? checkoutModel.checkoutURL
-            : 0,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          _controller.complete(webViewController);
-        },
-      ),
+      // body: WebView(
+      //   initialUrl: (checkoutModel != null && checkoutModel.checkoutURL != null)
+      //       ? checkoutModel.checkoutURL
+      //       : 0,
+      //   javascriptMode: JavascriptMode.unrestricted,
+      //   onWebViewCreated: (WebViewController webViewController) {
+      //     _controller.complete(webViewController);
+      //   },
+      // ),
       // floatingActionButton: Padding(
       //   padding: const EdgeInsets.only(left: 20.0, right: 20),
       //   child: TextButtonComponent(
@@ -162,13 +161,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
       // );
       print("Category category: ${widget.clientReference}");
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
-          url: '$CHECK_PAYMENT_STATUS/${checkoutModel.clientReference}',
+      Response? response = await networkUtility.getDataWithAuth(
+          url: '$CHECK_PAYMENT_STATUS/${checkoutModel!.clientReference}',
           auth: ACCESS_TOKEN_FOR_REQUEST);
 
       print("Client Reference: ${widget.clientReference}");
 
-      debugPrint('Payment Status response: ${response.body}');
+      debugPrint('Payment Status response: ${response!.body}');
 
       var data = jsonDecode(response.body);
       print("Data: ${data['data']}");
@@ -222,7 +221,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  Future<bool> successMessage(BuildContext context) {
+  Future successMessage(BuildContext context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -246,30 +245,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
               textAlign: TextAlign.center,
             ),
             actions: <Widget>[
-              FlatButton(
-                child: Container(
-                  height: 30,
-                  width: 100,
-                  color: Colors.black,
-                  child: Center(
-                    child: Text(
-                      "Done",
-                      style: GoogleFonts.raleway(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pop(context);
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => Index()),
-                      (route) => false);
+                          (route) => false);
                 },
+                child: Text(
+                  "Done",
+                  style: GoogleFonts.raleway(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: 0.0,
+                  ),
+                ),
               ),
             ],
           );
@@ -291,7 +286,7 @@ class NavigationControls extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<WebViewController> snapshot) {
         final bool webViewReady =
             snapshot.connectionState == ConnectionState.done;
-        final WebViewController controller = snapshot.data;
+        final WebViewController controller = snapshot.data!;
         return Row(
           children: <Widget>[
             IconButton(
@@ -303,9 +298,9 @@ class NavigationControls extends StatelessWidget {
                         await controller.goBack();
                       } else {
                         // ignore: deprecated_member_use
-                        Scaffold.of(context).showSnackBar(
-                          const SnackBar(content: Text("No back history item")),
-                        );
+                        // Scaffold.of(context).showSnackBar(
+                        //   const SnackBar(content: Text("No back history item")),
+                        // );
                         return;
                       }
                     },
@@ -319,10 +314,10 @@ class NavigationControls extends StatelessWidget {
                         await controller.goForward();
                       } else {
                         // ignore: deprecated_member_use
-                        Scaffold.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("No forward history item")),
-                        );
+                        // Scaffold.of(context).showSnackBar(
+                        //   const SnackBar(
+                        //       content: Text("No forward history item")),
+                        // );
                         return;
                       }
                     },

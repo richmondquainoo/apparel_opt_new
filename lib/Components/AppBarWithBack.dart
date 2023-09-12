@@ -6,12 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import '../Constants/Colors.dart';
 import '../Constants/myColors.dart';
 
-AppBar AppBarWithBackComponent({BuildContext context, String title}) {
+AppBar AppBarWithBackComponent({BuildContext? context, String? title}) {
   return AppBar(
     backgroundColor: Colors.white,
     elevation: 0,
     leading: IconButton(
-      onPressed: () => Navigator.pop(context),
+      onPressed: () => Navigator.pop(context!),
       icon: const Icon(
         Icons.navigate_before,
         color: BLACK_COLOR,
@@ -19,7 +19,7 @@ AppBar AppBarWithBackComponent({BuildContext context, String title}) {
       ),
     ),
     title: Text(
-      title,
+      title!,
       style: GoogleFonts.raleway(
         fontSize: 16,
         fontWeight: FontWeight.w500,

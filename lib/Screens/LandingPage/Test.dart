@@ -132,11 +132,11 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                 final color = getColor(index);
                 List<Color> gradientColors;
                 if (type == ConnectorType.start) {
-                  gradientColors = [Color.lerp(prevColor, color, 0.5), color];
+                  gradientColors = [Color.lerp(prevColor, color, 0.5)!, color];
                 } else {
                   gradientColors = [
                     prevColor,
-                    Color.lerp(prevColor, color, 0.5)
+                    Color.lerp(prevColor, color, 0.5)!
                   ];
                 }
                 return DecoratedLineConnector(
@@ -174,13 +174,13 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 /// hardcoded bezier painter
 /// TODO: Bezier curve into package component
 class _BezierPainter extends CustomPainter {
-  const _BezierPainter({
-    @required this.color,
+   _BezierPainter({
+     this.color,
     this.drawStart = true,
     this.drawEnd = true,
   });
 
-  final Color color;
+  final Color? color;
   final bool drawStart;
   final bool drawEnd;
 
@@ -195,7 +195,7 @@ class _BezierPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = color;
+      ..color = color!;
 
     final radius = size.width / 2;
 

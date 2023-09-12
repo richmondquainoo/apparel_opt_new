@@ -97,7 +97,7 @@ class MenuDB {
       final Database db = await database;
       // Query the obj for all The Objects.
       final List<Map<String, dynamic>> maps = await db.query('menu');
-      // print('List of items from getAllMenu query: $maps');
+      print('List of items from getAllMenu query: $maps');
 
       return List.generate(
         maps.length,
@@ -120,13 +120,13 @@ class MenuDB {
             brand: maps[i]["brand"],
             manufacturer: maps[i]["manufacturer"],
             newArrival: maps[i]["newArrival"],
-            productVariants: maps[i]["productVariants"]
+            // productVariants: maps[i]["productVariants"]
           );
         },
       );
     } catch (e) {
       print('Fetch Error(getAllMenu): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -159,13 +159,13 @@ class MenuDB {
             brand: maps[i]["brand"],
             manufacturer: maps[i]["manufacturer"],
             newArrival: maps[i]["newArrival"],
-            productVariants: maps[i]["productVariants"]
+            // productVariants: maps[i]["productVariants"]
           );
         },
       ).first;
     } catch (e) {
       print('Fetch Error(getMenuById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -204,7 +204,7 @@ class MenuDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getMenuByMenuItem): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -237,13 +237,13 @@ class MenuDB {
             brand: maps[i]["brand"],
             manufacturer: maps[i]["manufacturer"],
             newArrival: maps[i]["newArrival"],
-            productVariants: maps[i]["productVariants"]
+            // productVariants: maps[i]["productVariants"]
           );
         },
       ).first;
     } catch (e) {
       print('Fetch Error(getMenuByIdOnly): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -276,13 +276,13 @@ class MenuDB {
             brand: maps[i]["brand"],
             manufacturer: maps[i]["manufacturer"],
             newArrival: maps[i]["newArrival"],
-            productVariants: maps[i]["productVariants"]
+            // productVariants: maps[i]["productVariants"]
           );
         },
       );
     } catch (e) {
       print('Fetch Error(getMenuById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -298,13 +298,13 @@ class MenuDB {
         (i) {
           return MenuModel(
             imageUrl: maps[i]['imageUrl'],
-            category: maps[i]['category'],
+            category: maps[i]['category'], productVariants: [],
           );
         },
       );
     } catch (e) {
       print('Fetch Error(getMenuById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -337,13 +337,13 @@ class MenuDB {
             brand: maps[i]["brand"],
             manufacturer: maps[i]["manufacturer"],
             newArrival: maps[i]["newArrival"],
-            productVariants: maps[i]["productVariants"]
+            // productVariants: maps[i]["productVariants"]
           );
         },
       );
     } catch (e) {
       print('Fetch Error(getMenuById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -376,13 +376,13 @@ class MenuDB {
               brand: maps[i]["brand"],
               manufacturer: maps[i]["manufacturer"],
               newArrival: maps[i]["newArrival"],
-              productVariants: maps[i]["productVariants"]
+              // productVariants: maps[i]["productVariants"]
           );
         },
       );
     } catch (e) {
       print('Fetch Error(getByNewArrival): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -413,13 +413,13 @@ class MenuDB {
             organization: maps[i]['organization'],
             publish: maps[i]['publish'],
             product: maps[i]["product"],
-            productVariants: maps[i]["productVariants"]
+            // productVariants: maps[i]["productVariants"]
           );
         },
       );
     } catch (e) {
       print('Fetch Error(getMenuById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -441,7 +441,7 @@ class MenuDB {
       );
     } catch (e) {
       print('Fetch Error(getAllMenu): $e');
-      return null;
+      return null!;
     }
   }
 

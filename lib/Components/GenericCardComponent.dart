@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class GenericCardComponent extends StatelessWidget {
-  final double borderRadius;
-  final Color backgroundColor;
-  final Widget child;
+  final double? borderRadius;
+  final Color? backgroundColor;
+  final Widget? child;
 
   const GenericCardComponent({
-    Key key,
+    Key? key,
     this.child,
     this.borderRadius,
     this.backgroundColor,
@@ -16,7 +16,7 @@ class GenericCardComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(borderRadius!),
           color: backgroundColor ?? Colors.white,
           boxShadow: const [
             BoxShadow(

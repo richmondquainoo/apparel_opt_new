@@ -14,8 +14,8 @@ import '../../Utils/paths.dart';
 import 'LoginScreen.dart';
 
 class PasswordResetScreen extends StatefulWidget {
-  final OTPModel otpModel;
-  const PasswordResetScreen({Key key, this.otpModel}) : super(key: key);
+  final OTPModel? otpModel;
+  const PasswordResetScreen({Key? key, this.otpModel}) : super(key: key);
 
   @override
   State<PasswordResetScreen> createState() =>
@@ -23,13 +23,13 @@ class PasswordResetScreen extends StatefulWidget {
 }
 
 class _PasswordResetScreenState extends State<PasswordResetScreen> {
-  final OTPModel otpModel;
+  final OTPModel? otpModel;
 
   var passwordController = TextEditingController();
   var confirmPasswordController = TextEditingController();
 
-  String password;
-  String confirmPassword;
+  String? password;
+  String? confirmPassword;
 
   _PasswordResetScreenState({this.otpModel});
 
@@ -233,7 +233,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                         bool canSendEmail = isValidEntries(context);
                         if (canSendEmail) {
                           OTPModel model = OTPModel(
-                              email: widget.otpModel.email,
+                              email: widget.otpModel!.email,
                               password: confirmPasswordController.text);
                           resetPassword(context: context, dataModel: model);
                         }
@@ -283,10 +283,10 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
     }
   }
 
-  void resetPassword({OTPModel dataModel, BuildContext context}) async {
+  void resetPassword({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Resetting Password...');
         },
@@ -294,13 +294,13 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
       // dataModel.pin = int.parse(globalPin);
       var jsonBody = jsonEncode(dataModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: CONFIRM_NEW_PASSWORD,
           body: jsonBody,
           auth: 'Bearer $ACCESS_TOKEN');
 
       // print("Verify By email: ${OTP_VERIFY_BY_EMAIL}");
-      print('reset-password body: ${response.body}');
+      print('reset-password body: ${response!.body}');
 
       if (response == null) {
         //error handling
@@ -320,7 +320,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
           // verification is successful
           print('Body: ${response.body}');
           OTPModel otpModel = new OTPModel(
-              email: widget.otpModel.email,
+              email: widget.otpModel!.email,
               password: confirmPasswordController.text.toString());
           Navigator.of(context, rootNavigator: true).pop();
 
@@ -356,7 +356,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 

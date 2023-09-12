@@ -5,14 +5,14 @@ import '../Constants/myColors.dart';
 import 'TopBarComponent.dart';
 
 class ClipPathComponent extends StatelessWidget {
-  final String label1;
-  final String label2;
-  final IconButton iconButton;
-  final TopBarComponent topBarComponent;
+  final String? label1;
+  late final String label2;
+  final IconButton? iconButton;
+  final TopBarComponent? topBarComponent;
 
   ClipPathComponent(
       {this.label1,
-      @required this.label2,
+       required this.label2,
       this.iconButton,
       this.topBarComponent});
 
@@ -39,7 +39,7 @@ class ClipPathComponent extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    label1 != null ? label1 : 'Delivering to',
+                    label1! != null ? label1! : 'Delivering to',
                     style: GoogleFonts.roboto(
                         fontSize: 17,
                         fontWeight: FontWeight.w300,
@@ -76,7 +76,9 @@ class ClipPathComponent extends StatelessWidget {
                                   const Icon(
                                     Icons.edit,
                                     color: Colors.white,
-                                  ),
+                                  ), onPressed: () {
+
+                            },
                             ),
                           ),
                         ],

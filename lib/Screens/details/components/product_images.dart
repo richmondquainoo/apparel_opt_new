@@ -5,11 +5,11 @@ import '../../../Model/size_config.dart';
 
 class ProductImages extends StatefulWidget {
   const ProductImages({
-    Key key,
+    Key? key,
     @required this.product,
   }) : super(key: key);
 
-  final ProductNew product;
+  final ProductNew? product;
 
   @override
   _ProductImagesState createState() => _ProductImagesState();
@@ -26,8 +26,8 @@ class _ProductImagesState extends State<ProductImages> {
           child: AspectRatio(
             aspectRatio: 1,
             child: Hero(
-              tag: widget.product.id.toString(),
-              child: Image.asset(widget.product.images[selectedImage]),
+              tag: widget.product!.id.toString(),
+              child: Image.asset(widget.product!.images![selectedImage]),
             ),
           ),
         ),
@@ -35,7 +35,7 @@ class _ProductImagesState extends State<ProductImages> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ...List.generate(widget.product.images.length,
+            ...List.generate(widget.product!.images!.length,
                 (index) => buildSmallProductPreview(index)),
           ],
         )
@@ -62,7 +62,8 @@ class _ProductImagesState extends State<ProductImages> {
           border: Border.all(
               color: Colors.teal.withOpacity(selectedImage == index ? 1 : 0)),
         ),
-        child: Image.asset(widget.product.images[index]),
+        duration: null!,
+        child: Image.asset(widget.product!.images![index]),
       ),
     );
   }

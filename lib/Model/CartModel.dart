@@ -1,21 +1,21 @@
 class CartModel {
-  int id;
-  String type;
-  double price;
-  double total;
-  String size;
-  String imageUrl;
-  String tagName;
-  String description;
-  double ratingFrequency;
-  double cumulativeRating;
-  String branch;
-  String category;
-  String menuItem;
-  int likes;
-  String organization;
-  String kitchen;
-  int quantity;
+  int? id;
+  String? type;
+  double? price;
+  double? total;
+  String? size;
+  String? imageUrl;
+  String? tagName;
+  String? description;
+  double? ratingFrequency;
+  double? cumulativeRating;
+  String? branch;
+  String? category;
+  String? menuItem;
+  int? likes;
+  String? organization;
+  String? kitchen;
+  int? quantity;
 
   CartModel({
     this.id,

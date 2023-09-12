@@ -13,11 +13,11 @@ class CheckoutModel {
     this.checkoutDirectURL,
   });
 
-  String checkoutURL;
-  String checkoutID;
-  String clientReference;
-  String message;
-  String checkoutDirectURL;
+  String? checkoutURL;
+  String? checkoutID;
+  String? clientReference;
+  String? message;
+  String? checkoutDirectURL;
 
   // factory CheckoutModel.fromJson(Map<String, dynamic> json) => CheckoutModel(
   //       checkoutUrl: json["checkoutUrl"].toString(),

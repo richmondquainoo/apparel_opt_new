@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 class RoundedIconBtn extends StatelessWidget {
   const RoundedIconBtn({
-    Key key,
+    Key? key,
     @required this.icon,
     @required this.press,
     this.showShadow = false,
   }) : super(key: key);
 
-  final IconData icon;
-  final GestureTapCancelCallback press;
-  final bool showShadow;
+  final IconData? icon;
+  final GestureTapCancelCallback? press;
+  final bool? showShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class RoundedIconBtn extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         boxShadow: [
-          if (showShadow)
+          if (showShadow!)
             BoxShadow(
               offset: Offset(0, 6),
               blurRadius: 10,

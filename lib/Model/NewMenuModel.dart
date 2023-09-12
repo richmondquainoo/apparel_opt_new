@@ -36,26 +36,26 @@ class NewMenuModel {
     this.productVariants,
   });
 
-  dynamic id;
-  String organization;
-  String product;
-  String category;
-  String type;
-  String tagName;
-  String imageUrl;
-  dynamic price;
-  String size;
-  dynamic createdBy;
-  DateTime createOn;
-  DateTime lastUpdated;
-  dynamic lastUpdatedBy;
-  dynamic likes;
-  dynamic cumulativeRating;
-  dynamic ratingFrequency;
-  String branch;
-  String description;
-  bool publish;
-  List<ProductVariant> productVariants;
+  dynamic? id;
+  String? organization;
+  String? product;
+  String? category;
+  String? type;
+  String? tagName;
+  String? imageUrl;
+  dynamic? price;
+  String? size;
+  dynamic? createdBy;
+  DateTime? createOn;
+  DateTime? lastUpdated;
+  dynamic? lastUpdatedBy;
+  dynamic? likes;
+  dynamic? cumulativeRating;
+  dynamic? ratingFrequency;
+  String ?branch;
+  String? description;
+  bool? publish;
+  List<ProductVariant>? productVariants;
 
   factory NewMenuModel.fromJson(Map<String, dynamic> json) => NewMenuModel(
     id: json["id"],
@@ -91,8 +91,8 @@ class NewMenuModel {
     "price": price,
     "size": size,
     "createdBy": createdBy,
-    "createOn": createOn.toIso8601String(),
-    "lastUpdated": lastUpdated.toIso8601String(),
+    "createOn": createOn?.toIso8601String(),
+    "lastUpdated": lastUpdated?.toIso8601String(),
     "lastUpdatedBy": lastUpdatedBy,
     "likes": likes,
     "cumulativeRating": cumulativeRating,
@@ -100,7 +100,7 @@ class NewMenuModel {
     "branch": branch,
     "description": description,
     "publish": publish,
-    "productVariants": List<ProductVariantModel>.from(productVariants.map((x) => x.toJson())),
+    "productVariants": List<ProductVariantModel>.from(productVariants!.map((x) => x.toJson())),
   };
 
   Map<String, dynamic> toMap() {
@@ -136,13 +136,13 @@ class ProductVariant {
     this.sizes,
   });
 
-  dynamic id;
-  dynamic productId;
-  String color;
-  String colorCode;
-  String imageUrl;
-  dynamic quantity;
-  String sizes;
+  dynamic? id;
+  dynamic? productId;
+  String? color;
+  String? colorCode;
+  String? imageUrl;
+  dynamic? quantity;
+  String? sizes;
 
   factory ProductVariant.fromJson(Map<String, dynamic> json) => ProductVariant(
     id: json["id"],

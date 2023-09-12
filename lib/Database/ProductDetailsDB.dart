@@ -70,7 +70,7 @@ class ProductDetailsDB{
       );
     } catch (e) {
       print('Fetch Error(getProductDetailsById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -89,7 +89,7 @@ class ProductDetailsDB{
       );
     } catch (e) {
       print('Fetch Error(getProductDetailHeaders): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -133,7 +133,7 @@ class ProductDetailsDB{
       );
     } catch (e) {
       print('Fetch Error(getProductDetailsByHeader): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -161,7 +161,7 @@ class ProductDetailsDB{
       );
     } catch (e) {
       print('Fetch Error(getAllProductDetails): $e');
-      return null;
+      return null!;
     }
   }
 

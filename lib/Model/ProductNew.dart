@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ProductNew {
-  final int id;
-  final String brand;
-  final String title, description;
-  final List<String> images;
-  final List<Color> colors;
-  final double rating, price;
-  final bool isFavourite, isPopular;
+  final int? id;
+  final String? brand;
+  final String? title, description;
+  final List<String>? images;
+  final List<Color>? colors;
+  final double? rating, price;
+  final bool? isFavourite, isPopular;
 
   ProductNew({
     this.brand,

@@ -21,13 +21,13 @@ class ProductVariantModel {
     this.sizes,
   });
 
-  int id;
-  int productId;
-  String color;
-  String colorCode;
-  String imageUrl;
-  int quantity;
-  String sizes;
+  int? id;
+  int? productId;
+  String? color;
+  String? colorCode;
+  String? imageUrl;
+  int? quantity;
+  String? sizes;
 
   factory ProductVariantModel.fromJson(Map<String, dynamic> json) => ProductVariantModel(
     id: json["id"],

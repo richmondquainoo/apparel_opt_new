@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import '../Constants/Colors.dart';
 
 class CategoryCardComponent extends StatelessWidget {
-  final String backgroundImage;
-  final String category;
-  final String icon;
-  final Function onTapped;
+  final String? backgroundImage;
+  final String? category;
+  final String? icon;
+  final Function? onTapped;
 
   const CategoryCardComponent(
       {this.backgroundImage, this.category, this.icon, this.onTapped});
@@ -45,7 +45,7 @@ class CategoryCardComponent extends StatelessWidget {
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.37), BlendMode.darken),
                       image: AssetImage(
-                        backgroundImage,
+                        backgroundImage!,
                       ),
                       fit: BoxFit.fitWidth,
                     ),
@@ -56,7 +56,7 @@ class CategoryCardComponent extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 7.0, bottom: 7),
                 child: Container(
                   child: Text(
-                    category,
+                    category!,
                     style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,

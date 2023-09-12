@@ -8,9 +8,9 @@ import '../Constants/myColors.dart';
 import 'WidgetFunctions.dart';
 
 class ChoosePackageCardComponent extends StatelessWidget {
-  final String packageLabel;
-  final String packageDescription;
-  final String amount;
+  final String? packageLabel;
+  final String? packageDescription;
+  final String? amount;
   const ChoosePackageCardComponent({
     this.packageLabel,
     this.packageDescription,
@@ -68,7 +68,7 @@ class ChoosePackageCardComponent extends StatelessWidget {
                     children: [
                       Container(
                         child: Text(
-                          packageLabel,
+                          packageLabel!,
                           style: GoogleFonts.raleway(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -80,7 +80,7 @@ class ChoosePackageCardComponent extends StatelessWidget {
                       addVertical(7.5),
                       Container(
                         child: Text(
-                          packageDescription,
+                          packageDescription!,
                           style: GoogleFonts.raleway(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,

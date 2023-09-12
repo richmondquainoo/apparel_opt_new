@@ -52,7 +52,7 @@ class BranchDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getAllBranch): $e');
-      return null;
+      return null!;
     }
   }
 

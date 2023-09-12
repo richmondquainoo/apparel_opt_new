@@ -15,12 +15,12 @@ class LikeModel {
     this.likes,
   });
 
-  String email;
-  int id;
-  int menuId;
-  String organization;
-  String branch;
-  int likes;
+  String? email;
+  int? id;
+  int? menuId;
+  String? organization;
+  String? branch;
+  int? likes;
 
   factory LikeModel.fromJson(Map<String, dynamic> json) => LikeModel(
         email: json["email"],

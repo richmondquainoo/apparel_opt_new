@@ -1,7 +1,7 @@
 class PromoModel {
-  int id;
-  String category;
-  String imageUrl;
+  int? id;
+  String? category;
+  String? imageUrl;
 
   PromoModel({this.id, this.category, this.imageUrl});
 

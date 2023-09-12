@@ -33,27 +33,27 @@ class OrderModel {
     this.products,
   });
 
-  String orderNo;
-  String orderBy;
-  String orderPhone;
-  String orderAddress;
-  String orderEmail;
-  String orderDetail;
-  String orderAdditionalInfo;
-  int orderTotalAmount;
-  String orderBranch;
-  int paymentAmount;
-  String paymentMode;
-  String channel;
-  String deliveryOption;
-  double orderLat;
-  double orderLon;
-  int orderItemCost;
-  String orderTakenBy;
-  String organizationName;
-  String organizationCode;
-  int orderQuantity;
-  List<Product> products;
+  String? orderNo;
+  String? orderBy;
+  String? orderPhone;
+  String? orderAddress;
+  String? orderEmail;
+  String? orderDetail;
+  String? orderAdditionalInfo;
+  int? orderTotalAmount;
+  String? orderBranch;
+  int? paymentAmount;
+  String? paymentMode;
+  String? channel;
+  String? deliveryOption;
+  double? orderLat;
+  double? orderLon;
+  int? orderItemCost;
+  String? orderTakenBy;
+  String? organizationName;
+  String? organizationCode;
+  int? orderQuantity;
+  List<Product>? products;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
     orderNo: json["orderNo"],
@@ -100,7 +100,7 @@ class OrderModel {
     "organizationName": organizationName,
     "organizationCode": organizationCode,
     "orderQuantity": orderQuantity,
-    "products": List<dynamic>.from(products.map((x) => x.toJson())),
+    "products": List<dynamic>.from(products!.map((x) => x.toJson())),
   };
 }
 
@@ -121,19 +121,19 @@ class Product {
     this.selected,
   });
 
-  int id;
-  int productId;
-  String color;
-  String colorCode;
-  String imageUrl;
-  int quantity;
-  String sizes;
-  int productVariantId;
-  String productName;
-  String productCategory;
-  int price;
-  int total;
-  bool selected;
+  int? id;
+  int? productId;
+  String? color;
+  String? colorCode;
+  String? imageUrl;
+  int? quantity;
+  String? sizes;
+  int? productVariantId;
+  String? productName;
+  String? productCategory;
+  int? price;
+  int? total;
+  bool? selected;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
     id: json["id"],

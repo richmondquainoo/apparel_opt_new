@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../Constants/Colors.dart';
 import '../../Constants/constantColors.dart';
@@ -38,9 +39,9 @@ import '../../Utils/Utility.dart';
 import '../../Utils/paths.dart';
 
 class PreLoadScreen extends StatefulWidget {
-  // final UserProfileModel userProfileModel;
+  final UserProfileModel? userProfileModel;
   const PreLoadScreen({
-    Key key,
+    Key? key, this.userProfileModel,
   }) : super(key: key);
 
   @override
@@ -48,34 +49,34 @@ class PreLoadScreen extends StatefulWidget {
 }
 
 class _PreLoadScreenState extends State<PreLoadScreen> {
-  Timer _timer;
-  double _progress;
+  Timer? _timer;
+  double? _progress;
 
   // final UserProfileModel userProfileModel;
-  UserProfileModel userModel = UserProfileModel();
-  CategoryDB categoryDB = CategoryDB();
-  PromoDB promoDB = PromoDB();
-  CategoryModel category = CategoryModel();
-  PromoModel promo = PromoModel();
-  UserDB userDB = UserDB();
-  MenuDB menuDB = MenuDB();
-  BranchDB branchDB = BranchDB();
-  LikesDB likesDB = LikesDB();
-  ConfigDB configDB = ConfigDB();
-  DeliveryCostDB deliveryCostDB = DeliveryCostDB();
-  ProductVariantDB productVariantDB = ProductVariantDB();
-  ProductSpecificationDB productSpecificationDB = ProductSpecificationDB();
-  ProductDetailsDB productDetailsDB = ProductDetailsDB();
+  UserProfileModel? userModel = UserProfileModel();
+  CategoryDB? categoryDB = CategoryDB();
+  PromoDB? promoDB = PromoDB();
+  CategoryModel? category = CategoryModel();
+  PromoModel? promo = PromoModel();
+  UserDB? userDB = UserDB();
+  MenuDB? menuDB = MenuDB();
+  BranchDB? branchDB = BranchDB();
+  LikesDB? likesDB = LikesDB();
+  ConfigDB? configDB = ConfigDB();
+  DeliveryCostDB? deliveryCostDB = DeliveryCostDB();
+  ProductVariantDB? productVariantDB = ProductVariantDB();
+  ProductSpecificationDB? productSpecificationDB = ProductSpecificationDB();
+  ProductDetailsDB? productDetailsDB = ProductDetailsDB();
 
-  List<CategoryModel> categoryList = [];
-  List<PromoModel> promoList = [];
-  List<MenuModel> popularList = [];
-  List<BranchModel> branchList = [];
-  List<ProductVariantModel> productVariantsList = [];
+  List<CategoryModel?> categoryList = [];
+  List<PromoModel?> promoList = [];
+  List<MenuModel?> popularList = [];
+  List<BranchModel?> branchList = [];
+  List<ProductVariantModel?> productVariantsList = [];
 
 
-  int id5 = 0;
-  String branch;
+  int? id5 = 0;
+  String? branch;
 
   @override
   void initState() {
@@ -93,15 +94,15 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
 
   void initDB() async {
     //Step 0: Initialize db objects
-    await branchDB.initialize();
-    await userDB.initialize();
-    await menuDB.initialize();
-    await likesDB.initialize();
-    await configDB.initialize();
-    await deliveryCostDB.initialize();
-    await productVariantDB.initialize();
-    await productSpecificationDB.initialize();
-    await productDetailsDB.initialize();
+    await branchDB!.initialize();
+    await userDB!.initialize();
+    await menuDB!.initialize();
+    await likesDB!.initialize();
+    await configDB!.initialize();
+    await deliveryCostDB!.initialize();
+    await productVariantDB!.initialize();
+    await productSpecificationDB!.initialize();
+    await productDetailsDB!.initialize();
 
     //Step 1: Fetch user from local db
     await loadUserFromLocalStorage();
@@ -116,30 +117,35 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
 
   Future<void> fetchAllMethods() async {
     try {
-      // _progress = 0;
-      // _timer?.cancel();
-      // _timer = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
-      //   EasyLoading.showProgress(_progress,
-      //       status: '${(_progress * 100).toStringAsFixed(0)}%');
-      //   _progress += 0.03;
-      //
-      //   if (_progress >= 1) {
-      //     _timer?.cancel();
-      //     EasyLoading.dismiss();
-      //   }
-      // });
+      _progress = 0;
+      _timer?.cancel();
+      _timer = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
+        EasyLoading.showProgress(_progress!,
+            status: '${(_progress !* 100).toStringAsFixed(0)}%');
+        _progress = _progress !+ 0.03;
 
+        if (_progress! >= 1) {
+          _timer?.cancel();
+          EasyLoading.dismiss();
+        }
+      });
+
+
+      Container(
+        height: 120,
+        child: Lottie.asset("assets/loading.json"),
+      );
       await fetchMenuData(context);
       // await fetchLikesData(context);
-      // await fetchConfigData(context);
-      // await fetchDeliveryCharges(context);
+      await fetchConfigData(context);
+      await fetchDeliveryCharges(context);
     } catch (e) {
       print("Sorry an error occurred when fetching all methods");
     }
   }
 
   Future<void> loadUserFromLocalStorage() async {
-    List<UserProfileModel> users = await userDB.getAllUsers();
+    List<UserProfileModel> users = await userDB!.getAllUsers();
     if (users.isNotEmpty) {
       setState(() {
         userModel = users.first;
@@ -154,126 +160,130 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            "assets/images/preloadPic.jpg",
-            fit: BoxFit.cover,
-            color: Colors.black.withOpacity(0.5),
-            colorBlendMode: BlendMode.darken,
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 50,
-                vertical: 220,
-              ),
-              decoration: BoxDecoration(
-                color: BLACK_COLOR.withOpacity(0.35),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+        ),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              "assets/images/preloadPic.jpg",
+              fit: BoxFit.cover,
+              color: Colors.black.withOpacity(0.5),
+              colorBlendMode: BlendMode.darken,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.25,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 50,
+                  vertical: 220,
+                ),
+                decoration: BoxDecoration(
+                  color: BLACK_COLOR.withOpacity(0.35),
+                ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 120,
-                  width: 120,
-                  child: Image.asset(
-                    "assets/images/appLogo.png",
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 120,
+                    width: 120,
+                    child: Image.asset(
+                      "assets/images/appLogo.png",
+                    ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: Center(
-                        child: Text(
-                          "Apparel",
-                          style: GoogleFonts.aBeeZee(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: PRIMARY_YELLOW,
-                            letterSpacing: 0.3,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: Center(
+                          child: Text(
+                            "Apparel",
+                            style: GoogleFonts.aBeeZee(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color: PRIMARY_YELLOW,
+                              letterSpacing: 0.3,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      child: Center(
-                        child: Text(
-                          "Options",
-                          style: GoogleFonts.raleway(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                            letterSpacing: 0.3,
+                      Container(
+                        child: Center(
+                          child: Text(
+                            "Options",
+                            style: GoogleFonts.raleway(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              letterSpacing: 0.3,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
-          ),
-          // TextButton(
-          //   child: Text('showProgress'),
-          //   onPressed: () {
-          //     _progress = 0;
-          //     _timer?.cancel();
-          //     _timer = Timer.periodic(const Duration(milliseconds: 100),
-          //         (Timer timer) {
-          //       EasyLoading.showProgress(_progress,
-          //           status: '${(_progress * 100).toStringAsFixed(0)}%');
-          //       _progress += 0.03;
-          //
-          //       if (_progress >= 1) {
-          //         _timer?.cancel();
-          //         EasyLoading.dismiss();
-          //       }
-          //     });
-          //   },
-          // ),
-        ],
+            // TextButton(
+            //   child: Text('showProgress'),
+            //   onPressed: () {
+            //     _progress = 0;
+            //     _timer?.cancel();
+            //     _timer = Timer.periodic(const Duration(milliseconds: 100),
+            //         (Timer timer) {
+            //       EasyLoading.showProgress(_progress,
+            //           status: '${(_progress * 100).toStringAsFixed(0)}%');
+            //       _progress += 0.03;
+            //
+            //       if (_progress >= 1) {
+            //         _timer?.cancel();
+            //         EasyLoading.dismiss();
+            //       }
+            //     });
+            //   },
+            // ),
+          ],
+        ),
       ),
     );
   }
 
   Future<void> saveBranch() async {
-    BranchModel model = BranchModel(branch: branch);
-    await branchDB.deleteAll();
-    await branchDB.insertObject(model);
+    BranchModel model = BranchModel(branch: branch!);
+    await branchDB!.deleteAll();
+    await branchDB!.insertObject(model);
   }
 
-  void fetchMenuData(BuildContext context) async {
+  Future<void> fetchMenuData(BuildContext context) async {
     try {
-      EasyLoading.show(status: 'loading...');
+      // EasyLoading.show(status: 'loading...');
+
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
+      Response? response = await networkUtility.getDataWithAuth(
           url: '${FETCH_LIST_OF_POPULAR_MENUS_BY_BRANCH}',
           auth: ACCESS_TOKEN_FOR_REQUEST);
 
       // debugPrint('Menu request url: ${FETCH_LIST_OF_POPULAR_MENUS_BY_BRANCH}/${branch}');
 
-      if (response.statusCode == 200 && response != null) {
+      if (response!.statusCode == 200) {
         //clear db
-        await menuDB.deleteAll();
-        await productVariantDB.deleteAll();
+        await menuDB!.deleteAll();
+        await productVariantDB!.deleteAll();
         var data = jsonDecode(response.body);
         var menuData = data['data'] as List;
         // var productVariantsData = data['data']['productVariants'].toString();
@@ -314,11 +324,13 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
               manufacturer: menuData[i]['manufacturer'].toString(),
               brand: menuData[i]['brand'].toString(),
               quantity: menuData[i]['quantity'].toString(),
+              productVariants: [],
             );
 
             // save to local db
-            await menuDB.insertObject(menuModel);
+            await menuDB!.insertObject(menuModel);
             print("Item insertion into MenuDB");
+            print("VARIANTTTTTT: ${menuData[i]['productVariants']}");
 
             var productVariantList = menuData[i]['productVariants'] as List;
             for (int j = 0; j < productVariantList.length; j++) {
@@ -333,7 +345,7 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
               );
               print("productVariantModel: ${productVariantModel}");
               // save to local db
-              await productVariantDB.insertObject(productVariantModel);
+              await productVariantDB!.insertObject(productVariantModel);
               print("Item insertion into productVariantDB");
 
             }
@@ -351,7 +363,7 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
               );
               print("productSpecificationModel: ${productSpecificationModel}");
               // save to local db
-              await productSpecificationDB.insertObject(productSpecificationModel);
+              await productSpecificationDB!.insertObject(productSpecificationModel);
               print("Item insertion into productSpecificationDB");
 
             }
@@ -369,7 +381,7 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
               );
               print("ProductDetailsModel: ${productDetailsModel}");
               // save to local db
-              await productDetailsDB.insertObject(productDetailsModel);
+              await productDetailsDB!.insertObject(productDetailsModel);
               print("Item insertion into productDetailsDB");
 
             }
@@ -380,29 +392,30 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
         // EasyLoading.dismiss();
         EasyLoading.show(status: 'Processing...');
 
-        List<MenuModel> list = await menuDB.getAllMenu();
-        // Navigator.of(context).pop();
-
-        if (list.isNotEmpty) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => Index(),
-          //   ),
-          // );
-
-          // fetchLikesData(context);
-          fetchConfigData(context);
-        } else {
-          UtilityService().showMessage(
-            message: 'Sorry, no menu info found for the selected branch',
-            context: context,
-            icon: const Icon(
-              Icons.info,
-              color: Colors.blue,
-            ),
-          );
-        }
+        // List<MenuModel> list = await menuDB!.getAllMenu();
+        // print("****&&&&&&&&&&&*********");
+        // // Navigator.of(context).pop();
+        //
+        // if (list.isNotEmpty) {
+        //   // Navigator.push(
+        //   //   context,
+        //   //   MaterialPageRoute(
+        //   //     builder: (context) => Index(),
+        //   //   ),
+        //   // );
+        //
+        //   // fetchLikesData(context);
+        //   fetchConfigData(context);
+        // } else {
+        //   UtilityService().showMessage(
+        //     message: 'Sorry, no menu info found for the selected branch',
+        //     context: context,
+        //     icon: const Icon(
+        //       Icons.info,
+        //       color: Colors.blue,
+        //     ),
+        //   );
+        // }
       } else {
         UtilityService().showMessage(
           message: 'Sorry, an error occurred while fetching app data',
@@ -416,7 +429,7 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
     } catch (e) {
       debugPrint('fetch bill data error: $e');
       UtilityService().showMessage(
-        message: 'Sorry, an error occurred while fetching app data',
+        message: 'An error occurred while fetching app data',
         context: context,
         icon: const Icon(
           Icons.cancel,
@@ -427,20 +440,20 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
     }
   }
 
-  void fetchLikesData(BuildContext context) async {
+  Future<void> fetchLikesData(BuildContext context) async {
     try {
       // EasyLoading.showProgress(0.25, status: 'loading...');
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
-          url: '${FETCH_LIKES_DATA}/HQ/email/${userModel.email}',
+      Response? response = await networkUtility.getDataWithAuth(
+          url: '${FETCH_LIKES_DATA}/HQ/email/${userModel!.email}',
           auth: ACCESS_TOKEN_FOR_REQUEST);
 
-      if (response.statusCode == 200 && response != null) {
+      if (response!.statusCode == 200) {
         var data = jsonDecode(response.body);
         var list = data['data'] as List;
         if (list.isNotEmpty) {
           //clear db
-          await likesDB.deleteAll();
+          await likesDB!.deleteAll();
           for (int i = 0; i < list.length; i++) {
             LikeModel likeData = LikeModel(
               menuId: list[i]['menuId'],
@@ -449,11 +462,11 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
               organization: list[i]['organization'],
               email: list[i]['email'],
             );
-            await likesDB.insertObject(likeData);
+            await likesDB!.insertObject(likeData);
           }
         }
       }
-      Navigator.of(context, rootNavigator: true).pop();
+      // Navigator.of(context, rootNavigator: true).pop();
 
       EasyLoading.dismiss();
       Navigator.push(
@@ -464,33 +477,33 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
       );
     } catch (e) {
       debugPrint('fetch likes data error: $e');
-      Navigator.of(context, rootNavigator: true).pop();
+      // Navigator.of(context, rootNavigator: true).pop();
       EasyLoading.dismiss();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Index(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => Index(),
+      //   ),
+      // );
     }
   }
 
-  void fetchConfigData(BuildContext context) async {
+  Future<void>  fetchConfigData(BuildContext context) async {
     try {
       EasyLoading.showProgress(0.50, status: 'Setting Up...');
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
+      Response? response = await networkUtility.getDataWithAuth(
           url: '${FETCH_CONFIGURATIONS_BY_BRANCH}/HQ',
           auth: ACCESS_TOKEN_FOR_REQUEST);
 
-      print('config data: ${response.body}');
+      print('config data: ${response!.body}');
 
-      if (response.statusCode == 200 && response != null) {
+      if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         var list = data as List;
         if (list.isNotEmpty) {
           //clear db
-          await configDB.deleteAll();
+          await configDB!.deleteAll();
           for (int i = 0; i < list.length; i++) {
             Config config = Config(
               // id: list[i]['id'],
@@ -501,7 +514,8 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
               latitude: list[i]['latitude'],
               longitude: list[i]['longitude'],
             );
-            await configDB.insertObject(config);
+            await configDB!.insertObject(config);
+            print("THE CONFIGS INFO: ${config}");
           }
         }
       }
@@ -513,23 +527,23 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
     }
   }
 
-  void fetchDeliveryCharges(BuildContext context) async {
+  Future<void>  fetchDeliveryCharges(BuildContext context) async {
     try {
       EasyLoading.showProgress(0.50, status: 'Almost Done...');
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
+      Response? response = await networkUtility.getDataWithAuth(
           url: '${FETCH_DELIVERY_COST_BY_BRANCH}/HQ',
           auth: ACCESS_TOKEN_FOR_REQUEST);
 
-      print('delivery charge data: ${response.body}');
+      print('delivery charge data: ${response!.body}');
 
-      if (response.statusCode == 200 && response != null) {
+      if (response.statusCode == 200) {
         EasyLoading.showSuccess('Success!');
         var data = jsonDecode(response.body);
         var list = data as List;
         if (list.isNotEmpty) {
           //clear db
-          await deliveryCostDB.deleteAll();
+          await deliveryCostDB!.deleteAll();
           for (int i = 0; i < list.length; i++) {
             DeliveryCost deliveryCost = DeliveryCost(
               id: list[i]['id'],
@@ -539,7 +553,7 @@ class _PreLoadScreenState extends State<PreLoadScreen> {
               maxDistance: list[i]['maxDistance'],
               cost: list[i]['cost'],
             );
-            await deliveryCostDB.insertObject(deliveryCost);
+            await deliveryCostDB!.insertObject(deliveryCost);
           }
         }
       }

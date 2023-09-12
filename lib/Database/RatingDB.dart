@@ -74,7 +74,7 @@ class RatingDB {
       );
     } catch (e) {
       print('Fetch Error(getAllRatings): $e');
-      return null;
+      return null!;
     }
   }
 

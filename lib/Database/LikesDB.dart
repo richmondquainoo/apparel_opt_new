@@ -80,7 +80,7 @@ class LikesDB {
       );
     } catch (e) {
       print('Fetch Error(getAllLikes): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -106,7 +106,7 @@ class LikesDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getLikesById): $e');
-      return null;
+      return null!;
     }
   }
 

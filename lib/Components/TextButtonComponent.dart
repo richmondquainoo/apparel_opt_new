@@ -4,24 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TextButtonComponent extends StatelessWidget {
-  final String label;
-  final Function onTap;
-  final Color labelColor;
-  final Color textColor;
-  final double fontSize;
-  final double borderRadius;
-  final BoxShadow boxShadow;
-  final double offSetX;
-  final double offSetY;
-  final double spreadRadius;
-  final double blurRadius;
-  final Color shadowColor;
-  final double buttonHeight;
-  final FontWeight fontWeight;
+  final String? label;
+  final Function() onTap;
+  final Color? labelColor;
+  final Color? textColor;
+  final double? fontSize;
+  final double? borderRadius;
+  final BoxShadow? boxShadow;
+  final double? offSetX;
+  final double? offSetY;
+  final double? spreadRadius;
+  final double? blurRadius;
+  final Color? shadowColor;
+  final double? buttonHeight;
+  final FontWeight? fontWeight;
 
   const TextButtonComponent(
       {@required this.label,
-      @required this.onTap,
+      required this.onTap,
       this.labelColor,
       this.fontSize,
       this.borderRadius,
@@ -38,7 +38,7 @@ class TextButtonComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap:onTap,
       child: Row(
         children: [
           Expanded(
@@ -54,7 +54,7 @@ class TextButtonComponent extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     offset:
-                        Offset(offSetX ?? 0.2, offSetY != null ? offSetX : 0.2),
+                        Offset(offSetX ?? 0.2, offSetY != null ? offSetX! : 0.2),
                     blurRadius: blurRadius ?? 0.2,
                     spreadRadius: spreadRadius ?? 0.2,
                     color: shadowColor ?? Colors.black12,
@@ -62,7 +62,7 @@ class TextButtonComponent extends StatelessWidget {
                 ],
               ),
               child: Text(
-                label,
+                label!,
                 style: GoogleFonts.lato(
                   fontSize: fontSize ?? 21,
                   fontWeight: fontWeight ?? FontWeight.w500,

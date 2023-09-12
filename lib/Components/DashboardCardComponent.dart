@@ -5,16 +5,16 @@ import '../Constants/Colors.dart';
 import 'WidgetFunctions.dart';
 
 class DashboardCardComponent extends StatelessWidget {
-  final String dashboardLabel;
-  final String dashboardDescription;
-  final String subLabel;
-  final String subDescription;
-  final String dashboardIcon;
-  final Color firstGradientColor;
-  final Color secondGradientColor;
+  final String? dashboardLabel;
+  final String? dashboardDescription;
+  final String? subLabel;
+  final String? subDescription;
+  final String? dashboardIcon;
+  final Color? firstGradientColor;
+  final Color? secondGradientColor;
 
   const DashboardCardComponent(
-      {Key key,
+      {Key? key,
       this.dashboardLabel,
       this.dashboardDescription,
       this.subLabel,
@@ -44,8 +44,8 @@ class DashboardCardComponent extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    firstGradientColor,
-                    secondGradientColor,
+                    firstGradientColor!,
+                    secondGradientColor!,
                   ],
                 ),
               ),
@@ -65,7 +65,7 @@ class DashboardCardComponent extends StatelessWidget {
                         child: SizedBox(
                           height: 35,
                           width: 40,
-                          child: Image.asset(dashboardIcon),
+                          child: Image.asset(dashboardIcon!),
                         ),
                       ),
                     ),
@@ -80,7 +80,7 @@ class DashboardCardComponent extends StatelessWidget {
                     ),
                     addVerticalSpace(5),
                     Text(
-                      dashboardLabel,
+                      dashboardLabel!,
                       style: GoogleFonts.raleway(
                         color: Colors.white,
                         fontSize: 15,
@@ -97,7 +97,7 @@ class DashboardCardComponent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    subDescription,
+                    subDescription!,
                     style: GoogleFonts.raleway(
                       color: Colors.black54,
                       fontSize: 13,
@@ -107,7 +107,7 @@ class DashboardCardComponent extends StatelessWidget {
                   addVerticalSpace(1),
                   Center(
                     child: Text(
-                      subLabel,
+                      subLabel!,
                       style: GoogleFonts.raleway(
                         color: APPBAR_GREEN,
                         fontSize: 17,

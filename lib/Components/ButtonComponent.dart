@@ -11,7 +11,9 @@ ElevatedButton ButtonComponent(
   Function onPressed,
 ) {
   return ElevatedButton(
-    onPressed: onPressed,
+    onPressed: (){
+      onPressed;
+    },
     style: ElevatedButton.styleFrom(
       primary: APPBAR_GREEN,
     ),

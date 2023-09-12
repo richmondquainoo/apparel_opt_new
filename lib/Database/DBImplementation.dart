@@ -4,7 +4,7 @@ import '../Model/UserProfileModel.dart';
 import 'UserDB.dart';
 
 class DBImplementation {
-  final BuildContext context;
+  final BuildContext? context;
   DBImplementation({this.context});
 
   UserDB userDB = UserDB();
@@ -28,7 +28,7 @@ class DBImplementation {
     }
   }
 
-  Future<UserProfileModel> authenticateAgainstLocalDB(
+  Future<Future<UserProfileModel?>?> authenticateAgainstLocalDB(
       String email, String password) async {
     try {
       await initializeDB();
@@ -48,9 +48,9 @@ class DBImplementation {
       }
     } catch (e) {
       print('getUser error: $e');
-      return null;
+      return null!;
     }
-    return null;
+    return null!;
   }
 
   Future<void> deleteAll() async {

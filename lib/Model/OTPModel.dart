@@ -1,10 +1,10 @@
 class OTPModel {
-  int id;
-  String name;
-  String email;
-  String phone;
-  String password;
-  int pin;
+  int? id;
+  String? name;
+  String? email;
+  String? phone;
+  String? password;
+  int? pin;
 
   OTPModel({
     this.id,

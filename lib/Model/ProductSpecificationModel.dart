@@ -14,12 +14,12 @@ class ProductSpecificationModel {
     this.productId,
   });
 
-  int id;
-  String organization;
-  String specification;
-  String value;
-  String createdBy;
-  int productId;
+  int? id;
+  String? organization;
+  String? specification;
+  String? value;
+  String? createdBy;
+  int? productId;
 
   factory ProductSpecificationModel.fromJson(Map<String, dynamic> json) => ProductSpecificationModel(
     id: json["id"],

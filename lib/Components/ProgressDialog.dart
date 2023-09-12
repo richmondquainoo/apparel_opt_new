@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 class ProgressDialog extends StatelessWidget {
-  final String displayMessage;
+  final String? displayMessage;
 
   ProgressDialog({@required this.displayMessage});
 
@@ -26,7 +26,7 @@ class ProgressDialog extends StatelessWidget {
             ),
             Container(
               child: Text(
-                displayMessage,
+                displayMessage!,
                 style: GoogleFonts.lato(
                   color: Colors.black,
                   fontSize: 15,

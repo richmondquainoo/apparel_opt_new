@@ -17,7 +17,7 @@ import 'LoginScreen.dart';
 import 'OtpVerify.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key key}) : super(key: key);
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -32,11 +32,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var passwordConfirmController = TextEditingController();
   var phoneController = TextEditingController();
 
-  String username;
-  String email;
-  String password;
-  String phone;
-  String passwordConfirm;
+  String? username;
+  String? email;
+  String? password;
+  String? phone;
+  String? passwordConfirm;
 
   bool checkBoxValue = false;
   @override
@@ -331,9 +331,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Checkbox(
                           // checkColor:Colors.blueAccent,
                           value: checkBoxValue,
-                          onChanged: (bool value) {
+                          onChanged: (bool? value) {
                             setState(() {
-                              checkBoxValue = value;
+                              checkBoxValue = value!;
                             });
                           },
                           activeColor: primaryColor,
@@ -379,10 +379,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           bool canProceed = isValidEntries(context);
                           if (canProceed) {
                             OTPModel model = OTPModel(
-                              name: username.trim(),
-                              email: email.trim(),
+                              name: username!.trim(),
+                              email: email!.trim(),
                               // pin: pin,
-                              phone: phone.trim(),
+                              phone: phone!.trim(),
                             );
                             new UtilityService().confirmationBox(
                                 title: 'Confirmation',
@@ -393,7 +393,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 noButtonColor: kCardBackGround,
                                 // color: Colors.blueAccent,
                                 onYes: () {
-                                  Navigator.pop(context);
+                                  print("****************");
+                                  // Navigator.pop(context);
                                   checkForEmail(
                                       context: context, dataModel: model);
                                 },
@@ -545,20 +546,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void checkForEmail({OTPModel dataModel, BuildContext context}) async {
+  void checkForEmail({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Please wait...');
         },
       );
-      String url = '$GET_CUSTOMER_BY_EMAIL/${dataModel.email}';
+      String url = '$GET_CUSTOMER_BY_EMAIL/${dataModel!.email}';
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
+      Response? response = await networkUtility.getDataWithAuth(
           url: url, auth: 'Bearer $ACCESS_TOKEN');
 
-      int status = response.statusCode;
+      int status = response!.statusCode;
       Navigator.of(context, rootNavigator: true).pop();
       if (status == 404) {
         createOTP(context: context, dataModel: dataModel);
@@ -582,24 +583,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 
-  void createOTP({OTPModel dataModel, BuildContext context}) async {
+  void createOTP({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Please wait...');
         },
       );
       var jsonBody = jsonEncode(dataModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: OTP_URL, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
-      print('Response: ${response.body}');
+      print('Response Code: ${response!.statusCode}');
 
       if (response == null) {
         //error handling
@@ -662,7 +663,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 }

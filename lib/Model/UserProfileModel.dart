@@ -6,11 +6,11 @@ String userProfileModelToJson(UserProfileModel data) =>
     json.encode(data.toJson());
 
 class UserProfileModel {
-  int id;
-  String name;
-  String email;
-  String phone;
-  String password;
+  int? id;
+  String? name;
+  String? email;
+  String? phone;
+  String? password;
 
   UserProfileModel({
     this.id,

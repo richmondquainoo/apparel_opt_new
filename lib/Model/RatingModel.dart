@@ -1,7 +1,7 @@
 class RatingModel {
-  int id;
-  String email;
-  String cumulativeRating;
+  int? id;
+  String? email;
+  String? cumulativeRating;
 
   RatingModel({this.id, this.email, this.cumulativeRating});
 

@@ -17,7 +17,7 @@ import '../../animation/FadeAnimation.dart';
 import '../../index.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key key}) : super(key: key);
+  const EditProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -28,9 +28,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   var phoneController = TextEditingController();
   // var addressController = TextEditingController();
 
-  String profileName;
-  String phone;
-  String address;
+  String? profileName;
+  String? phone;
+  String? address;
   UserDB userDB = UserDB();
   UserProfileModel userProfileModel = UserProfileModel();
 
@@ -53,13 +53,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     List<UserProfileModel> list = await userDB.getAllUsers();
     if (list.isNotEmpty) {
       Provider.of<AppData>(context, listen: false).updateUserData(list.first);
-      UserProfileModel user =
+      UserProfileModel? user =
           Provider.of<AppData>(context, listen: false).userData;
       if (user != null) {
         setState(() {
           userProfileModel = user;
-          profileNameController.text = userProfileModel.name;
-          phoneController.text = userProfileModel.phone;
+          profileNameController.text = userProfileModel.name!;
+          phoneController.text = userProfileModel.phone!;
         });
       }
     }
@@ -70,126 +70,124 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       persistentFooterButtons: [
-        FadeAnimation(
-            0,
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: MaterialButton(
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Center(
-                            child: Text(
-                              "Confirmation",
-                              style: GoogleFonts.raleway(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                                letterSpacing: 0.3,
-                              ),
-                            ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: MaterialButton(
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Center(
+                        child: Text(
+                          "Confirmation",
+                          style: GoogleFonts.raleway(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                            letterSpacing: 0.3,
                           ),
-                          content: Text(
-                            "Are you sure you want to edit your profile?",
-                            style: GoogleFonts.raleway(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                              letterSpacing: 0.3,
-                            ),
-                          ),
-                          actions: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: FlatButton(
-                                height: 34,
-                                color: Colors.teal.shade400,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  if (profileNameController.text.isEmpty) {
-                                    new UtilityService().showMessage(
-                                      context: context,
-                                      message: 'Please enter your name',
-                                      icon: const Icon(
-                                        Icons.error_outline,
-                                        color: Colors.red,
-                                      ),
-                                    );
-                                  } else if (phoneController.text.length !=
-                                      10) {
-                                    new UtilityService().showMessage(
-                                      context: context,
-                                      message:
-                                          'Please enter valid phone number',
-                                      icon: const Icon(
-                                        Icons.error_outline,
-                                        color: Colors.red,
-                                      ),
-                                    );
-                                  } else {
-                                    UserProfileModel user = UserProfileModel(
-                                      name: profileNameController.text,
-                                      email: userProfileModel.email,
-                                      phone: phoneController.text,
-                                    );
-
-                                    editProfile(user);
-                                  }
-                                },
-                                child: Text(
-                                  "Yes",
-                                  style: GoogleFonts.raleway(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
+                        ),
+                      ),
+                      content: Text(
+                        "Are you sure you want to edit your profile?",
+                        style: GoogleFonts.raleway(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      actions: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              if (profileNameController.text.isEmpty) {
+                                new UtilityService().showMessage(
+                                  context: context,
+                                  message: 'Please enter your name',
+                                  icon: const Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red,
                                   ),
-                                ),
+                                );
+                              } else if (phoneController.text.length !=
+                                  10) {
+                                new UtilityService().showMessage(
+                                  context: context,
+                                  message:
+                                  'Please enter valid phone number',
+                                  icon: const Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red,
+                                  ),
+                                );
+                              } else {
+                                UserProfileModel user = UserProfileModel(
+                                  name: profileNameController.text,
+                                  email: userProfileModel.email,
+                                  phone: phoneController.text,
+                                );
+
+                                editProfile(user);
+                              }
+                            },
+                            child: Text(
+                              "Yes",
+                              style: GoogleFonts.raleway(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: 0.0,
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, right: 8),
-                              child: FlatButton(
-                                  height: 34,
-                                  color: LABEL_COLOR,
-                                  onPressed: () {
-                                    Navigator.pop(context); //close Dialog
-                                  },
-                                  child: Text(
-                                    "No",
-                                    style: GoogleFonts.raleway(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(width: 35,),
-                          ],
-                        );
-                      });
-                },
-                height: 40,
-                elevation: 0,
-                splashColor: Colors.teal[700],
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                color: Colors.black,
-                child: Center(
-                  child: Text(
-                    "Edit",
-                    style: GoogleFonts.raleway(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                          const EdgeInsets.only(bottom: 8.0, right: 8),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context); //close Dialog
+                              },
+                              child: Text(
+                                "No",
+                                style: GoogleFonts.raleway(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  letterSpacing: 0.0,
+                                ),
+                              )),
+                        ),
+                        SizedBox(width: 35,),
+                      ],
+                    );
+                  });
+            },
+            height: 40,
+            elevation: 0,
+            splashColor: Colors.teal[700],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            color: Colors.black,
+            child: Center(
+              child: Text(
+                "Edit",
+                style: GoogleFonts.raleway(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
               ),
-            ))
+            ),
+          ),
+        )
+        // FadeAnimation(
+        //     0,
+        //
+        // )
       ],
       appBar: AppBar(
         backgroundColor: Colors.grey.shade50,
@@ -343,10 +341,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       var jsonBody = jsonEncode(userProfileModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: EDIT_USER_URL, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
-      if (response.statusCode != 200) {
+      if (response!.statusCode != 200) {
         new UtilityService().showMessage(
           context: context,
           message: 'An error has occurred. Please try again',

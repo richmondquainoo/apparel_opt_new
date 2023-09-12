@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../Model/size_config.dart';
 
 class CustomAppBar extends StatelessWidget {
-  final double rating;
+  final double? rating;
 
   CustomAppBar({@required this.rating});
 

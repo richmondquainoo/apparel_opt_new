@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TextFieldComponent extends StatelessWidget {
-  final Icon prefixIcon;
-  final String hint;
-  final bool obscureText;
-  final bool enableField;
-  final TextEditingController controller;
-  final Function onChange;
+  final Icon? prefixIcon;
+  final String? hint;
+  final bool? obscureText;
+  final bool? enableField;
+  final TextEditingController? controller;
+  final Function? onChange;
   const TextFieldComponent({
     @required this.prefixIcon,
     @required this.hint,
@@ -21,11 +21,11 @@ class TextFieldComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      onChanged: onChange,
+      // onChanged: onChange,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       enabled: enableField,
-      obscureText: obscureText,
+      obscureText: obscureText!,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         hintText: hint,

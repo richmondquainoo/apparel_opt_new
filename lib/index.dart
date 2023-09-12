@@ -1,6 +1,7 @@
 import 'package:apparel_options/Constants/Colors.dart';
 import 'package:apparel_options/Screens/LandingPage/explore.dart';
 import 'package:flutter/material.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Constants/constantColors.dart';
 import 'Model/UserModel.dart';
@@ -11,18 +12,18 @@ import 'Utils/Utility.dart';
 import 'components/ProgressDialog.dart';
 
 class Index extends StatefulWidget {
-  final UserModel userModel;
-  const Index({Key key, this.userModel}) : super(key: key);
+  const Index({Key? key}) : super(key: key);
 
   @override
-  _IndexState createState() => _IndexState(userModel: userModel);
+  _IndexState createState() => _IndexState();
 }
 
 class _IndexState extends State<Index> {
-  final UserModel userModel;
-  int _selectedIndex = 0;
 
-  _IndexState({this.userModel});
+  int _selectedIndex = 0;
+  var _currentIndex = 0;
+
+  _IndexState();
 
   Future<bool> showExitPopUp() async {
     new UtilityService().confirmationBox(
@@ -53,24 +54,62 @@ class _IndexState extends State<Index> {
   }
 
   @override
+  void initState() {
+    // print("User is : ${widget.userModel}");
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: showExitPopUp,
-      child: Scaffold(
-        bottomNavigationBar: buildBottomNavigationBar(),
+      child :Scaffold(
+        bottomNavigationBar: SalomonBottomBar(
+          currentIndex: _currentIndex,
+          onTap: (i) => setState(() => _currentIndex = i),
+          items: [
+            SalomonBottomBarItem(
+              icon: Icon(Icons.home),
+              title: Text("Home"),
+              selectedColor:Colors.black,
+            ),
+            SalomonBottomBarItem(
+              icon: Icon(Icons.menu),
+              title: Text("Category"),
+              selectedColor: Colors.black,
+            ),
+            SalomonBottomBarItem(
+              icon: Icon(Icons.card_travel_outlined),
+              title: Text("Orders"),
+              selectedColor: Colors.black,
+            ),
+            SalomonBottomBarItem(
+              icon: Icon(Icons.favorite_border),
+              title: Text("Favorites"),
+              selectedColor: Colors.black,
+            ),
+          ],
+        ),
         backgroundColor: NAVBAR_BACKGROUND_COLOR,
-        body: navigator(_selectedIndex),
+        body: navigator(_currentIndex),
       ),
+      // child: Scaffold(
+      //   bottomNavigationBar: buildBottomNavigationBar(),
+      //   backgroundColor: NAVBAR_BACKGROUND_COLOR,
+      //   body: navigator(_selectedIndex),
+      // ),
     );
   }
 
-  Widget navigator(int index) {
+  Widget? navigator(int index) {
+    print("THE INDEX: ${index}");
     // Provider.of<AppData>(context, listen: false).updateUserData(customer);
     if (index == 0) {
       return ExplorePage(
       );
     } else if (index == 1) {
-      return const CategoryScreen();
+      return CategoryScreen();
     } else if (index == 2) {
       return OrderScreen(
         showBackButton: false,

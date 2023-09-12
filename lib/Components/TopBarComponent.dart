@@ -8,10 +8,10 @@ import '../Constants/constantColors.dart';
 
 
 class TopBarComponent extends StatelessWidget {
-  final Icon icon;
-  final String label;
-  final Function iconFunction;
-  final Function labelFunction;
+  final Icon? icon;
+  final String? label;
+  final Function? iconFunction;
+  final Function? labelFunction;
 
   TopBarComponent({
     @required this.icon,
@@ -29,17 +29,19 @@ class TopBarComponent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: iconFunction,
+                onTap: (){
+                  iconFunction;
+                },
                 child: Container(
                   child: icon,
 
                 ),
               ),
               GestureDetector(
-                onTap: labelFunction != null ? labelFunction : (){},
+                // onTap: labelFunction != null ? labelFunction : (){},
                 child: Container(
                   child: Text(
-                    label != null ? label : "",
+                    label! != null ? label! : "",
                     style: GoogleFonts.lato(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,

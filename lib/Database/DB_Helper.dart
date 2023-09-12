@@ -8,9 +8,9 @@ import '../Model/MenuModel.dart';
 import '../Model/NewMenuModel.dart';
 
 class DBHelper {
-  static Database _db;
+  static Database? _db;
 
-  Future<Database> get db async {
+  Future<Database?> get db async {
     if (_db != null) {
       return _db;
     }
@@ -62,14 +62,14 @@ class DBHelper {
   Future<NewMenuModel> insert(NewMenuModel menuModel) async {
     print(menuModel.toMap());
     var dbClient = await db;
-    await dbClient.insert('cart', menuModel.toMap());
+    await dbClient!.insert('cart', menuModel.toMap());
     print("Added to Cart: $menuModel");
     return menuModel;
   }
 
   Future<List<MenuModel>> getCartList() async {
     var dbClient = await db;
-    final List<Map<String, Object>> queryResult = await dbClient.query('cart');
+    final List<Map<String, Object?>> queryResult = await dbClient!.query('cart');
     return queryResult.map((e) => MenuModel.fromMap(e)).toList();
   }
 
@@ -81,18 +81,18 @@ class DBHelper {
 
   Future<int> delete(int id) async {
     var dbClient = await db;
-    return await dbClient.delete('cart', where: 'id = ?', whereArgs: [id]);
+    return await dbClient!.delete('cart', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> updateQuantity(MenuModel menuModel) async {
     var dbClient = await db;
-    return await dbClient.update('cart', menuModel.toMap(),
+    return await dbClient!.update('cart', menuModel.toMap(),
         where: 'id = ?', whereArgs: [menuModel.id]);
   }
 
-  Future<void> deleteAllCartItems() async {
+  Future<int> deleteAllCartItems() async {
     var dbClient = await db;
     // Remove Object from the database.
-    return await dbClient.delete("cart");
+    return await dbClient!.delete("cart");
   }
 }

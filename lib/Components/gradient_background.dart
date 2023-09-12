@@ -6,12 +6,12 @@ import '../Constants/Colors.dart';
 
 class GradientBackground extends StatelessWidget {
   final bool needWave;
-  final Widget child;
+  final Widget? child;
   final bool needTopSafeArea;
   final bool needTopRadius;
 
   const GradientBackground({
-    Key key,
+    Key? key,
     this.needWave = true,
     this.needTopSafeArea = true,
     this.needTopRadius = false,

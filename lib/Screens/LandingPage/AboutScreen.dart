@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/constantColors.dart';
 
 class AboutScreen extends StatefulWidget {
-  const AboutScreen({Key key}) : super(key: key);
+  const AboutScreen({Key? key}) : super(key: key);
 
   @override
   State<AboutScreen> createState() => _AboutScreenState();

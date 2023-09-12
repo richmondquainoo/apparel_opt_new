@@ -78,11 +78,11 @@ class UserDB {
       );
     } catch (e) {
       print('Fetch Error(getAllUsers): $e');
-      return null;
+      return null!;
     }
   }
 
-  Future<UserProfileModel> authenticateUser(
+  Future<UserProfileModel?> authenticateUser(
       String email, String password) async {
     try {
       final Database db = await database;
@@ -106,7 +106,7 @@ class UserDB {
       }
     } catch (e) {
       print('Fetch Error(authenticateUser): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -131,7 +131,7 @@ class UserDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getUserByEmail): $e');
-      return null;
+      return null!;
     }
   }
 

@@ -9,27 +9,27 @@ List<MenuModel> menuModelListFromJson(String str) =>
 String menuModelToJson(MenuModel data) => json.encode(data.toJson());
 
 class MenuModel {
-  int id;
-  String type;
-  String price;
-  String size;
-  String imageUrl;
-  String tagName;
-  String description;
-  String ratingFrequency;
-  String cumulativeRating;
-  String branch;
-  String category;
-  String menuItem;
-  String likes;
-  String organization;
-  String publish;
-  String quantity;
-  String product;
-  String brand;
-  String manufacturer;
-  String newArrival;
-  List<ProductVariantModel> productVariants;
+  int? id;
+  String? type;
+  String? price;
+  String? size;
+  String? imageUrl;
+  String? tagName;
+  String? description;
+  String? ratingFrequency;
+  String? cumulativeRating;
+  String? branch;
+  String? category;
+  String? menuItem;
+  String? likes;
+  String? organization;
+  String? publish;
+  String? quantity;
+  String? product;
+  String? brand;
+  String? manufacturer;
+  String? newArrival;
+  List<ProductVariantModel>? productVariants;
 
 
   MenuModel({
@@ -128,8 +128,7 @@ class MenuModel {
         brand = res["brand"],
         manufacturer = res["manufacturer"],
         newArrival = res["newArrival"],
-
-        productVariants = List<dynamic>.from(res["productVariants"].map((x) => x));
+        productVariants = List<ProductVariantModel>.from(res["productVariants"].map((x) => x));
   //
   MenuModel.fromJson(Map<dynamic, dynamic> res)
       : id = res['id'],

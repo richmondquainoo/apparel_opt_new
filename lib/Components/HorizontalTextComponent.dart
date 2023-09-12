@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HorizontalTextComponent extends StatelessWidget {
-  final String label;
-  final Color userColor;
-  final Color backgroundColor;
-  final double borderRadius;
+  final String? label;
+  final Color? userColor;
+  final Color? backgroundColor;
+  final double? borderRadius;
 
   const HorizontalTextComponent(
       {@required this.label,
@@ -19,7 +19,7 @@ class HorizontalTextComponent extends StatelessWidget {
       height: 40,
       width: 80,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(borderRadius!),
           border: Border.all(
             color: Colors.black12, //                   <--- border color
             width: 1.0,

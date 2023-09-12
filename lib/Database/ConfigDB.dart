@@ -67,7 +67,7 @@ class ConfigDB {
       );
     } catch (e) {
       print('Fetch Error(getAllConfigs): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -94,7 +94,7 @@ class ConfigDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getAllConfigs): $e');
-      return null;
+      return null!;
     }
   }
 

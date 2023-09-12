@@ -11,8 +11,8 @@ import '../Model/MenuModel.dart';
 import 'LandingPage/MenuInfoScreen.dart';
 
 class CategoryScreen extends StatefulWidget {
-  final bool showBackButton;
-  const CategoryScreen({Key key, this.showBackButton}) : super(key: key);
+  final bool? showBackButton;
+  const CategoryScreen({Key? key, this.showBackButton}) : super(key: key);
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState(
@@ -22,8 +22,8 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen>
     with TickerProviderStateMixin {
-  final bool showBackButton;
-  TabController _tabController;
+  final bool? showBackButton;
+  TabController? _tabController;
   List<MenuModel> categoryList = [];
   MenuDB menuDB = MenuDB();
 
@@ -35,7 +35,7 @@ class _CategoryScreenState extends State<CategoryScreen>
 
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.animateTo(2);
+    _tabController!.animateTo(2);
   }
 
   void initDB() async {
@@ -72,7 +72,7 @@ class _CategoryScreenState extends State<CategoryScreen>
     } else {
       results = categoryList
           .where((item) => item.category
-          .toLowerCase()
+          !.toLowerCase()
           .contains(enteredKeyword.toLowerCase()))
           .toList();
       setState(() {
@@ -96,7 +96,7 @@ class _CategoryScreenState extends State<CategoryScreen>
           backgroundColor: Colors.grey.shade50,
           elevation: 0.2,
           automaticallyImplyLeading: false,
-          leading: (showBackButton != null && showBackButton)
+          leading: (showBackButton != null && showBackButton!)
               ? IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -108,14 +108,13 @@ class _CategoryScreenState extends State<CategoryScreen>
             ),
           )
               : Container(),
-          title: Center(
-            child: Text(
-              "Menu",
-              style: GoogleFonts.raleway(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
+          title: Text(
+            "MENU",
+            style: GoogleFonts.raleway(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+              letterSpacing: .75,
             ),
           ),
         ),
@@ -356,7 +355,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                                     padding: const EdgeInsets.only(left: 15.0),
                                     child: Container(
                                       child: Text(
-                                        category.category,
+                                        category.category!,
                                         style: GoogleFonts.raleway(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
@@ -464,7 +463,7 @@ class _CategoryScreenState extends State<CategoryScreen>
       return list;
     } catch (e) {
       debugPrint('Error pizza list: $e');
-      return null;
+      return null!;
     }
   }
 }

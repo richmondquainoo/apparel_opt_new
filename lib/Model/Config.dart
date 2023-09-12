@@ -22,14 +22,14 @@ class Config {
     this.serviceCharge,
   });
 
-  int id;
-  String organization;
-  String branch;
-  String assignmentMode;
+  int? id;
+  String? organization;
+  String? branch;
+  String? assignmentMode;
   // bool orderTracker;
-  double latitude;
-  double longitude;
-  double serviceCharge;
+  double? latitude;
+  double? longitude;
+  double? serviceCharge;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
         id: json["id"],

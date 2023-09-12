@@ -4,11 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'WidgetFunctions.dart';
 
 class SettingCardComponent extends StatelessWidget {
-  final IconData leadingIcon;
-  final Color leadingIconColor;
-  final Color bgIconColor;
-  final String title;
-  final GestureTapCallback onTap;
+  final IconData? leadingIcon;
+  final Color? leadingIconColor;
+  final Color? bgIconColor;
+  final String? title;
+  final GestureTapCallback? onTap;
   const SettingCardComponent(
       {@required this.title,
       this.onTap,
@@ -40,7 +40,7 @@ class SettingCardComponent extends StatelessWidget {
                   addHorizontalSpace(10),
                   Expanded(
                     child: Text(
-                      title,
+                      title!,
                       style: GoogleFonts.raleway(fontSize: 14),
                     ),
                   ),
@@ -53,7 +53,7 @@ class SettingCardComponent extends StatelessWidget {
               : [
                   Expanded(
                     child: Text(
-                      title,
+                      title!,
                       style: GoogleFonts.raleway(fontSize: 16),
                     ),
                   ),

@@ -74,7 +74,7 @@ class CategoryDB {
       );
     } catch (e) {
       print('Fetch Error(getAllCategories): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -97,7 +97,7 @@ class CategoryDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getCategoryByPromo): $e');
-      return null;
+      return null!;
     }
   }
 

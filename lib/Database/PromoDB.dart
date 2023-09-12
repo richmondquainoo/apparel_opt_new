@@ -74,7 +74,7 @@ class PromoDB {
       );
     } catch (e) {
       print('Fetch Error(getAllPromo): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -97,7 +97,7 @@ class PromoDB {
       ).first;
     } catch (e) {
       print('Fetch Error(getCategoryByPromo): $e');
-      return null;
+      return null!;
     }
   }
 

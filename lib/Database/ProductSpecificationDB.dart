@@ -68,7 +68,7 @@ class ProductSpecificationDB{
       );
     } catch (e) {
       print('Fetch Error(getProductSpecificationById): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -95,7 +95,7 @@ class ProductSpecificationDB{
       );
     } catch (e) {
       print('Fetch Error(getAllProductVariants): $e');
-      return null;
+      return null!;
     }
   }
 

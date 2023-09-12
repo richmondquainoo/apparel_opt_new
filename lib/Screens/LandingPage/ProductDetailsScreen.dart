@@ -7,7 +7,7 @@ import 'package:apparel_options/Database/ProductSpecificationDB.dart';
 import 'package:apparel_options/Database/ProductVariantDB.dart';
 import 'package:apparel_options/Model/ProductSpecificationModel.dart';
 import 'package:apparel_options/Model/ProductVariantModel.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -44,9 +44,9 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 
 class ProductDetailsScreen extends StatefulWidget {
-  final MenuModel menuItem;
-  final ProductVariantModel productVariantModelItem;
-  final int productID;
+  final MenuModel? menuItem;
+  final ProductVariantModel? productVariantModelItem;
+  final int? productID;
 
   ProductDetailsScreen({
     this.menuItem,
@@ -56,40 +56,40 @@ class ProductDetailsScreen extends StatefulWidget {
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState(
-        menuItem: menuItem,
-        productVariantModelItem: productVariantModelItem,
-        productID: productID
+        menuItem: menuItem!,
+
+        productID: productID!
       );
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
-  Color currentColor = Colors.amber;
-  List<Color> currentColors = [Colors.yellow, Colors.green];
+  Color? currentColor = Colors.amber;
+  List<Color?> currentColors = [Colors.yellow, Colors.green];
 
   void changeColor(Color color) => setState(() => currentColor = color);
 
   final int productID;
   final MenuModel menuItem;
-  ProductVariantModel productVariantModelItem;
-  ProductSpecificationModel productSpecificationModelItem;
-  ProductDetailsModel productDetailsModelItem;
-  ProductDetailsModel productDetailsHeaderModel;
-  ProductVariantModel productVariantModelByID;
-  List<ProductVariantModel> productVariantsByID;
+  ProductVariantModel? productVariantModelItem;
+  ProductSpecificationModel? productSpecificationModelItem;
+  ProductDetailsModel? productDetailsModelItem;
+  ProductDetailsModel? productDetailsHeaderModel;
+  ProductVariantModel? productVariantModelByID;
+  late List<ProductVariantModel?> productVariantsByID;
 
-  int selectedImage = -1;
-  int selectedQuantity = -1;
-  bool isTapped = false;
-  bool isClicked = false;
+  int? selectedImage = -1;
+  int? selectedQuantity = -1;
+  bool? isTapped = false;
+  bool? isClicked = false;
 
-  String availableSizes;
-  List<MenuModel> selectedValue = [];
+  String? availableSizes;
+  List<MenuModel?> selectedValue = [];
 
-  List<dynamic> productList = [];
-  List<dynamic> cartItems = [];
-  List<ProductVariantModel> productVariantsList = [];
-  List<ProductVariantModel> productVariantsListByID = [];
+  List<dynamic>? productList = [];
+  List<dynamic>? cartItems = [];
+  List<ProductVariantModel?> productVariantsList = [];
+  List<ProductVariantModel?> productVariantsListByID = [];
   List<ProductSpecificationModel> productSpecificationListByID = [];
   List<ProductSpecificationModel> productSpecificationList = [];
   List<ProductDetailsModel> productDetailsListByID = [];
@@ -97,41 +97,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   List<ProductDetailsModel> productDetailsValueByIDList = [];
   List<ProductDetailsModel> productDetailsList = [];
 
-  final List<MenuModel> optionsList;
+  // final List<MenuModel?> optionsList;
 
 
-  List<int> cartItemCount = [1, 1, 1, 1];
-  double totalPrice = 0;
-  LikesDB likeDB = LikesDB();
-  LikeModel likeModel = LikeModel();
-  RatingDB ratingDB = RatingDB();
-  RatingModel ratingModel = RatingModel();
-  UserProfileModel userProfileModel = UserProfileModel();
-  ProductVariantModel productVariantModel = ProductVariantModel();
-  MenuModel optionsModel = MenuModel();
-  MenuModel menuModel = MenuModel();
-  DBHelper dbHelper = DBHelper();
-  bool isGreaterThanZero = false;
-  int _itemCount = 1;
-  int cartCounter = 1;
-  bool _hasBeenLiked = false;
-  String branch;
-  bool showLoader = false;
+  List<int?> cartItemCount = [1, 1, 1, 1];
+  double? totalPrice = 0;
+  LikesDB? likeDB = LikesDB();
+  LikeModel? likeModel = LikeModel();
+  RatingDB? ratingDB = RatingDB();
+  RatingModel? ratingModel = RatingModel();
+  UserProfileModel? userProfileModel = UserProfileModel();
+  ProductVariantModel? productVariantModel = ProductVariantModel();
+  MenuModel? optionsModel = MenuModel(productVariants: []);
+  MenuModel? menuModel = MenuModel(productVariants: []);
+  DBHelper? dbHelper = DBHelper();
+  bool? isGreaterThanZero = false;
+  int? _itemCount = 1;
+  int? cartCounter = 1;
+  bool? _hasBeenLiked = false;
+  String? branch;
+  bool? showLoader = false;
 
   // final _items = AddOns.getAddOns();
-  UserDB userDB = UserDB();
-  BranchDB branchDB = BranchDB();
-  MenuDB menuDB = MenuDB();
-  ProductVariantDB productVariantDB = ProductVariantDB();
-  ProductSpecificationDB productSpecificationDB = ProductSpecificationDB();
-  ProductDetailsDB productDetailsDB = ProductDetailsDB();
-  double ratingNew;
-  bool isEmpty;
-  List<MultiSelectCard> sizesList = [];
-  List<String> headers = [];
-  List<String> prodDetailList = [];
-  Map<String, dynamic> headerDetailMap = {};
-  String header;
+  UserDB? userDB = UserDB();
+  BranchDB? branchDB = BranchDB();
+  MenuDB? menuDB = MenuDB();
+  ProductVariantDB? productVariantDB = ProductVariantDB();
+  ProductSpecificationDB? productSpecificationDB = ProductSpecificationDB();
+  ProductDetailsDB? productDetailsDB = ProductDetailsDB();
+  double? ratingNew;
+  bool? isEmpty;
+  List<MultiSelectCard>? sizesList = [];
+  List<String?> headers = [];
+  List<String?> prodDetailList = [];
+  Map<String?, dynamic> headerDetailMap = {};
+  String? header;
 
 
   final MultiSelectController<String> _controller = MultiSelectController();
@@ -140,10 +140,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   // Obtain shared preferences.
 
   _ProductDetailsScreenState({
-    this.menuItem,
-    this.productVariantModelItem,
-    this.productID,
-    this.optionsList,
+    required this.menuItem,
+    required this.productID,
   });
   @override
   void initState() {
@@ -157,13 +155,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   void initDB() async {
-    await userDB.initialize();
-    await menuDB.initialize();
-    await likeDB.initialize();
-    await ratingDB.initialize();
-    await productVariantDB.initialize();
-    await productSpecificationDB.initialize();
-    await productDetailsDB.initialize();
+    await userDB!.initialize();
+    await menuDB!.initialize();
+    await likeDB!.initialize();
+    await ratingDB!.initialize();
+    await productVariantDB!.initialize();
+    await productSpecificationDB!.initialize();
+    await productDetailsDB!.initialize();
 
 
     await loadUserFromLocalStorage();
@@ -175,7 +173,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     await loadProductDetailsByProductID();
     await loadProductDetailsHeadersByProductID();
 
-    headers = await productDetailsDB.getProductDetailHeaders(productID);
+    headers = await productDetailsDB!.getProductDetailHeaders(productID);
     print('List of headers: ${headers}');
     // if(headers.isNotEmpty){
     //   for(String header in headers){
@@ -188,10 +186,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   }
 
-  double newPrice;
+  double? newPrice;
 
   Future<void> loadUserFromLocalStorage() async {
-    List<UserProfileModel> users = await userDB.getAllUsers();
+    List<UserProfileModel> users = await userDB!.getAllUsers();
     if (users.isNotEmpty) {
       setState(() {
         userProfileModel = users.first;
@@ -200,42 +198,42 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Future<void> loadProductVariantsFromDB() async {
-    List<ProductVariantModel> productVariants = await productVariantDB.getAllVariants();
+    List<ProductVariantModel> productVariants = await productVariantDB!.getAllVariants();
     if (productVariants.isNotEmpty) {
       setState(() {
         productVariantsList = productVariants;
 
-        for(ProductVariantModel productVariantsList in productVariantsList){
+        for(ProductVariantModel? productVariantsList in productVariantsList){
           productVariantModelItem = productVariantsList;
         }
       });
     }
-    print("Product Variant Item ID new: ${productVariantModelItem.id}");
+    print("Product Variant Item ID new: ${productVariantModelItem!.id}");
     print("Product Variants from the DB: ${productVariantsList.length}");
   }
 
   Future<void> loadProductVariantsByProductID() async {
-    List<ProductVariantModel> productVariantsByID = await productVariantDB.getProductVariantById(productID.toString());
+    List<ProductVariantModel?> productVariantsByID = await productVariantDB!.getProductVariantById(productID.toString());
     print("Product Variant Item BY ID *******: $productVariantsByID");
 
     if (productVariantsByID.isNotEmpty) {
       setState(() {
         productVariantsListByID = productVariantsByID;
-        for(ProductVariantModel productVariantsListByID in productVariantsListByID){
+        for(ProductVariantModel? productVariantsListByID in productVariantsListByID){
           productVariantModelItem = productVariantsListByID;
         }
       });
     }
     print("Product Variant Item ID: ${productVariantModelItem}");
     print("Product Variants BY ID from the DB: ${productVariantsListByID.length}");
-    print("ONE COLOR :${productVariantModelItem.colorCode.substring(1)}");
+    print("ONE COLOR :${productVariantModelItem!.colorCode!.substring(1)}");
 
     // print("Product Variants from the DB By ID: ${productVariantsList.length}");
   }
 
 
   Future<void> loadProductSpecificationsFromDB() async {
-    List<ProductSpecificationModel> productSpecifications = await productSpecificationDB.getAllProductSpecification();
+    List<ProductSpecificationModel> productSpecifications = await productSpecificationDB!.getAllProductSpecification();
     if (productSpecifications.isNotEmpty) {
       setState(() {
         productSpecificationList = productSpecifications;
@@ -245,13 +243,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         }
       });
     }
-    print("Product Specification ALL Item: ${productSpecificationModelItem.specification}");
+    print("Product Specification ALL Item: ${productSpecificationModelItem!.specification}");
     print("Product Specification ALL from the DB LENGTH: ${productSpecificationList.length}");
   }
 
 
   Future<void> loadProductSpecificationsByProductID() async {
-    List<ProductSpecificationModel> productSpecificationsByID = await productSpecificationDB.getProductSpecificationById(productID.toString());
+    List<ProductSpecificationModel> productSpecificationsByID = await productSpecificationDB!.getProductSpecificationById(productID.toString());
     print("Product Specifications Item BY ID *******: $productSpecificationsByID");
 
       try{
@@ -268,13 +266,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       }
 
 
-    print("Product Specification Item: ${productSpecificationModelItem.specification}");
+    print("Product Specification Item: ${productSpecificationModelItem!.specification}");
     print("Product Specification BY ID from the DB: ${productSpecificationListByID.length}");
 
   }
 
   Future<void> loadProductDetailsByProductID() async {
-    List<ProductDetailsModel> productDetailsByID = await productDetailsDB.getProductDetailsById(productID.toString());
+    List<ProductDetailsModel> productDetailsByID = await productDetailsDB!.getProductDetailsById(productID.toString());
     print("Product Details Item BY ID *******: $productDetailsByID");
 
     if (productDetailsByID.isNotEmpty) {
@@ -285,13 +283,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         }
       });
     }
-    print("Product Details Item: ${productDetailsModelItem.details}");
+    print("Product Details Item: ${productDetailsModelItem!.details}");
     print("Product Details BY ID from the DB: ${productDetailsListByID.length}");
 
   }
 
   Future<void> loadProductDetailsHeadersByProductID() async {
-    List<ProductDetailsModel> productDetailsHeaderByID = await productDetailsDB.getProductDetailsByHeader(productID, productDetailsModelItem.header);
+    List<ProductDetailsModel> productDetailsHeaderByID = await productDetailsDB!.getProductDetailsByHeader(productID, productDetailsModelItem!.header!);
     print("Product Details HEADER Item BY ID *******: $productDetailsHeaderByID");
 
     if (productDetailsHeaderByID.isNotEmpty) {
@@ -302,17 +300,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         }
       });
     }
-    print("Product Details HEADER Item: ${productDetailsHeaderModel.details}");
+    print("Product Details HEADER Item: ${productDetailsHeaderModel!.details}");
     print("Product Details HEADER BY ID and Header from the DB: ${productDetailsListByID.length}");
 
   }
 
-
-
-
   Future<void> loadAllLikes() async {
     print('menu on load up: $menuItem');
-    List<LikeModel> list = await likeDB.getAllLikes();
+    List<LikeModel> list = await likeDB!.getAllLikes();
     print('likes on load up: ${list.length} | $list');
     if (list.isNotEmpty) {
       for (LikeModel model in list) {
@@ -328,19 +323,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Future<void> loadAllRatings() async {
-    MenuModel newMenuModel = MenuModel(id: menuItem.id);
+    MenuModel newMenuModel = MenuModel(id: menuItem.id, productVariants: []);
     // List<MenuModel> list = await menuDB.getAllMenu();
     // print('MenuModel list: ${list.length} | ${newMenuModel.id} | $list');
-    MenuModel menu = await menuDB.getMenuById(newMenuModel);
+    MenuModel menu = await menuDB!.getMenuById(newMenuModel);
     if (menu != null) {
       setState(() {
         menuModel = menu;
       });
     }
-    print('Cumulative Rating after load up: ${menuModel.cumulativeRating}');
+    print('Cumulative Rating after load up: ${menuModel!.cumulativeRating}');
 
-    int actualRating = double.parse(menuModel.cumulativeRating) ~/
-        double.parse(menuModel.ratingFrequency);
+    int actualRating = double.parse(menuModel!.cumulativeRating!) ~/
+        double.parse(menuModel!.ratingFrequency!);
     print("The actual rating: ${actualRating}");
   }
 
@@ -368,7 +363,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             onPressed: () async {
               List<MenuModel> allOptions = [];
 
-              if(selectedImage < 0
+              if(selectedImage !< 0
               ){
                 UtilityService().showMessage(
                   message: 'Please choose available variant and a size',
@@ -381,36 +376,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               }
               else{
                 ProductModel newMainCartItem = ProductModel(
-                    id: productVariantsListByID[selectedImage].id,
-                    colorCode: productVariantsListByID[selectedImage].colorCode,
+                    id: productVariantsListByID[selectedImage!]!.id,
+                    colorCode: productVariantsListByID[selectedImage!]!.colorCode,
                     productName: menuItem.product,
                     productCategory: menuItem.category,
-                    imageUrl: productVariantsListByID[selectedImage].imageUrl,
-                    price: double.parse(menuItem.price),
-                    total: (double.parse(menuItem.price) * _itemCount),
-                    quantity: _itemCount,
+                    imageUrl: productVariantsListByID[selectedImage!]!.imageUrl,
+                    price: double.parse(menuItem.price!),
+                    total: (double.parse(menuItem.price!) * _itemCount!),
+                    quantity: _itemCount!,
                     sizes: menuItem.size,
-                    color: productVariantsListByID[selectedImage].color,
-                    productVariantId: productVariantsListByID[selectedImage].id,
+                    color: productVariantsListByID[selectedImage!]!.color,
+                    productVariantId: productVariantsListByID[selectedImage!]!.id,
                     productId: menuItem.id
                 );
 
                 // print('selected options: ${allOptions.length} | $allOptions');
-                print('Product Variant to Cart: ${ productVariantsList[selectedImage].productId}');
+                print('Product Variant to Cart: ${ productVariantsList[selectedImage!]!.productId}');
 
                 //Add item to provider object
-                Provider.of<AppData>(context, listen: false)
-                    .addCartItem(newMainCartItem);
+                Provider.of<AppData>(context, listen: false).addCartItem(newMainCartItem);
 
                 // Add items to shared pref as well
                 final prefs = await SharedPreferences.getInstance();
                 List<ProductModel> cartList = Provider.of<AppData>(context, listen: false).cartItemNew;
                 prefs.setString(CART_ITEM_SHARED_PREF, jsonEncode(cartList));
-                prefs.setInt(COUNT_CART_ITEM_SHARED_PREF,
-                    Provider.of<AppData>(context, listen: false).getCartCount());
+                prefs.setInt(COUNT_CART_ITEM_SHARED_PREF, Provider.of<AppData>(context, listen: false).getCartCount());
 
                 //Read shared pref value
-                String storedValue = prefs.get(CART_ITEM_SHARED_PREF);
+                Object? storedValue = prefs.get(CART_ITEM_SHARED_PREF);
                 print('Stored value: $storedValue');
 
                 final snackBar = SnackBar(
@@ -478,7 +471,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           title: Center(
             child: Text(
               (menuItem != null && menuItem.tagName != null)
-                  ? menuItem.category
+                  ? menuItem.category!
                   : "Details",
               style: GoogleFonts.poppins(
                 fontSize: 16,
@@ -499,17 +492,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           actions: [
             Center(
-              child: Badge(
-                position: BadgePosition.topEnd(),
-                padding: EdgeInsets.all(5),
-                badgeContent:
-                    Consumer<AppData>(builder: (context, value, child) {
+              child: badges.Badge(
+                badgeContent: Consumer<AppData>(builder: (context, value, child) {
                   return Text(
-                    value.getCartCount().toString(),
+                    value.getCartCount().toString() != null ? value.getCartCount().toString() : "0",
                     style: TextStyle(color: Colors.white),
                   );
                 }),
-                animationDuration: Duration(milliseconds: 300),
+                badgeAnimation: badges.BadgeAnimation.slide(
+                  toAnimate: true,
+                  animationDuration: Duration(milliseconds: 300),
+                ),
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -541,9 +534,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Hero(
-                  tag: widget.menuItem.id.toString(),
-                  child: selectedImage < 0
-                  ?Image.network(widget.menuItem.imageUrl):  Image.network(productVariantsListByID[selectedImage].imageUrl)
+                  tag: widget.menuItem!.id.toString(),
+                  child: selectedImage! < 0
+                  ?Image.network(widget.menuItem!.imageUrl!):  Image.network(productVariantsListByID[selectedImage!]!.imageUrl!)
                 ),
               ),
             ),
@@ -652,7 +645,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Text(
                                     (menuItem != null &&
                                             menuItem.category != null)
-                                        ? menuItem.category
+                                        ? menuItem.category!
                                         : '-',
                                     style: GoogleFonts.raleway(
                                         fontSize: 12,
@@ -673,7 +666,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               SizedBox(
                                 width: 5,
                               ),
-                              (showLoader)
+                              (showLoader!)
                                   ? Container(
                                       height: 20,
                                       width: 20,
@@ -684,12 +677,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     )
                                   : IconButton(
                                       onPressed: () async {
-                                        await addLikes(context, menuItem);
+                                        // await addLikes(context, menuItem);
                                       },
                                       icon: Icon(
                                         Icons.favorite,
                                         size: 25,
-                                        color: _hasBeenLiked
+                                        color: _hasBeenLiked!
                                             ? Colors.redAccent
                                             : Colors.grey,
                                       ),
@@ -756,7 +749,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       Container(
                         child: Text(
                             menuItem != null && menuItem.description != null
-                                ? menuItem.description
+                                ? menuItem.description!
                                 : '-',
                             style: GoogleFonts.raleway(
                                 fontSize: 12,
@@ -785,7 +778,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Container(
                                 child: Text(
                                     menuItem != null && menuItem.tagName != null
-                                        ? menuItem.tagName
+                                        ? menuItem.tagName!
                                         : '-',
                                     style: GoogleFonts.raleway(
                                         fontSize: 13,
@@ -810,7 +803,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Container(
                                 child: Text(
                                     menuItem != null && menuItem.price != null
-                                        ? double.parse(menuItem.price)
+                                        ? double.parse(menuItem.price!)
                                             .toStringAsFixed(2)
                                         : '-',
                                     style: GoogleFonts.raleway(
@@ -842,7 +835,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 height: 3,
                               ),
                               Container(
-                                child: selectedImage < 0
+                                child: selectedImage !< 0
                                     ? Container(
                                         child: Text("Choose variants to see sizes",
                                     style: GoogleFonts.raleway(
@@ -869,24 +862,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 Colors.green.withOpacity(0.1),
                                                 Colors.yellow.withOpacity(0.1),
                                               ]),
-                                              border: Border.all(color: Colors.green[200]),
+                                              border: Border.all(color: Colors.green[200]!),
                                               borderRadius: BorderRadius.circular(20)),
                                           selectedDecoration: BoxDecoration(
                                               gradient: const LinearGradient(colors: [
                                                 Colors.green,
                                                 Colors.lightGreen
                                               ]),
-                                              border: Border.all(color: Colors.green[700]),
+                                              border: Border.all(color: Colors.green[700]!),
                                               borderRadius: BorderRadius.circular(5)),
                                           disabledDecoration: BoxDecoration(
                                               color: Colors.grey,
-                                              border: Border.all(color: Colors.grey[500]),
+                                              border: Border.all(color: Colors.grey[500]!),
                                               borderRadius: BorderRadius.circular(10)),
                                         ),
-                                        items: sizesList,
+                                        items: sizesList!,
                                         onChange: (allSelectedItems, selectedItem) {
                                           setState(() {
-                                            menuItem.size = selectedItem;
+                                            menuItem.size = selectedItem.toString();
                                           });
                                         }),
                                       ],
@@ -976,7 +969,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Container(
                                 child: Text(
                                     menuItem != null && menuItem.brand != null
-                                        ? menuItem.brand
+                                        ? menuItem.brand!
                                         : '-'.toUpperCase(),
                                     style: GoogleFonts.raleway(
                                         fontSize: 13,
@@ -1086,24 +1079,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   ),
                                                   onPressed: () {
                                                     print("OnRemove");
-                                                    int quantity = _itemCount;
+                                                    int quantity = _itemCount!;
                                                     setState(() {
                                                       cart.setQuantity(
                                                           int.parse(_itemCount
                                                               .toString()));
                                                       setState(
-                                                              () => _itemCount--);
+                                                              () => _itemCount = _itemCount!-1);
                                                     });
                                                     double price = double.parse(
                                                         menuItem.price
                                                             .toString());
                                                     // cartCounter--;
                                                     double newPrice =
-                                                        price * cartCounter;
+                                                        price * cartCounter!;
 
                                                     if (quantity > 1) {
-                                                      dbHelper
-                                                          .updateQuantity(
+                                                      dbHelper!.updateQuantity(
                                                         MenuModel(
                                                           type: menuItem.type
                                                               .toString(),
@@ -1138,7 +1130,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                               .menuItem
                                                               .toString(),
                                                           likes: menuItem.likes
-                                                              .toString(),
+                                                              .toString(), productVariants: [],
                                                         ),
                                                       )
                                                           .then((value) {
@@ -1180,17 +1172,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                       cart.setQuantity(int.parse(
                                                           _itemCount.toString()));
 
-                                                      int quantity = _itemCount;
-                                                      _itemCount++;
+                                                      int quantity = _itemCount!;
+                                                      _itemCount = _itemCount !+ 1;
                                                     });
                                                     double price = double.parse(
                                                         menuItem.price.toString());
                                                     // quantity++;
                                                     double newPrice =
-                                                        price * cartCounter;
+                                                        price * cartCounter!;
 
                                                     dbHelper
-                                                        .updateQuantity(
+                                                        !.updateQuantity(
                                                       MenuModel(
                                                         type: menuItem.type
                                                             .toString(),
@@ -1218,7 +1210,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                         menuItem: menuItem.menuItem
                                                             .toString(),
                                                         likes: menuItem.likes
-                                                            .toString(),
+                                                            .toString(), productVariants: [],
                                                       ),
                                                     )
                                                         .then((value) {
@@ -1272,7 +1264,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Column(
                                 children: [
                                   Container(
-                                    child:  selectedImage < 0
+                                    child:  selectedImage !< 0
                                         ?Container(
                                       child: Text("Choose variants to see quantity",
                                           style: GoogleFonts.raleway(
@@ -1280,8 +1272,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               color: Colors.teal,
                                               fontWeight: FontWeight.w500)),
                                     )
-                                        :Container(child: Text((productVariantsListByID[selectedImage].quantity.toString() != null && productVariantsListByID[selectedImage].quantity.toString() != 0 ) ?
-                                    (productVariantsListByID[selectedImage].quantity.toString() ) : "Out of Stock",
+                                        :Container(child: Text((productVariantsListByID[selectedImage!]!.quantity.toString() != null && productVariantsListByID[selectedImage!]!.quantity.toString() != 0 ) ?
+                                    (productVariantsListByID[selectedImage!]!.quantity.toString() ) : "Out of Stock",
                                           style: GoogleFonts.raleway(
                                               fontSize: 14,
                                               color: Colors.black,
@@ -1392,7 +1384,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     GestureDetector(
                                       onTap:(){
                                         setState(() {
-                                          isTapped = !isTapped;
+                                          isTapped = !isTapped!;
                                         });
                                         print("Is tapped");
                                       },
@@ -1425,7 +1417,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                             SizedBox(height: 10,),
                             Container(
-                              child: isTapped
+                              child: isTapped!
                                   ? Container(
                                     child: Card(
                                 color: Colors.white,
@@ -1580,7 +1572,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     GestureDetector(
                                       onTap:() {
                                         setState(() {
-                                          isClicked = !isClicked;
+                                          isClicked = !isClicked!;
                                         });
                                       },
                                       child: Padding(
@@ -1612,7 +1604,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
 
                            Container(
-                             child: isClicked
+                             child: isClicked!
                              ?  Container(
                                child: Card(
                                  color: Colors.white,
@@ -1758,10 +1750,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     //your code
     try {
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.putDataWithAuth(
+      Response? response = await networkUtility.putDataWithAuth(
           url: '${LIKE_FOOD_ITEM}', auth: ACCESS_TOKEN_FOR_REQUEST);
 
-      if (response.statusCode == 200 && response != null) {
+      if (response!.statusCode == 200 && response != null) {
         print("Hey");
       }
     } catch (e) {
@@ -1778,20 +1770,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       });
 
       LikeModel likeMod = LikeModel(
-        email: userProfileModel.email,
+        email: userProfileModel!.email,
         branch: "HQ",
         organization: 'Apparel',
         menuId: model.id,
-        likes: (_hasBeenLiked) ? 0 : 1,
+        likes: (_hasBeenLiked!) ? 0 : 1,
       );
 
       print('likeMenuModel request: $likeMod');
       var jsonBody = jsonEncode(likeMod);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.putDataWithAuth(
+      Response? response = await networkUtility.putDataWithAuth(
           url: '${ADD_LIKES}', auth: 'Bearer $ACCESS_TOKEN', body: jsonBody);
 
-      print('addLikes response: ${response.body}');
+      print('addLikes response: ${response!.body}');
       if (response.statusCode == 200 && response != null) {
         //parse data received
         var data = jsonDecode(response.body);
@@ -1800,18 +1792,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           likes: data['data']['likes'],
           branch: "HQ",
           organization: 'Apparel',
-          email: userProfileModel.email,
+          email: userProfileModel!.email,
         );
         print('likeData to be saved: $likeData');
         if (likeData.likes == 0) {
-          await likeDB.deleteLikes(likeModel.id);
+          await likeDB!.deleteLikes(likeModel!.id!);
           // await likeDB.insertObject(likeData);
         } else {
-          await likeDB.insertObject(likeData);
+          await likeDB!.insertObject(likeData);
         }
-        List<LikeModel> lm = await likeDB.getAllLikes();
+        List<LikeModel> lm = await likeDB!.getAllLikes();
         print('lm: ${lm.length} | $lm');
-        if (_hasBeenLiked) {
+        if (_hasBeenLiked!) {
           setState(() {
             _hasBeenLiked = false;
           });
@@ -1844,10 +1836,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       var jsonBody = jsonEncode(model);
       print("The json Body: $jsonBody");
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.putDataWithAuth(
+      Response? response = await networkUtility.putDataWithAuth(
           url: '${ADD_RATINGS}', auth: 'Bearer $ACCESS_TOKEN', body: jsonBody);
 
-      debugPrint('Rating response: ${response.body}');
+      debugPrint('Rating response: ${response!.body}');
       debugPrint('Rating statusCode: ${response.statusCode}');
 
       if (response.statusCode == 200 && response != null) {
@@ -1864,12 +1856,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           RatingModel ratingModel = RatingModel(
             id: menuItem.id,
             cumulativeRating: ratingNew.toString(),
-            email: userProfileModel.email,
+            email: userProfileModel!.email,
           );
-          print("The email: ${userProfileModel.email}");
+          print("The email: ${userProfileModel!.email}");
           print("After insertion: ${ratingModel}");
           //update the local db
-          await ratingDB.insertObject(ratingModel);
+          await ratingDB!.insertObject(ratingModel);
         }
 
         Navigator.of(context).pop();
@@ -1914,14 +1906,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           selectedQuantity = index;
 
           //process size dynamically
-          String sizeString = productVariantsList[index].sizes;
+          String sizeString = productVariantsList[index]!.sizes!;
           if(sizeString!=null){
 
             List<String> list = sizeString.split(",");
             if(list.isNotEmpty){
-              sizesList.clear();
+              sizesList!.clear();
               for(String size in list){
-                sizesList.add(MultiSelectCard(value: size, label: size));
+                sizesList!.add(MultiSelectCard(value: size, label: size));
               }
             }
           }
@@ -1939,7 +1931,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           border: Border.all(
               color: Colors.orange.withOpacity(selectedImage == index ? 1 : 0)),
         ),
-        child: Image.network(productVariantsListByID[index].imageUrl),
+        child: Image.network(productVariantsListByID[index]!.imageUrl!),
       ),
     );
   }
@@ -1963,7 +1955,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       return list;
     } catch (e) {
       debugPrint('Error loadProductDetails List: $e');
-      return null;
+      return null!;
     }
   }
 
@@ -1976,9 +1968,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
 class ProductDetailComponent extends StatelessWidget {
   const ProductDetailComponent({
-    Key key,
-    @required this.productDetailsList,
-    @required this.header,
+    Key? key,
+    required this.productDetailsList,
+    required this.header,
   }) : super(key: key);
 
   final List<String> productDetailsList;

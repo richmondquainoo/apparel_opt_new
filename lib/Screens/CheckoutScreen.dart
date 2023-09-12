@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:apparel_options/Database/DeliveryCostDB.dart';
 import 'package:apparel_options/Model/NewOrderModel.dart';
 import 'package:apparel_options/Screens/LandingPage/SuccessScreen.dart';
@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../Components/ProgressDialog.dart';
 import '../Constants/constantColors.dart';
+import '../Constants/myColors.dart';
 import '../Database/ConfigDB.dart';
 import '../Database/UserDB.dart';
 import '../Model/AppData.dart';
@@ -26,15 +27,18 @@ import '../Model/ProductModel.dart';
 import '../Model/Questions.dart';
 import '../Model/UserProfileModel.dart';
 import '../Services/NetworkUtility.dart';
+import '../Services/services/api/api_service.dart';
+import '../Services/services/location_service.dart';
 import '../Utils/Utility.dart';
 import '../Utils/paths.dart';
 import '../animation/FadeAnimation.dart';
 import 'CartScreen.dart';
 import 'LandingPage/MapScreen.dart';
 import 'LandingPage/PaymentScreen.dart';
+import 'LandingPage/SearchPlacesScreen.dart';
 
 class CheckOutScreen extends StatefulWidget {
-  const CheckOutScreen({Key key}) : super(key: key);
+  const CheckOutScreen({Key? key}) : super(key: key);
 
   @override
   State<CheckOutScreen> createState() => _CheckOutScreenState();
@@ -50,11 +54,11 @@ class _CheckOutScreenState extends State<CheckOutScreen>
   UserProfileModel user = UserProfileModel();
 
   int selectedPayMethod = 0;
-  String locationName;
+  String? locationName;
   double itemCost = 0;
   double deliveryCharge = 0;
   double subTotal = 0;
-  double serviceCharge = 0;
+  double serviceCharge = 0.0;
   double overallTotal = 0;
 
   var additionalController = TextEditingController();
@@ -63,27 +67,35 @@ class _CheckOutScreenState extends State<CheckOutScreen>
   TextEditingController amountController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   Completer<GoogleMapController> _controller = Completer();
-  String additionalNote;
-  String allergyNote;
+  String? additionalNote;
+  String? allergyNote;
   String _currentAddress = '';
   String _startAddress = '';
+  geo.Geolocator geolocator1 = new geo.Geolocator();
 
   Set<Marker> markersList = Set<Marker>();
   int currentStep = 0;
-  String modeOfDelivery;
-  String deliveryOptions;
-  String modeOfPayment;
-  Config configs;
-  bool serviceEnabled;
-  DeliveryCost deliveryCost;
-  Position currentPosition;
-
+  String? modeOfDelivery;
+  String? deliveryOptions;
+  String? modeOfPayment;
+  Config? configs;
+  bool? serviceEnabled;
+  DeliveryCost? deliveryCost;
+  Position? currentPosition;
+  LatLng? initialPosition;
   bool servicestatus = false;
   bool haspermission = false;
-  LocationPermission permission;
-  Position position;
+  LocationPermission? permission;
+  Position? position;
   String long = "", lat = "";
-  StreamSubscription<Position> positionStream;
+  StreamSubscription<Position>? positionStream;
+  final Completer<GoogleMapController> mapController = Completer();
+  late final LocationService locationService;
+  double? currentLongitude;
+  double? currentLatitude;
+  String address = "";
+  String? myAddress;
+  String? loc;
 
   int id5 = 0;
   int id6 = 0;
@@ -137,9 +149,9 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                       child: Text(
                         "Item",
                         style: GoogleFonts.raleway(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.teal,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -148,9 +160,9 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                       child: Text(
                         "Qty",
                         style: GoogleFonts.raleway(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.teal,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -158,9 +170,9 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                       child: Text(
                         "Price(GHS)",
                         style: GoogleFonts.raleway(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.teal,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -168,7 +180,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                 ),
                 Divider(
                   color: Colors.orangeAccent,
-                  thickness: 0.2,
+                  thickness: 0.26,
                 ),
                 SizedBox(
                   height: 6,
@@ -182,7 +194,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                         return ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data.length,
+                            itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(
@@ -191,7 +203,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                                   onTap: () {
                                     // fetchProductDetails(context, pizza.category);
                                     debugPrint(
-                                        "pizzaType: ${snapshot.data[index].productCategory}");
+                                        "pizzaType: ${snapshot.data![index].productCategory}");
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(
@@ -203,7 +215,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                                         Expanded(
                                           flex: 2,
                                           child: Text(
-                                            "${snapshot.data[index].productName}",
+                                            "${snapshot.data![index].productName}",
                                             style: GoogleFonts.raleway(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w400,
@@ -214,7 +226,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                                         Expanded(
                                           flex: 1,
                                           child: Text(
-                                            "${snapshot.data[index].quantity}",
+                                            "${snapshot.data![index].quantity}",
                                             style: GoogleFonts.raleway(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w400,
@@ -225,7 +237,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                                         Expanded(
                                           child: Center(
                                             child: Text(
-                                              "${snapshot.data[index].total.toStringAsFixed(2)}",
+                                              "${snapshot.data![index].total!.toStringAsFixed(2)}",
                                               style: GoogleFonts.lato(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w400,
@@ -269,7 +281,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                   children: [
                     Container(
                       child:
-                      Icon(Icons.home, size: 27, color: Colors.black),
+                      Icon(Icons.location_on_outlined, size: 33, color: Colors.black),
                     ),
                     SizedBox(
                       width: 10,
@@ -280,10 +292,10 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Address",
+                            "Delivery Address",
                             style: GoogleFonts.raleway(
                               fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w300,
                               color: Colors.black,
                               letterSpacing: .8,
                             ),
@@ -293,16 +305,12 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                           ),
                           Text(
                             // _startAddress != null ? _startAddress : "-",
-                            Provider.of<AppData>(context, listen: false)
-                                .locationName !=
-                                null
-                                ? Provider.of<AppData>(context,
-                                listen: false)
-                                .locationName
+                            Provider.of<AppData>(context, listen: false).confirmationLocation != null ?
+                            Provider.of<AppData>(context, listen: false).confirmationLocation!
                                 : "My Location",
                             style: GoogleFonts.raleway(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
                               color: Colors.black,
                             ),
                           ),
@@ -316,7 +324,8 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                 padding: const EdgeInsets.only(left: 18.0, top: 10),
                 child: GestureDetector(
                   onTap: () {
-                    if (currentPosition == null) {
+                    if ((Provider.of<AppData>(context,
+                        listen: false).locationName! == null)) {
                       new UtilityService().showMessage(
                         context: context,
                         message:
@@ -331,7 +340,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                           context,
                           MaterialPageRoute(
                               builder: (context) => SearchPlacesScreen(
-                                positionLocation: currentPosition,
+                                // positionLocation: null!,
                               )));
                     }
                   },
@@ -339,7 +348,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                     children: [
                       Container(
                         child:
-                        Icon(Icons.edit, size: 16, color: Colors.teal),
+                        Icon(Icons.edit, size: 20, color: Colors.black),
                       ),
                       SizedBox(
                         width: 4,
@@ -347,9 +356,9 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                       Text(
                         "Edit Location",
                         style: GoogleFonts.raleway(
-                          fontSize: 13,
+                          fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          color: Colors.teal,
+                          color: Colors.black,
                           letterSpacing: .75,
                         ),
                       ),
@@ -371,8 +380,8 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                     children: deliveryMode
                         .map((data) => Container(
                       height: 35,
-                      child: RadioListTile(
-                        activeColor: Colors.teal,
+                      child: RadioListTile<dynamic>(
+                        activeColor: Colors.black,
                         title: Text(
                           "${data.question}",
                           style: GoogleFonts.raleway(
@@ -382,15 +391,16 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                         ),
                         groupValue: id6,
                         value: data.index,
-                        onChanged: (val) async {
+                        onChanged: (val)  {
+                          setState(() {
+                            id6 = data.index!;
+                          });
                           setState(() async {
                             modeOfDelivery = data.question;
-                            id6 = data.index;
-                            print(
-                                "Delivery option: $modeOfDelivery");
+                            print("Delivery option: $modeOfDelivery");
                             if (modeOfDelivery == "Delivery") {
-                              double startLat = configs.latitude;
-                              double startLon = configs.longitude;
+                              double? startLat = configs!.latitude;
+                              double? startLon = configs!.longitude;
                               double endLat = Provider.of<AppData>(
                                   context,
                                   listen: false)
@@ -411,10 +421,10 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                               findDeliveryCost("HQ",
                                   distanceInKilometers);
 
-                              print(
-                                  'computed distance: $distanceInKilometers');
+                              print('computed distance: $distanceInKilometers');
                               findDeliveryCost("HQ",
                                   distanceInKilometers);
+
                             } else {
                               setState(() {
                                 deliveryCost = null;
@@ -430,63 +440,86 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                   ),
                 ),
               ),
-              Container(
-                child: modeOfDelivery != null &&
-                    modeOfDelivery.contains("Delivery")
-                    ? Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 12.0, right: 12, top: 12),
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Delivery Time",
-                            style: GoogleFonts.raleway(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                              letterSpacing: .75,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 12.0, right: 12, top: 10),
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                "Please note that delivery time could be impacted by external factors",
-                                style: GoogleFonts.raleway(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.redAccent.shade100,
-                                  letterSpacing: .75,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                  ],
-                )
-                    : Container(),
-              ),
+              // Container(
+              //   child: modeOfDelivery != null &&
+              //       modeOfDelivery!.contains("Delivery")
+              //       ? Column(
+              //     children: [
+              //       Padding(
+              //         padding: const EdgeInsets.only(left: 12.0, right: 12, top: 10),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           children: [
+              //             Expanded(
+              //               child: Center(
+              //                 child: Padding(
+              //                   padding: const EdgeInsets.all(8.0),
+              //                   child: Text(
+              //                     "Company dispatching the product would contact you and deliver your product to you soon.",
+              //                     style: GoogleFonts.raleway(
+              //                         color: kPrimaryTheme,
+              //                         fontSize: 14,
+              //                         letterSpacing: 0.2,
+              //                         fontWeight: FontWeight.w600),
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         height: 8,
+              //       ),
+              //       Padding(
+              //         padding: const EdgeInsets.only(left: 18.0, top: 10),
+              //         child: GestureDetector(
+              //           onTap: () {
+              //             Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPlacesScreen()));
+              //           },
+              //           child: Row(
+              //             children: [
+              //               Container(
+              //                 child: Icon(Icons.edit, size: 16, color: Colors.teal),
+              //               ),
+              //               SizedBox(
+              //                 width: 4,
+              //               ),
+              //               Expanded(
+              //                 child: Column(
+              //                   crossAxisAlignment: CrossAxisAlignment.start,
+              //                   children: [
+              //                     Text(
+              //                       "Select Location",
+              //                       style: GoogleFonts.raleway(
+              //                         fontSize: 15,
+              //                         fontWeight: FontWeight.w600,
+              //                         color: Colors.teal,
+              //                       ),
+              //                     ),
+              //                     SizedBox(height: 6),
+              //                     Text(
+              //                       "ooo",
+              //                       // Provider.of<AppData>(context, listen: true).confirmationLocation != null
+              //                       //     ? Provider.of<AppData>(context, listen: true).confirmationLocation!
+              //                       //     : "-",
+              //                       style: GoogleFonts.raleway(
+              //                         fontSize: 15,
+              //                         fontWeight: FontWeight.w600,
+              //                         color: Colors.black,
+              //                       ),
+              //                     ),
+              //                   ],
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   )
+              //       : Container(),
+              // ),
               SizedBox(
                 height: 15,
               ),
@@ -679,7 +712,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                         ),
                         Text(
                           (serviceCharge != null)
-                              ? serviceCharge.toStringAsFixed(2)
+                              ? serviceCharge!.toStringAsFixed(2)
                               : "0.00",
                           style: GoogleFonts.lato(
                               fontWeight: FontWeight.w300,
@@ -742,8 +775,8 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                     children: paymentMethod
                         .map((data) => Container(
                       height: 35,
-                      child: RadioListTile(
-                        activeColor: Colors.teal,
+                      child: RadioListTile<dynamic>(
+                        activeColor: Colors.black,
                         title: Text(
                           "${data.question}",
                           style: GoogleFonts.raleway(
@@ -756,7 +789,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                         onChanged: (val) {
                           setState(() {
                             modeOfPayment = data.question;
-                            id7 = data.index;
+                            id7 = data.index!;
                             print(
                                 "Delivery option: $modeOfPayment");
                             if (modeOfPayment == "Mobile Money") {}
@@ -777,13 +810,13 @@ class _CheckOutScreenState extends State<CheckOutScreen>
   ];
 
   Future<double> computeDistance({
-    double startLat,
-    double startLon,
-    double endLat,
-    double endLon,
+    double? startLat,
+    double? startLon,
+    double? endLat,
+    double? endLon,
   }) async {
     double distanceInMeters = await Geolocator
-        .distanceBetween(startLat, startLon, endLat, endLon);
+        .distanceBetween(startLat!, startLon!, endLat!, endLon!);
     double distanceInKilometers = distanceInMeters / 1000;
     return distanceInKilometers;
   }
@@ -797,12 +830,12 @@ class _CheckOutScreenState extends State<CheckOutScreen>
     if (list.isNotEmpty) {
       for (DeliveryCost del in list) {
         if (del.branch == branch &&
-            (distance >= del.minDistance && distance <= del.maxDistance)) {
+            (distance >= del.minDistance! && distance <= del.maxDistance!)) {
           print('distance found: $del');
           found = true;
           setState(() {
             deliveryCost = del;
-            deliveryCharge = deliveryCost.cost;
+            deliveryCharge = deliveryCost!.cost!;
             debugPrint("The delivery Charge: ${deliveryCharge}");
             computeCosts();
           });
@@ -822,8 +855,10 @@ class _CheckOutScreenState extends State<CheckOutScreen>
   void computeCosts() {
     setState(() {
       itemCost = Provider.of<AppData>(context, listen: false).getCartTotal();
+      // print("THE CONFIG: ${configs!.serviceCharge.runtimeType}");
+
       subTotal = itemCost + deliveryCharge;
-      serviceCharge = configs.serviceCharge * subTotal;
+      serviceCharge = 0 * subTotal;
       overallTotal = subTotal + serviceCharge;
     });
     print("item cost: $itemCost");
@@ -831,6 +866,62 @@ class _CheckOutScreenState extends State<CheckOutScreen>
     print("sub cost: $subTotal");
     print("service charge: $serviceCharge");
     print("overall cost: $overallTotal");
+  }
+
+
+  Future<void> getUserLocation() async {
+
+    var position = await geo.GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.bestForNavigation));
+    print("LOC POSTION:${position}");
+    setState(() {
+      initialPosition = LatLng(position.latitude, position.longitude);
+    });
+    final GoogleMapController controller = await mapController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLng(initialPosition!),
+    );
+    print("This initialPosition: $initialPosition");
+  }
+
+  Future<void> getLocation() async {
+    print("POSITION:::: ");
+    position = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    print("POSITION ${position}");
+
+    long = position!.longitude.toString();
+    lat = position!.latitude.toString();
+
+    setState(() async {
+      currentPosition = position;
+      Provider.of<AppData>(context, listen: false)
+          .updateActualCoordinates(currentPosition!);
+      print('CURRENT POS: $currentPosition');
+      //refresh UI
+
+      await _getAddress();
+    });
+  }
+
+  _getAddress() async {
+    try {
+      List<Placemark> p = await placemarkFromCoordinates(
+          currentPosition!.latitude, currentPosition!.longitude);
+      Placemark place = p[0];
+      setState(() {
+        _currentAddress =
+        "${place.name},${place.street},${place.subLocality}, ${place.locality},${place.subAdministrativeArea}";
+        _originController.text = _currentAddress!;
+        _startAddress = _currentAddress;
+        print("THE ADDRESS: ${_startAddress}");
+        Provider.of<AppData>(context, listen: false)
+            .updateActualLocation(_startAddress!);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   checkGps() async {
@@ -867,111 +958,148 @@ class _CheckOutScreenState extends State<CheckOutScreen>
     });
   }
 
-  getLocation() async {
-    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print("The Longitude: ${position.longitude}"); //Output: 80.24599079
-    print("The Longitude: ${position.latitude}");
-    print("Coordinates : $position");//Output: 29.6593457
-
-    long = position.longitude.toString();
-    lat = position.latitude.toString();
-
-    setState(() {
-
-      currentPosition = position;
-      Provider.of<AppData>(context, listen: false)
-          .updateActualCoordinates(currentPosition);
-      print('CURRENT POS: $currentPosition');
-      //refresh UI
-    });
-    await _getAddress();
-
-    LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high, //accuracy of the location data
-      distanceFilter: 100, //minimum distance (measured in meters) a
-      //device must move horizontally before an update event is generated;
-    );
-
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
-        locationSettings: locationSettings).listen((Position position) {
-      print(position.longitude); //Output: 80.24599079
-      print(position.latitude); //Output: 29.6593457
-
-      long = position.longitude.toString();
-      lat = position.latitude.toString();
-
-      setState(() {
-        //refresh UI on update
-      });
-    });
-  }
-
-
-  _getAddress() async {
-    try {
-      List<Placemark> p = await placemarkFromCoordinates(
-          currentPosition.latitude, currentPosition.longitude);
-
-      Placemark place = p[0];
-
-      setState(() {
-        _currentAddress = "${place.name}, ${place.locality}";
-        _originController.text = _currentAddress;
-        _startAddress = _currentAddress;
-        print("THE ADDRESS: ${_startAddress}");
-        Provider.of<AppData>(context, listen: false)
-            .updateActualLocation(_startAddress);
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void _setMarker(LatLng point) {
     setState(() {
       markersList.clear();
       markersList.add(Marker(
         markerId: MarkerId('maker'),
-        position: LatLng(currentPosition.latitude, currentPosition.longitude),
+        position: LatLng(currentPosition!.latitude, currentPosition!.longitude),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       ));
     });
   }
 
-  // _getCurrentLocation() async {
-  //   await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-  //       .then((Position position) async {
-  //     await Geolocator.checkPermission();
-  //     await Geolocator.requestPermission();
-  //
-  //     final GoogleMapController mapController = await _controller.future;
-  //     setState(() {
-  //       currentPosition = position;
-  //       print('CURRENT POS: ${currentPosition}');
-  //       _setMarker(
-  //           LatLng(currentPosition.latitude, currentPosition.longitude));
-  //     });
-  //     await _getAddress();
-  //   }).catchError((e) {
-  //     print(e);
-  //   });
-  // }
+  _getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) async {
+      await Geolocator.checkPermission();
+      await Geolocator.requestPermission();
 
+      final GoogleMapController mapController = await _controller.future;
+      setState(() {
+        currentPosition = position;
+        print('CURRENT POS: ${currentPosition}');
+        // _setMarker(LatLng(currentPosition.latitude, currentPosition.longitude));
+      });
+      await _getAddress();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getAddressFromLatLng(_currentPosition!);
+
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+        _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress = '${place.street}, ${place.subLocality}';
+      });
+      print("LOC: ${_currentAddress}");
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
 
 
   @override
   void initState() {
-    getLocation();
-    print("The dragged new location from provider: ${Provider.of<AppData>(context, listen: false).locationName}");
-    super.initState();
-    // loadUserFromLocalStorage();
+    _getCurrentPosition();
     initDB();
+    computeCosts();
 
+    super.initState();
 
+    print("************************@@@@@@@@@@@");
+    locationService = LocationService();
+    locationService.getCurrentLocation().then((position) => _updatePosition(position, context));
+    // print("LATITUDE: ${locationservice.locationStream.last.toString()}");
+
+    print("The dragged new location from provider: ${Provider.of<AppData>(context, listen: false).locationName}");
+
+  }
+
+  Future<void> _updatePosition(geo.Position position, BuildContext context) async {
+    print("%%%%%%%%%%%%=========% : pm");
+    List pm = await locationService.getPlacemarkFromCoord(
+      currentLatitude = position.latitude,
+      currentLongitude = position.longitude,
+    );
+    print("%%%%%%%%%%%%%%%%%% : $pm");
+
+    setState(() {
+      print("currentLatitude: $currentLatitude");
+
+      address = '${pm[0]}';
+      print(address);
+      initialPosition = LatLng(position.latitude, position.longitude);
+    });
+    context
+        .read<ApiService>()
+        .convertCoordToPlace(
+      lat: position.latitude,
+      long: position.longitude,
+    )
+        .then((value) {
+      print('long name: ${value['address_components'][1]['long_name']}');
+
+      setState(() {
+        loc = '${value['address_components'][1]['long_name']}';
+        myAddress = loc;
+      });
+    }).catchError((err) {
+      print("error occurred $err");
+    });
   }
 
   void initDB() async {
     await userDB.initialize();
+    await getUserLocation;
+    // await checkGps();
+    // await getLocation();
     await configDB.initialize();
     await deliveryCostDB.initialize();
 
@@ -982,18 +1110,21 @@ class _CheckOutScreenState extends State<CheckOutScreen>
         user = list.first;
         debugPrint('User Info: $user');
       });
+
+
+      Config conf = await configDB.getConfigsByBranch("HQ");
+      setState(() {
+        configs = conf;
+        print("THE VALUE FRM CONFIGS: ${configs!.serviceCharge}");
+      });
     }
 
-    Config conf = await configDB.getConfigsByBranch("HQ");
-    setState(() {
-      configs = conf;
-    });
+
 
     List<DeliveryCost> costList = await deliveryCostDB.getDeliveryCost();
     print('costList: $costList');
 
-    DeliveryCost cost =
-    await deliveryCostDB.getDeliveryCostByBranch("HQ");
+    DeliveryCost cost = await deliveryCostDB.getDeliveryCostByBranch("HQ");
     setState(() {
       deliveryCost = cost;
     });
@@ -1003,7 +1134,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
 
     computeCosts();
   }
-
+  Position? _currentPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -1018,174 +1149,180 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                   title: 'Total',
                   value: r'GHS ' + overallTotal.toStringAsFixed(2),
                 ),
-                FadeAnimation(
-                    0,
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: MaterialButton(
-                        onPressed: () async {
-                          if (modeOfDelivery == null) {
-                            UtilityService().showMessage(
-                              message: 'Please specify delivery option',
-                              context: context,
-                              icon: const Icon(
-                                Icons.cancel,
-                                color: Colors.redAccent,
-                              ),
-                            );
-                            setState(() {
-                              currentStep = 1;
-                            });
-                          } else if (modeOfPayment == null) {
-                            UtilityService().showMessage(
-                              message: 'Please specify payment mode',
-                              context: context,
-                              icon: const Icon(
-                                Icons.cancel,
-                                color: Colors.redAccent,
-                              ),
-                            );
-                            setState(() {
-                              currentStep = 4;
-                            });
-                          } else {
-                            final provider = Provider.of<AppData>(context, listen: false);
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: MaterialButton(
+                    onPressed: () async {
+                      if (modeOfDelivery == null) {
+                        UtilityService().showMessage(
+                          message: 'Please specify delivery option',
+                          context: context,
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: Colors.redAccent,
+                          ),
+                        );
+                        setState(() {
+                          currentStep = 1;
+                        });
+                      } else if (modeOfPayment == null) {
+                        UtilityService().showMessage(
+                          message: 'Please specify payment mode',
+                          context: context,
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: Colors.redAccent,
+                          ),
+                        );
+                        setState(() {
+                          currentStep = 4;
+                        });
+                      } else {
+                        final provider = Provider.of<AppData>(context, listen: false);
 
-                            NewOrderModel newOrderModel = NewOrderModel(
-                              channel: "MobileApp",
-                              deliveryOption: modeOfDelivery.toString(),
-                              orderAdditionalInfo: additionalController.text.toString(),
-                              orderAddress: _startAddress.toString(),
-                              orderBranch: "HQ",
-                              orderBy: user.name.toString(),
-                              orderEmail: user.email.toString(),
-                              orderPhone: user.phone.toString(),
-                              organizationName: "Apparel",
-                              organizationCode: "Apparel",
-                              paymentAmount: double.parse(overallTotal.toString()),
-                              paymentMode: modeOfPayment,
-                              orderTotalAmount: double.parse(overallTotal.toString()),
-                              orderLat: double.parse(provider.searchPosition.latitude.toString()),
-                              orderLon: double.parse(provider.searchPosition.longitude.toString()),
-                              orderQuantity: int.parse(provider.getCartCount().toString()),
-                              products: provider.cartItemNew,
-                              orderTakenBy: "Admin",
-                              orderDetail: "",
-                              orderItemCost: double.parse(provider.getCartTotal().toString()),
+                        NewOrderModel newOrderModel = NewOrderModel(
+                          channel: "MobileApp",
+                          deliveryOption: modeOfDelivery.toString(),
+                          orderAdditionalInfo: additionalController.text.toString(),
+                          orderAddress: _startAddress.toString(),
+                          orderBranch: "HQ",
+                          orderBy: user.name.toString(),
+                          orderEmail: user.email.toString(),
+                          orderPhone: user.phone.toString(),
+                          organizationName: "Apparel",
+                          organizationCode: "Apparel",
+                          paymentAmount: double.parse(overallTotal.toString()),
+                          paymentMode: modeOfPayment!,
+                          orderTotalAmount: double.parse(overallTotal.toString()),
+                          orderLat: double.parse(provider.searchPosition.latitude.toString()),
+                          orderLon: double.parse(provider.searchPosition.longitude.toString()),
+                          orderQuantity: int.parse(provider.getCartCount().toString()),
+                          products: provider.cartItemNew,
+                          orderTakenBy: "Admin",
+                          orderDetail: "",
+                          orderItemCost: double.parse(provider.getCartTotal().toString()),
 
-                            );
+                        );
 
-                            new UtilityService().confirmationBox(
-                                title: 'Confirmation',
-                                message: 'Are you sure you want to checkout?',
-                                context: context,
-                                yesButtonColor: Colors.amber,
-                                noButtonColor: Colors.teal,
-                                // color: Colors.blueAccent,
-                                onYes: () {
-                                  debugPrint("PRODUCT FOR POSTING ********: ${newOrderModel.products}");
-                                  print("Order Model: $newOrderModel");
-                                  Navigator.pop(context);
-                                  sendOrder(context: context, dataModel: newOrderModel);
-                                },
-                                onNo: () {
-                                  Navigator.pop(context);
-                                });
+                        // new UtilityService().confirmationBox(
+                        //     title: 'Confirmation',
+                        //     message: 'Are you sure you want to checkout?',
+                        //     context: context,
+                        //     yesButtonColor: Colors.amber,
+                        //     noButtonColor: Colors.teal,
+                        //     // color: Colors.blueAccent,
+                        //     onYes: () {
+                        //       debugPrint("PRODUCT FOR POSTING ********: ${newOrderModel.products}");
+                        //       print("Order Model: $newOrderModel");
+                        //       Navigator.pop(context);
+                        //       sendOrder(context: context, dataModel: newOrderModel);
+                        //     },
+                        //     onNo: () {
+                        //       Navigator.pop(context);
+                        //     });
 
 
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Center(
-                                      child: Text(
-                                        "Confirmation",
-                                        style: GoogleFonts.raleway(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                          letterSpacing: 0.3,
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Center(
+                                  child: Text(
+                                    "Confirmation",
+                                    style: GoogleFonts.raleway(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                      letterSpacing: 0.3,
+                                    ),
+                                  ),
+                                ),
+                                content: Text(
+                                  "Are you sure you want to proceed to checkout?",
+                                  style: GoogleFonts.raleway(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: SizedBox(
+                                      height: 34,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: kPrimaryTheme,
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          debugPrint("PRODUCT FOR POSTING ********: ${newOrderModel.products}");
+                                          print("Order Model: $newOrderModel");
+                                          // Navigator.pop(context);
+                                          sendOrder(context: context, dataModel: newOrderModel);
+                                        },
+                                        child: Text(
+                                          "Yes",
+                                          style: GoogleFonts.raleway(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                            letterSpacing: 0.0,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    content: Text(
-                                      "Are you sure you want to proceed to checkout?",
-                                      style: GoogleFonts.raleway(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 8.0),
-                                        child: FlatButton(
-                                          height: 34,
-                                          color: Colors.teal.shade400,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0, right: 8),
+                                    child: SizedBox(
+                                      height: 34,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.redAccent,
+                                          ),
                                           onPressed: () {
-                                            Navigator.pop(context);
-                                            debugPrint("PRODUCT FOR POSTING ********: ${newOrderModel.products}");
-                                            print("Order Model: $newOrderModel");
-                                            Navigator.pop(context);
-                                            sendOrder(context: context, dataModel: newOrderModel);
+                                            Navigator.pop(context); //close Dialog
                                           },
                                           child: Text(
-                                            "Yes",
+                                            "No",
                                             style: GoogleFonts.raleway(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w700,
                                               color: Colors.white,
                                               letterSpacing: 0.0,
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 8.0, right: 8),
-                                        child: FlatButton(
-                                            height: 34,
-                                            color: LABEL_COLOR,
-                                            onPressed: () {
-                                              Navigator.pop(context); //close Dialog
-                                            },
-                                            child: Text(
-                                              "No",
-                                              style: GoogleFonts.raleway(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white,
-                                                letterSpacing: 0.0,
-                                              ),
-                                            )),
-                                      ),
-                                      SizedBox(width: 35,),
-                                    ],
-                                  );
-                                });
+                                          )),
+                                    ),
+                                  ),
 
-                          }
+                                  SizedBox(width: 35,),
+                                ],
+                              );
+                            });
+
+                      }
 
 
-                        },
-                        height: 40,
-                        elevation: 0,
-                        splashColor: Colors.teal[700],
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        color: Colors.teal,
-                        child: Center(
-                          child: Text(
-                            "Proceed to Checkout",
-                            style: GoogleFonts.raleway(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
+                    },
+                    height: 55,
+                    elevation: 0,
+                    splashColor: Colors.amber,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    color: Colors.black,
+                    child: Center(
+                      child: Text(
+                        "Proceed",
+                        style: GoogleFonts.raleway(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w700),
                       ),
-                    ))
+                    ),
+                  ),
+                )
               ],
             ),
           );
@@ -1199,11 +1336,12 @@ class _CheckOutScreenState extends State<CheckOutScreen>
         elevation: 0.5,
         automaticallyImplyLeading: false,
         title: Text(
-          "Checkout",
+          "CHECKOUT",
           style: GoogleFonts.raleway(
             fontSize: 18,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             color: Colors.black,
+
             letterSpacing: .75,
           ),
         ),
@@ -1221,7 +1359,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
             Theme(
               data: ThemeData(
                 colorScheme: Theme.of(context).colorScheme.copyWith(
-                      primary: Colors.teal,
+                      primary: Colors.amber,
                       onPrimary: Colors.black, // <-- SEE HERE
                     ),
               ),
@@ -1264,10 +1402,10 @@ class _CheckOutScreenState extends State<CheckOutScreen>
     );
   }
 
-  Future<void> sendOrder({BuildContext context, NewOrderModel dataModel}) async {
+  Future<void> sendOrder({BuildContext? context, NewOrderModel? dataModel}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Please wait...');
         },
@@ -1278,27 +1416,25 @@ class _CheckOutScreenState extends State<CheckOutScreen>
       var jsonBody = jsonEncode(dataModel);
       print('JSON BODY: $dataModel');
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: CREATE_ORDER, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
-      print('order response: ${json.decode(response.body)}');
+      print('order response: ${json.decode(response!.body)}');
 
-      if (response == null) {
-        //error handling
-        new UtilityService().showMessage(
-          context: context,
-          message: 'An error has occurred. Please try again',
-          icon: Icon(
-            Icons.error_outline,
-            color: Colors.red,
-          ),
-        );
-      } else {
         var data = jsonDecode(response.body);
         int status = data['status'];
-        print('Status: $status');
-
+        print('Status 123: $status');
+      new UtilityService().showMessage(
+        message: 'An error has occurred. Please try again',
+        icon: Icon(
+          Icons.error_outline,
+          color: Colors.red,
+        ),
+        context: context,
+      );
+      Navigator.of(context!, rootNavigator: true).pop();
         if (status == 500 || status == 404 || status == 403) {
+          Navigator.pop(context);
           new UtilityService().showMessage(
             message: 'An error has occurred. Please try again',
             icon: Icon(
@@ -1307,11 +1443,12 @@ class _CheckOutScreenState extends State<CheckOutScreen>
             ),
             context: context,
           );
+          Navigator.pop(context);
         } else if (status == 201) {
           Navigator.of(context, rootNavigator: true).pop();
 
           //go to payment page, if electronic
-          if (dataModel.paymentMode == 'Electronic') {
+          if (dataModel!.paymentMode == 'Electronic') {
             CheckoutModel model = CheckoutModel(
               checkoutURL: data['data']['checkoutURL'].toString(),
               checkoutDirectURL: data['data']['checkoutDirectURL'].toString(),
@@ -1339,7 +1476,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
               ),
             );
             Navigator.pushReplacement(
-              context,
+              context!,
               MaterialPageRoute(
                 builder: (context) => SuccessScreen(),
               ),
@@ -1347,7 +1484,6 @@ class _CheckOutScreenState extends State<CheckOutScreen>
           }
           print('successfully sent');
         }
-      }
     } catch (e) {
       print('postUserData error: $e');
       new UtilityService().showMessage(
@@ -1358,7 +1494,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 }

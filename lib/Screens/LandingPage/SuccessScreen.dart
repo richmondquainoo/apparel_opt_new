@@ -6,7 +6,7 @@ import 'package:lottie/lottie.dart';
 import '../../animation/FadeAnimation.dart';
 
 class SuccessScreen extends StatefulWidget {
-  const SuccessScreen({Key key}) : super(key: key);
+  const SuccessScreen({Key? key}) : super(key: key);
 
   @override
   State<SuccessScreen> createState() => _SuccessScreenState();
@@ -17,36 +17,34 @@ class _SuccessScreenState extends State<SuccessScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       persistentFooterButtons: [
-        FadeAnimation(
-            1.2,
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: MaterialButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OrderScreen(
-                                showBackButton: true,
-                              )));
-                },
-                height: 50,
-                elevation: 0,
-                splashColor: Colors.yellow[700],
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                color: Colors.black,
-                child: Center(
-                  child: Text(
-                    "Track My Order",
-                    style: GoogleFonts.raleway(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: MaterialButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderScreen(
+                        showBackButton: true,
+                      )));
+            },
+            height: 50,
+            elevation: 0,
+            splashColor: Colors.yellow[700],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            color: Colors.black,
+            child: Center(
+              child: Text(
+                "Track My Order",
+                style: GoogleFonts.raleway(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
               ),
-            ))
+            ),
+          ),
+        )
       ],
       appBar: AppBar(
         backgroundColor: Colors.grey.shade50,

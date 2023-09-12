@@ -4,6 +4,7 @@
 // const String POST_TAKEOUT_URL = '$BASE_URL/take-out/mobile/save';
 
 const String BASE_URL = 'https://staging-api.apparel.casantey.com';
+//  const String BASE_URL = "https://9742-2a04-4540-6a1a-5e00-a14e-4907-539b-85cd.ngrok-free.app";
 const String OTP_URL = '$BASE_URL/otp/create';
 const String CREATE_USER = '$BASE_URL/customer/create-customer';
 const String GET_CUSTOMER_BY_EMAIL = '$BASE_URL/customer/email';
@@ -35,11 +36,18 @@ const String FETCH_TYPE_OF_CATEGORY = '$BASE_URL/menu/type';
 const String ADD_LIKES = '$BASE_URL/product/likes/addLikes';
 const String ADD_RATINGS = '$BASE_URL/menu/addRating';
 const String CHECK_PAYMENT_STATUS = '$BASE_URL/order/check-payment-status';
-const String ACCESS_TOKEN =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBcHBhcmVsIiwiaXNzIjoiU3lzX0FkbWluIiwiZXhwIjoxNjkyMjA3MzUzfQ.nEeQClZWA_nlxWq0yLKk0ikoXcwJUHuzhp3NRvmQjK0";
+const String SET_DELIVERY_ADDRESS = '$BASE_URL/delivery-address/create-delivery-address';
+
+
+
+
+// const String ACCESS_TOKEN =
+//     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBcHBhcmVsIiwiaXNzIjoiU3lzX0FkbWluIiwiZXhwIjoxNjkyMjA3MzUzfQ.nEeQClZWA_nlxWq0yLKk0ikoXcwJUHuzhp3NRvmQjK0";
 const String LIKE_FOOD_ITEM = '$BASE_URL/menu/addLikes';
 const String TRACK_RIDER = '$BASE_URL/tracker/organization/Apparel/branch';
 
 const String POST_TO_PAYMENT_URL = '$BASE_URL/payment/initiatePaymentRequest';
 const String ACCESS_TOKEN_FOR_REQUEST =
-    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBcHBhcmVsIiwiaXNzIjoiU3lzX0FkbWluIiwiZXhwIjoxNjkyMjA3MzUzfQ.nEeQClZWA_nlxWq0yLKk0ikoXcwJUHuzhp3NRvmQjK0";
+    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBcHBhcmVsIiwiaXNzIjoiU3lzX0FkbWluIiwiZXhwIjoyMDA5MDA1OTQ0fQ.fjJXDTWNoGqZrgnI3VXBnmkWWAJ17eXH2EUEROa9FHQ";
+
+const String ACCESS_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBcHBhcmVsIiwiaXNzIjoiU3lzX0FkbWluIiwiZXhwIjoyMDA5MDA1OTQ0fQ.fjJXDTWNoGqZrgnI3VXBnmkWWAJ17eXH2EUEROa9FHQ';

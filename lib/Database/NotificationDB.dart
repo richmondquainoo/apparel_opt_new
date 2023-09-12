@@ -64,7 +64,7 @@ class NotificationDB {
       );
     } catch (e) {
       print('Fetch Error(getAllNotification): $e');
-      return null;
+      return null!;
     }
   }
 
@@ -89,7 +89,7 @@ class NotificationDB {
       );
     } catch (e) {
       print('Fetch Error(getNotificationByEmail): $e');
-      return null;
+      return null!;
     }
   }
 

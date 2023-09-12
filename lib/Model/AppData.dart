@@ -2,16 +2,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Services/services/api/direction.dart';
 import 'FullCartModel.dart';
 import 'ProductModel.dart';
 import 'UserProfileModel.dart';
 
 class AppData extends ChangeNotifier {
-  UserProfileModel userData;
+  UserProfileModel? userData;
   int appNotificationCount = 0;
-  String branch;
-  String actualLocation;
-  String draggedLocation;
+  String? branch;
+  String? actualLocation;
+  String? draggedLocation;
+  String? confirmedLocation;
+  String? confirmationLocation;
+  String? locationName;
+  String? destinationLocation;
+  String? mapLocation;
+  Directions? updatedLocation;
+  Directions? newDestinationLocation;
+  String? latitude;
+  String? longitude;
+  double? newLatitude;
+  double? newLongitude;
   // List<FullCartModel> cartItem = [];
   List<ProductModel> cartItemNew = [];
 
@@ -64,7 +76,6 @@ class AppData extends ChangeNotifier {
   int get quantityPrice => _quantityPrice;
   double get totalPrice => _totalPrice;
   bool branchIsSelected = false;
-  String locationName;
 
   void getLocation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -130,7 +141,7 @@ class AppData extends ChangeNotifier {
     double total = 0;
     if (cartItemNew.isNotEmpty) {
       for (ProductModel item in cartItemNew) {
-        total += item.total;
+        total += item.total!;
       }
     }
     return total;
@@ -138,7 +149,7 @@ class AppData extends ChangeNotifier {
 
 
 
-  int removerCounter() {
+  int? removerCounter() {
     _counter--;
     if (_counter < 1) {
       return 0;
@@ -202,6 +213,42 @@ class AppData extends ChangeNotifier {
       speedAccuracy: 1,
       speed: 1,
     );
+    notifyListeners();
+  }
+
+  void updateDestinationLocation(String location) {
+    destinationLocation = location;
+    notifyListeners();
+  }
+
+  void updateConfirmedLocationName(String confirmedLocation) {
+    confirmationLocation = confirmedLocation;
+    notifyListeners();
+  }
+
+  void updateMapLocationName(String location) {
+    mapLocation = location;
+    notifyListeners();
+  }
+
+  void updateLatitude(double latitude) {
+    newLatitude = latitude;
+    notifyListeners();
+  }
+
+  void updateLongitude(double longitude) {
+    newLongitude = longitude;
+    notifyListeners();
+  }
+
+  void updateConfirmedLocation(String confirmedLocationName) {
+    confirmedLocation = confirmedLocationName;
+    notifyListeners();
+  }
+
+  void updatedLocationAddress(Directions updatedAddress) {
+    updatedLocation = updatedAddress;
+    print("this $updatedLocation");
     notifyListeners();
   }
 

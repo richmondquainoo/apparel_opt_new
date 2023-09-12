@@ -4,7 +4,7 @@ import 'package:apparel_options/Constants/constantColors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../Components/GenericCardComponent.dart';
@@ -19,19 +19,19 @@ import '../../Utils/paths.dart';
 import '../../index.dart';
 
 class OrderScreen extends StatefulWidget {
-  final bool showBackButton;
-  final bool goToHome;
-  const OrderScreen({Key key, this.showBackButton, this.goToHome})
+  final bool? showBackButton;
+  final bool? goToHome;
+  const OrderScreen({Key? key, this.showBackButton, this.goToHome})
       : super(key: key);
 
   @override
   State<OrderScreen> createState() =>
-      _OrderScreenState(showBackButton: showBackButton, goToHome: goToHome);
+      _OrderScreenState(showBackButton: showBackButton!, goToHome: goToHome);
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final bool showBackButton;
-  final bool goToHome;
+  final bool? showBackButton;
+  final bool? goToHome;
   List<NewOrderModel> orderList = [];
   int pending = 0;
   int progress = 0;
@@ -92,7 +92,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> loadOrdersFromLocalStorage() async {
     List<NewOrderModel> orders = await orderDB
-        .getOrdersByPhone(int.parse(userProfileModel.phone).toString());
+        .getOrdersByPhone(int.parse(userProfileModel.phone!).toString());
     setState(() {
       orderList = orders;
     });
@@ -116,7 +116,7 @@ class _OrderScreenState extends State<OrderScreen> {
     } else {
       results = orderList
           .where((item) =>
-          item.orderNo.toLowerCase().contains(enteredKeyword.toLowerCase()))
+          item.orderNo!.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
       setState(() {
         orderList = results;
@@ -133,7 +133,7 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: (showBackButton)
+        leading: (showBackButton!)
             ? IconButton(
                 onPressed: () {
                   (goToHome != null && goToHome == true)
@@ -157,12 +157,12 @@ class _OrderScreenState extends State<OrderScreen> {
         elevation: 0.2,
         automaticallyImplyLeading: false,
         title: Text(
-          "My Last 10 Orders",
+          "MY ORDERS",
           style: GoogleFonts.raleway(
-            fontSize: 17,
-            fontWeight: FontWeight.w300,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
             color: Colors.black,
-            letterSpacing: 0,
+            letterSpacing: .75,
           ),
         ),
       ),
@@ -443,16 +443,16 @@ class _OrderScreenState extends State<OrderScreen> {
       });
 
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.getDataWithAuth(
+      Response? response = await networkUtility.getDataWithAuth(
           url: '${FETCH_LIST_OF_ORDERS_BY_EMAIL}/${userProfileModel.email}',
           auth: 'Bearer $ACCESS_TOKEN');
       print(
           "The url: ${FETCH_LIST_OF_ORDERS_BY_EMAIL}/${userProfileModel.email}");
 
-      debugPrint('order response: ${response.body}');
+      debugPrint('order response: ${response!.body}');
 
       print("UserModel email: ${userProfileModel.email}");
-      if (response.statusCode == 200 && response != null) {
+      if (response!.statusCode == 200 && response != null) {
         //parse data received
         var data = jsonDecode(response.body);
 
@@ -546,7 +546,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
             print("OrderList: ${orderList.length}");
             print(
-                "Dispatcher phone number : ${orderModel.dispatcherPhone.length}");
+                "Dispatcher phone number : ${orderModel.dispatcherPhone!.length}");
           }
           if (orderList != null) {
             setState(() {
@@ -622,88 +622,88 @@ class _OrderScreenState extends State<OrderScreen> {
                           curStep = 6;
                         }
 
-                        showMaterialModalBottomSheet(
-                            context: context,
-                            builder: (context) =>
-                                StatefulBuilder(builder: (context, setState) {
-                                  return SingleChildScrollView(
-                                    physics: ClampingScrollPhysics(),
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 18.0, left: 10),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                child: Text("Order No: ",
-                                                    style: GoogleFonts.raleway(
-                                                        fontSize: 13,
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                        FontWeight.w500)),
-                                              ),
-                                              Container(
-                                                child: Text(
-                                                    order.orderNo.toString() ??
-                                                        "",
-                                                    style: GoogleFonts.raleway(
-                                                        fontSize: 15,
-                                                        color: Colors.teal,
-                                                        fontWeight:
-                                                        FontWeight.w400)),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Theme(
-                                          data: ThemeData(
-                                            colorScheme: Theme.of(context)
-                                                .colorScheme
-                                                .copyWith(
-                                              primary: Colors.black,
-                                              onPrimary: Colors
-                                                  .black, // <-- SEE HERE
-                                            ),
-                                          ),
-                                          child: Stepper(
-                                            controlsBuilder: (context, _) {
-                                              return Container();
-                                            },
-                                            type: StepperType.vertical,
-                                            steps: getSteps(curStep, order),
-                                            currentStep: currentStep,
-                                            onStepContinue: () {
-                                              final isLastStep = currentStep ==
-                                                  getSteps(curStep, order)
-                                                      .length -
-                                                      1;
-                                              if (isLastStep) {
-                                                debugPrint("completed");
-                                                //  Post data to server
-                                              } else {
-                                                setState(() {
-                                                  currentStep += 1;
-                                                });
-                                              }
-                                            },
-                                            onStepTapped: (step) =>
-                                                setState(() {
-                                                  currentStep = step;
-                                                }),
-                                            onStepCancel: currentStep == 0
-                                                ? null
-                                                : () {
-                                              setState(() {
-                                                currentStep -= 1;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }));
+                        // showMaterialModalBottomSheet(
+                        //     context: context,
+                        //     builder: (context) =>
+                        //         StatefulBuilder(builder: (context, setState) {
+                        //           return SingleChildScrollView(
+                        //             physics: ClampingScrollPhysics(),
+                        //             child: Column(
+                        //               children: [
+                        //                 Padding(
+                        //                   padding: const EdgeInsets.only(
+                        //                       top: 18.0, left: 10),
+                        //                   child: Row(
+                        //                     children: [
+                        //                       Container(
+                        //                         child: Text("Order No: ",
+                        //                             style: GoogleFonts.raleway(
+                        //                                 fontSize: 13,
+                        //                                 color: Colors.black,
+                        //                                 fontWeight:
+                        //                                 FontWeight.w500)),
+                        //                       ),
+                        //                       Container(
+                        //                         child: Text(
+                        //                             order.orderNo.toString() ??
+                        //                                 "",
+                        //                             style: GoogleFonts.raleway(
+                        //                                 fontSize: 15,
+                        //                                 color: Colors.teal,
+                        //                                 fontWeight:
+                        //                                 FontWeight.w400)),
+                        //                       ),
+                        //                     ],
+                        //                   ),
+                        //                 ),
+                        //                 Theme(
+                        //                   data: ThemeData(
+                        //                     colorScheme: Theme.of(context)
+                        //                         .colorScheme
+                        //                         .copyWith(
+                        //                       primary: Colors.black,
+                        //                       onPrimary: Colors
+                        //                           .black, // <-- SEE HERE
+                        //                     ),
+                        //                   ),
+                        //                   child: Stepper(
+                        //                     controlsBuilder: (context, _) {
+                        //                       return Container();
+                        //                     },
+                        //                     type: StepperType.vertical,
+                        //                     steps: getSteps(curStep, order),
+                        //                     currentStep: currentStep,
+                        //                     onStepContinue: () {
+                        //                       final isLastStep = currentStep ==
+                        //                           getSteps(curStep, order)
+                        //                               .length -
+                        //                               1;
+                        //                       if (isLastStep) {
+                        //                         debugPrint("completed");
+                        //                         //  Post data to server
+                        //                       } else {
+                        //                         setState(() {
+                        //                           currentStep += 1;
+                        //                         });
+                        //                       }
+                        //                     },
+                        //                     onStepTapped: (step) =>
+                        //                         setState(() {
+                        //                           currentStep = step;
+                        //                         }),
+                        //                     onStepCancel: currentStep == 0
+                        //                         ? null
+                        //                         : () {
+                        //                       setState(() {
+                        //                         currentStep -= 1;
+                        //                       });
+                        //                     },
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           );
+                        //         }));
                       },
                       child: Card(
                         child: Container(
@@ -825,7 +825,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                                 ),
                                                 Container(
                                                   child: Text(
-                                                      order.deliveryOption,
+                                                      order.deliveryOption!,
                                                       style:
                                                       GoogleFonts.raleway(
                                                           fontSize: 13,
@@ -856,7 +856,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                                   ),
                                                   Container(
                                                     child: Text(
-                                                        order.orderAddress,
+                                                        order.orderAddress!,
                                                         style:
                                                         GoogleFonts.raleway(
                                                             fontSize: 13,
@@ -973,7 +973,7 @@ class _OrderScreenState extends State<OrderScreen> {
       return list;
     } catch (e) {
       debugPrint('Error pizza list: $e');
-      return null;
+      return null!;
     }
   }
 

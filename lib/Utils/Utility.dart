@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UtilityService {
-  void showMessage({String message, Icon icon, BuildContext context}) {
+  void showMessage({String? message, Icon? icon, BuildContext? context}) {
     showFlash(
-        context: context,
+        context: context!,
         duration: Duration(seconds: 3),
         builder: (_, controller) {
           return Flash(
@@ -14,7 +14,7 @@ class UtilityService {
             child: FlashBar(
               icon: icon,
               message: Text(
-                message,
+                message!,
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -22,7 +22,7 @@ class UtilityService {
         });
   }
 
-  Future<bool> successMessage(BuildContext context) {
+  Future<bool?> successMessage(BuildContext context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -30,11 +30,22 @@ class UtilityService {
             title: Text('Done'),
             content: Text('Add Success'),
             actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () {
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                ),
+                onPressed: () async {
                   Navigator.pop(context);
                 },
+                child: Text(
+                  "Ok",
+                  style: GoogleFonts.raleway(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: 0.0,
+                  ),
+                ),
               ),
             ],
           );
@@ -225,17 +236,17 @@ class UtilityService {
   // }
 
   void successMessageButton({
-    String title,
-    String message,
-    BuildContext context,
-    Function proceed,
-    Color color,
+    String? title,
+    String? message,
+    BuildContext? context,
+    Function? proceed,
+    Color? color,
     buttonText,
-    Color textColor,
-    Color backgroundColor,
+    Color? textColor,
+    Color? backgroundColor,
   }) {
     showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -266,7 +277,7 @@ class UtilityService {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            title,
+                            title!,
                             style: GoogleFonts.lato(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -284,7 +295,7 @@ class UtilityService {
                           //alignment: Alignment.center,
                           child: Center(
                             child: Text(
-                              message,
+                              message!,
                               style: GoogleFonts.lato(
                                 fontSize: 15,
                                 wordSpacing: 0.8,
@@ -302,7 +313,9 @@ class UtilityService {
                         height: 15,
                       ),
                       GestureDetector(
-                        onTap: proceed,
+                        onTap: (){
+                          proceed!;
+                        },
                         child: Container(
                           height: 40,
                           width: 184,
@@ -342,17 +355,17 @@ class UtilityService {
   }
 
   void notificationMessageWithButton({
-    String title,
-    String message,
-    BuildContext context,
-    Function proceed,
-    Color color,
+    String? title,
+    String? message,
+    BuildContext? context,
+    Function? proceed,
+    Color? color,
     buttonText,
-    Color textColor,
-    Color backgroundColor,
+    Color? textColor,
+    Color? backgroundColor,
   }) {
     showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -383,7 +396,7 @@ class UtilityService {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            title,
+                            title!,
                             style: GoogleFonts.lato(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -401,7 +414,7 @@ class UtilityService {
                           //alignment: Alignment.center,
                           child: Center(
                             child: Text(
-                              message,
+                              message!,
                               style: GoogleFonts.lato(
                                 fontSize: 15,
                                 wordSpacing: 0.8,
@@ -419,7 +432,9 @@ class UtilityService {
                         height: 15,
                       ),
                       GestureDetector(
-                        onTap: proceed,
+                        onTap: (){
+                          proceed!;
+                        },
                         child: Container(
                           height: 40,
                           width: 184,
@@ -459,19 +474,19 @@ class UtilityService {
   }
 
   void confirmationBox({
-    String title,
-    String message,
-    BuildContext context,
-    Function onYes,
-    Function onNo,
-    Color yesButtonColor,
-    Color noButtonColor,
-    String buttonLabel,
-    double buttonHeight,
-    double buttonWidth,
+    String? title,
+    String? message,
+    BuildContext? context,
+    required Function() onYes,
+    required Function() onNo,
+    Color? yesButtonColor,
+    Color? noButtonColor,
+    String? buttonLabel,
+    double? buttonHeight,
+    double? buttonWidth,
   }) {
     showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -500,7 +515,7 @@ class UtilityService {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            title,
+                            title!,
                             style: GoogleFonts.lato(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -518,7 +533,7 @@ class UtilityService {
                           //alignment: Alignment.center,
                           child: Center(
                             child: Text(
-                              message,
+                              message!,
                               style: GoogleFonts.lato(
                                 fontSize: 15,
                                 wordSpacing: 1,
@@ -608,17 +623,17 @@ class UtilityService {
   }
 
   void singleButtonConfirmation({
-    String title,
-    String message,
-    BuildContext context,
-    Function onYes,
-    Color color,
-    String buttonLabel,
-    double buttonHeight,
-    double buttonWidth,
+    String? title,
+    String? message,
+    BuildContext? context,
+    Function? onYes,
+    Color? color,
+    String? buttonLabel,
+    double? buttonHeight,
+    double? buttonWidth,
   }) {
     showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -647,7 +662,7 @@ class UtilityService {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            title,
+                            title!,
                             style: GoogleFonts.lato(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -665,7 +680,7 @@ class UtilityService {
                           //alignment: Alignment.center,
                           child: Center(
                             child: Text(
-                              message,
+                              message!,
                               style: GoogleFonts.lato(
                                 fontSize: 15,
                                 wordSpacing: 1,
@@ -683,7 +698,9 @@ class UtilityService {
                       ),
                       Center(
                         child: GestureDetector(
-                          onTap: onYes,
+                          onTap: (){
+                            onYes!;
+                          },
                           child: Container(
                             height: buttonHeight != null ? buttonHeight : 35,
                             width: buttonWidth != null ? buttonWidth : 64,
@@ -721,17 +738,17 @@ class UtilityService {
   }
 
   void messageContent({
-    String title,
-    String message,
-    BuildContext context,
-    Function onYes,
-    Color color,
-    String buttonLabel,
-    double buttonHeight,
-    double buttonWidth,
+    String? title,
+    String? message,
+    BuildContext? context,
+    Function? onYes,
+    Color? color,
+    String? buttonLabel,
+    double? buttonHeight,
+    double? buttonWidth,
   }) {
     showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -764,7 +781,7 @@ class UtilityService {
                           //alignment: Alignment.center,
                           child: Center(
                             child: Text(
-                              message,
+                              message!,
                               style: GoogleFonts.lato(
                                 fontSize: 16.3,
                                 fontWeight: FontWeight.w400,

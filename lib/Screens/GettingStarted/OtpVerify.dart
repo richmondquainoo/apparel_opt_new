@@ -23,34 +23,34 @@ import 'NewRegisterScreen.dart';
 import 'PasswordResetScreen.dart';
 
 class OtpVerify extends StatefulWidget {
-  final OTPModel otpModel;
-  final String track;
-  final String password;
-  const OtpVerify({Key key, this.otpModel, this.track, this.password})
+  final OTPModel? otpModel;
+  final String? track;
+  final String? password;
+  const OtpVerify({Key? key, this.otpModel, this.track, this.password})
       : super(key: key);
 
   @override
   State<OtpVerify> createState() =>
-      _OtpVerifyState(otpModel: otpModel, password: password, track: track);
+      _OtpVerifyState(otpModel: otpModel!, password: password!, track: track!);
 }
 
 class _OtpVerifyState extends State<OtpVerify> {
-  final String track;
-  final OTPModel otpModel;
-  final String password;
-  String globalPin;
-  String caption =
+  final String? track;
+  final OTPModel? otpModel;
+  final String? password;
+  String? globalPin;
+  String? caption =
       'Enter the verification code we just sent to your email address.';
 
   @override
   void initState() {
     super.initState();
     print('value of track on init is ${widget.track}');
-    if (otpModel != null && otpModel.email != null) {
+    if (otpModel != null && otpModel!.email != null) {
       caption =
           'Enter the verification code we just sent to your email address '
-          '${otpModel.email.substring(0, 1)}'
-          '***${otpModel.email.substring(otpModel.email.length - 3)}';
+          '${otpModel!.email!.substring(0, 1)}'
+          '***${otpModel!.email!.substring(otpModel!.email!.length - 3)}';
     }
   }
 
@@ -58,191 +58,194 @@ class _OtpVerifyState extends State<OtpVerify> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NewRegisterScreen()));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 0, top: 10, bottom: 10),
+                                child: const Icon(Icons.keyboard_arrow_left,
+                                    color: Colors.black),
+                              ),
+                              const Text('Back',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text('Verification',
+                        style: GoogleFonts.raleway(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        )),
+                  ),
+                ),
+                Container(
+                  width: 320,
+                  height: 320,
+                  decoration: BoxDecoration(
+                    image: const DecorationImage(
+                      image: AssetImage('assets/images/OtpImage.jpg'),
+                    ),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Enter the verification code we',
+                      style: GoogleFonts.raleway(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'just sent to your phone number',
+                      style: GoogleFonts.raleway(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Center(
+                    child: OTPTextField(
+                      length: 4,
+                      width: MediaQuery.of(context).size.width,
+                      fieldWidth: 50,
+                      style: const TextStyle(color: Colors.black, fontSize: 22),
+                      textFieldAlignment: MainAxisAlignment.spaceAround,
+                      fieldStyle: FieldStyle.underline,
+                      onCompleted: (pin) {
+                        print("Completed: " + pin);
+                        setState(() {
+                          globalPin = (pin);
+                          print("globalPin: $globalPin");
+                        });
+                        handleVerification(context);
+                        // verifyOTP(context: context, dataModel: otpModel);
+                      },
+                      obscureText: false,
+                      onChanged: (pin) {
+                        globalPin = (pin);
+                        print("globalPin: $globalPin");
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
+                    Container(
+                      child: Text(
+                        "If you didn't receive a code.",
+                        style: GoogleFonts.lato(
+                            fontSize: 16, fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NewRegisterScreen()));
+                        // OTPModel model = OTPModel(
+                        //     name: widget.otpModel.name,
+                        //     email: widget.otpModel.email,
+                        //     // pin: pin,
+                        //     phone: widget.otpModel.phone,
+                        //     password: widget.password);
+                        createOTP(context: context, dataModel: otpModel!);
+                        print('resend');
+                        // print("Model: $model");
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.only(
-                                  left: 0, top: 10, bottom: 10),
-                              child: const Icon(Icons.keyboard_arrow_left,
-                                  color: Colors.black),
-                            ),
-                            const Text('Back',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black))
-                          ],
+                        child: Text(
+                          'Resend',
+                          style: GoogleFonts.lato(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.teal),
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      width: 10,
+                    ),
                   ],
                 ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text('Verification',
-                      style: GoogleFonts.raleway(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      )),
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-              Container(
-                width: 320,
-                height: 320,
-                decoration: BoxDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage('assets/images/OtpImage.jpg'),
-                  ),
-                  borderRadius: BorderRadius.circular(0),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Enter the verification code we',
-                    style: GoogleFonts.raleway(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 7,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'just sent to your phone number',
-                    style: GoogleFonts.raleway(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Center(
-                  child: OTPTextField(
-                    length: 4,
-                    width: MediaQuery.of(context).size.width,
-                    fieldWidth: 50,
-                    style: const TextStyle(color: Colors.black, fontSize: 22),
-                    textFieldAlignment: MainAxisAlignment.spaceAround,
-                    fieldStyle: FieldStyle.underline,
-                    onCompleted: (pin) {
-                      print("Completed: " + pin);
-                      setState(() {
-                        globalPin = (pin);
-                        print("globalPin: $globalPin");
-                      });
-                      handleVerification(context);
-                      // verifyOTP(context: context, dataModel: otpModel);
-                    },
-                    obscureText: false,
-                    onChanged: (pin) {
-                      globalPin = (pin);
-                      print("globalPin: $globalPin");
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    child: Text(
-                      "If you didn't receive a code.",
-                      style: GoogleFonts.lato(
-                          fontSize: 16, fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // OTPModel model = OTPModel(
-                      //     name: widget.otpModel.name,
-                      //     email: widget.otpModel.email,
-                      //     // pin: pin,
-                      //     phone: widget.otpModel.phone,
-                      //     password: widget.password);
-                      createOTP(context: context, dataModel: otpModel);
-                      print('resend');
-                      // print("Model: $model");
-                    },
-                    child: Container(
-                      child: Text(
-                        'Resend',
-                        style: GoogleFonts.lato(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.teal),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                child: TextButtonComponent(
-                    labelColor: Colors.black,
-                    label: 'Verify',
-                    onTap: () {
-                      handleVerification(context);
-                      // verifyOTP(context: context, dataModel: otpModel);
-                      // verifyByEmail(context: context, dataModel: otpModel);
-                    }),
-              )
-            ],
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  child: TextButtonComponent(
+                      labelColor: Colors.black,
+                      label: 'Verify',
+                      onTap: () {
+                        handleVerification(context);
+                        // verifyOTP(context: context, dataModel: otpModel);
+                        // verifyByEmail(context: context, dataModel: otpModel);
+                      }),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -259,7 +262,7 @@ class _OtpVerifyState extends State<OtpVerify> {
             color: Colors.red,
           ));
       return false;
-    } else if (globalPin != otpModel.pin.toString()) {
+    } else if (globalPin != otpModel!.pin.toString()) {
       new UtilityService().showMessage(
           message: 'Invalid pin',
           context: context,
@@ -273,20 +276,20 @@ class _OtpVerifyState extends State<OtpVerify> {
     }
   }
 
-  void createOTP({OTPModel dataModel, BuildContext context}) async {
+  void createOTP({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Resending OTP...');
         },
       );
       var jsonBody = jsonEncode(dataModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: OTP_URL, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
-      print('Response: ${response.body}');
+      print('Response: ${response!.body}');
 
       if (response == null) {
         //error handling
@@ -322,7 +325,7 @@ class _OtpVerifyState extends State<OtpVerify> {
             email: data['email'],
             pin: data['pin'],
             phone: data['phone'],
-            password: widget.password,
+            password: widget.password!,
           );
           print('data to next screen: $otpModel');
           Navigator.of(context, rootNavigator: true).pop();
@@ -348,13 +351,13 @@ class _OtpVerifyState extends State<OtpVerify> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 
-  void registerUser({OTPModel otpModel, BuildContext context}) async {
+  void registerUser({OTPModel? otpModel, BuildContext? context}) async {
     showDialog(
-      context: context,
+      context: context!,
       builder: (context) {
         return ProgressDialog(displayMessage: 'Please wait...');
       },
@@ -362,10 +365,10 @@ class _OtpVerifyState extends State<OtpVerify> {
     print(otpModel);
     var jsonBody = jsonEncode(otpModel);
     NetworkUtility networkUtility = NetworkUtility();
-    Response response = await networkUtility.postDataWithAuth(
+    Response? response = await networkUtility.postDataWithAuth(
         url: CREATE_USER, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
-    var data = jsonDecode(response.body);
+    var data = jsonDecode(response!.body);
     print("Response: ${response.statusCode}");
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -402,7 +405,7 @@ class _OtpVerifyState extends State<OtpVerify> {
     } else if (status == 201) {
       //account created
       //save the data to local storage
-      saveUserInfoLocally(otpModel);
+      saveUserInfoLocally(otpModel!);
       //navigate to home
       UserProfileModel user = UserProfileModel(
         name: otpModel.name,
@@ -426,23 +429,23 @@ class _OtpVerifyState extends State<OtpVerify> {
     }
   }
 
-  void verifyOTP({OTPModel dataModel, BuildContext context}) async {
+  void verifyOTP({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Please wait...');
         },
       );
-      dataModel.pin = int.parse(globalPin);
+      dataModel!.pin = int.parse(globalPin!);
       var jsonBody = jsonEncode(dataModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: OTP_VERIFICATION, body: jsonBody, auth: 'Bearer $ACCESS_TOKEN');
 
       // print('otp verification url: $OTP_VERIFICATION');
       // print('otp verification req: $jsonBody');
-      var data = jsonDecode(response.body);
+      var data = jsonDecode(response!.body);
       print('otp verification response: ${data}');
 
       if (response == null) {
@@ -460,11 +463,11 @@ class _OtpVerifyState extends State<OtpVerify> {
           // verification is successful
           // print('Body: ${response.body}');
           OTPModel otpModel = new OTPModel(
-              name: widget.otpModel.name,
-              password: widget.password,
-              email: widget.otpModel.email,
-              phone: widget.otpModel.phone,
-              pin: widget.otpModel.pin);
+              name: widget.otpModel!.name,
+              password: widget.password!,
+              email: widget.otpModel!.email,
+              phone: widget.otpModel!.phone,
+              pin: widget.otpModel!.pin);
 
           // print('Data after verification: $otpModel | password: ${widget.password}');
           Navigator.of(context, rootNavigator: true).pop();
@@ -493,7 +496,7 @@ class _OtpVerifyState extends State<OtpVerify> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 
@@ -508,7 +511,7 @@ class _OtpVerifyState extends State<OtpVerify> {
         verifyOTP(dataModel: widget.otpModel, context: context);
       }
       if (widget.track == 'Reset') {
-        verifyByEmail(context: context, dataModel: widget.otpModel);
+        verifyByEmail(context: context, dataModel: widget.otpModel!);
       }
     }
     // else {
@@ -537,24 +540,24 @@ class _OtpVerifyState extends State<OtpVerify> {
     }
   }
 
-  void verifyByEmail({OTPModel dataModel, BuildContext context}) async {
+  void verifyByEmail({OTPModel? dataModel, BuildContext? context}) async {
     try {
       showDialog(
-        context: context,
+        context: context!,
         builder: (context) {
           return ProgressDialog(displayMessage: 'Please wait...');
         },
       );
-      dataModel.pin = int.parse(globalPin);
+      dataModel!.pin = int.parse(globalPin!);
       var jsonBody = jsonEncode(dataModel);
       NetworkUtility networkUtility = NetworkUtility();
-      Response response = await networkUtility.postDataWithAuth(
+      Response? response = await networkUtility.postDataWithAuth(
           url: OTP_VERIFY_BY_EMAIL,
           body: jsonBody,
           auth: 'Bearer $ACCESS_TOKEN');
 
       // print("Verify By email: ${OTP_VERIFY_BY_EMAIL}");
-      print('otp verification by email response: ${response.body}');
+      print('otp verification by email response: ${response!.body}');
 
       if (response == null) {
         //error handling
@@ -574,11 +577,11 @@ class _OtpVerifyState extends State<OtpVerify> {
           // verification is successful
           print('Body: ${response.body}');
           OTPModel otpModel = new OTPModel(
-              name: widget.otpModel.name,
-              password: widget.password,
-              email: widget.otpModel.email,
-              phone: widget.otpModel.phone,
-              pin: widget.otpModel.pin);
+              name: widget.otpModel!.name,
+              password: widget.password!,
+              email: widget.otpModel!.email,
+              phone: widget.otpModel!.phone,
+              pin: widget.otpModel!.pin);
           Navigator.of(context, rootNavigator: true).pop();
           goToSetPin(context, otpModel);
         } else {
@@ -604,7 +607,7 @@ class _OtpVerifyState extends State<OtpVerify> {
           color: Colors.red,
         ),
       );
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context!, rootNavigator: true).pop();
     }
   }
 

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'Category.dart';
 
 class FilterPage extends StatelessWidget {
-  const FilterPage({Key key, this.allTextList, this.selectedUserList})
+  const FilterPage({Key? key, this.allTextList, this.selectedUserList})
       : super(key: key);
-  final List<Category> allTextList;
-  final List<Category> selectedUserList;
+  final List<Category>? allTextList;
+  final List<Category>? selectedUserList;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,14 +19,14 @@ class FilterPage extends StatelessWidget {
         child: FilterListWidget<Category>(
           themeData: FilterListThemeData(context),
           hideSelectedTextCount: true,
-          controlButtons: [ContolButtonType.All, ContolButtonType.Reset],
+          // controlButtons: [ContolButtonType.All, ContolButtonType.Reset],
           selectedListData: selectedUserList,
           onApplyButtonClick: (list) {
             Navigator.pop(context, list);
           },
           choiceChipLabel: (item) {
             /// Used to print text on chip
-            return item.name;
+            return item!.name;
           },
           // choiceChipBuilder: (context, item, isSelected) {
           //   return Container(
@@ -41,13 +41,13 @@ class FilterPage extends StatelessWidget {
           // },
           validateSelectedItem: (list, val) {
             ///  identify if item is selected or not
-            return list.contains(val);
+            return list!.contains(val);
           },
           onItemSearch: (user, query) {
             /// When search query change in search bar then this method will be called
             ///
             /// Check if items contains query
-            return user.name.toLowerCase().contains(query.toLowerCase());
+            return user.name!.toLowerCase().contains(query.toLowerCase());
           },
         ),
       ),
