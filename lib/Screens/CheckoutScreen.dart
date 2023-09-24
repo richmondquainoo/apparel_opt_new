@@ -324,25 +324,27 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                 padding: const EdgeInsets.only(left: 18.0, top: 10),
                 child: GestureDetector(
                   onTap: () {
-                    if ((Provider.of<AppData>(context,
-                        listen: false).locationName! == null)) {
-                      new UtilityService().showMessage(
-                        context: context,
-                        message:
-                        "Please allow location permission on your device",
-                        icon: Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                        ),
-                      );
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchPlacesScreen(
-                                // positionLocation: null!,
-                              )));
-                    }
+                    print("++++");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchPlacesScreen(
+                              // positionLocation: null!,
+                            )));
+                    // if ((Provider.of<AppData>(context,
+                    //     listen: false).locationName! == null)) {
+                    //   new UtilityService().showMessage(
+                    //     context: context,
+                    //     message:
+                    //     "Please allow location permission on your device",
+                    //     icon: Icon(
+                    //       Icons.error_outline,
+                    //       color: Colors.red,
+                    //     ),
+                    //   );
+                    // } else {
+                    //
+                    // }
                   },
                   child: Row(
                     children: [

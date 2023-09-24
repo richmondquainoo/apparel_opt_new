@@ -166,17 +166,30 @@ class _AccountScreenState extends State<AccountScreen> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: kBackgroundTheme,
+        persistentFooterButtons: [
+          Center(
+            child: Text(
+              "Version 1.0.2",
+              style: GoogleFonts.raleway(
+                fontSize: 13,
+                fontWeight: FontWeight.w300,
+                color: Colors.black54,
+                letterSpacing: .75,
+              ),
+            ),
+          ),
+        ],
         appBar: AppBar(
           backgroundColor: Colors.grey.shade50,
           elevation: 0.2,
           automaticallyImplyLeading: false,
           title: Text(
-            "ACCOUNT",
+            "Account",
             style: GoogleFonts.raleway(
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              fontWeight: FontWeight.w300,
               color: Colors.black,
-              letterSpacing: 0.7
+              letterSpacing: .75,
             ),
           ),
           leading: IconButton(
@@ -329,69 +342,130 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(
                 height: 10,
               ),
-              AccountMenu(
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OrderScreen(
-                        showBackButton: true,
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0, right: 14, bottom: 10),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Theme.of(context).cardColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(0, 1), // changes position of shadow
                       ),
+                    ],
+                  ),
+                  child: Column(children: [
+                    SettingCardComponent(
+                      title: "My Orders",
+                      leadingIcon: Icons.card_giftcard_outlined,
+                      bgIconColor: Colors.amber,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderScreen(
+                              showBackButton: true,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-                menu: "My Orders",
-                iconImage: Icons.card_giftcard_outlined,
+                  ]),
+                ),
               ),
-              // AccountMenu(
-              //     onTap: () {
-              //       Navigator.push(context,
-              //           MaterialPageRoute(builder: (context) => PaymentScreen()));
-              //     },
-              //     menu: "Payment History",
-              //     iconImage: Icons.payment),
-              AccountMenu(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FavoritesScreen(),
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0, right: 14,bottom: 10),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Theme.of(context).cardColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(0, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(children: [
+                    SettingCardComponent(
+                      title: "Favorites",
+                      leadingIcon: Icons.favorite_border,
+                      bgIconColor: Colors.amber,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FavoritesScreen(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-                menu: "Favorites",
-                iconImage: Icons.favorite_border,
+                  ]),
+                ),
               ),
-              // AccountMenu(
-              //   onTap: () {
-              //     // File file = await fromAsset('assets/Policy.pdf', 'Policy.pdf');
-              //     // fromAsset('assets/Policy.pdf', 'Policy.pdf').then((f) {
-              //     //   setState(() {
-              //     //     path = f.path;
-              //     //   });
-              //     // });
-              //     // print('file: $file | ${file.path}');
-              //     // if (file != null) {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => TermsAndConditionsScreen(
-              //           path:
-              //               '/data/user/0/com.casantey.potbelly/app_flutter/terms.pdf',
-              //         ),
-              //       ),
-              //     );
-              //   },
-              //   menu: "Terms & Conditions",
-              //   iconImage: Icons.bookmark_border_outlined,
-              // ),
-              AccountMenu(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AboutScreen()));
-                },
-                menu: "About App",
-                iconImage: Icons.info_rounded,
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0, right: 14,bottom: 10),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Theme.of(context).cardColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(0, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(children: [
+                    SettingCardComponent(
+                      title: "Privacy Policy",
+                      leadingIcon: Icons.shield,
+                      bgIconColor: Colors.amber,
+                      onTap: () {
+
+                      },
+                    ),
+                  ]),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0, right: 14,bottom: 10),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Theme.of(context).cardColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(0, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(children: [
+                    SettingCardComponent(
+                      title: "About App",
+                      leadingIcon: Icons.info_rounded,
+                      bgIconColor: Colors.amber,
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => AboutScreen()));
+                      },
+                    ),
+                  ]),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 14.0, right: 14),

@@ -78,106 +78,13 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: MaterialButton(
                       onPressed: () {
-                        // debugPrint("Day: ${product}");
-                        // dbHelper.getCartSummary();
-                        // new UtilityService().confirmationBox(
-                        //     title: 'Confirmation',
-                        //     message:
-                        //         'Are you sure you want to proceed with purchase?',
-                        //     context: context,
-                        //     yesButtonColor: Colors.amber,
-                        //     noButtonColor: Colors.amber,
-                        //     // color: Colors.blueAccent,
-                        //     onYes: () {
-                        //       Navigator.pop(context);
-                        //       Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //           builder: (context) => CheckOutScreen(),
-                        //         ),
-                        //       );
-                        //     },
-                        //     onNo: () {
-                        //       Navigator.pop(context);
-                        //     });
 
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Center(
-                                  child: Text(
-                                    "Confirmation",
-                                    style: GoogleFonts.raleway(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                      letterSpacing: 0.3,
-                                    ),
-                                  ),
-                                ),
-                                content: Text(
-                                  "Are you sure you want to proceed to checkout?",
-                                  style: GoogleFonts.raleway(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                    letterSpacing: 0.3,
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child:ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.teal,
-                                      ),
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => CheckOutScreen(),
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        "Yes",
-                                        style: GoogleFonts.raleway(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white,
-                                          letterSpacing: 0.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(bottom: 8.0, right: 8),
-                                    child:ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.black,
-                                      ),
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        "No",
-                                        style: GoogleFonts.raleway(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white,
-                                          letterSpacing: 0.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 35,),
-                                ],
-                              );
-                            });
-
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CheckOutScreen(),
+                          ),
+                        );
                       },
                       height: 50,
                       elevation: 0,
@@ -209,10 +116,10 @@ class _CartScreenState extends State<CartScreen> with TickerProviderStateMixin {
           elevation: 0.5,
           automaticallyImplyLeading: false,
           title: Text(
-            "CART",
+            "Cart",
             style: GoogleFonts.raleway(
               fontSize: 18,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w400,
               color: Colors.black,
               letterSpacing: .75,
             ),

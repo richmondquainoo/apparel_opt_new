@@ -102,6 +102,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal
+                            ),
                             onPressed: () {
                               Navigator.pop(context);
                               if (profileNameController.text.isEmpty) {
@@ -149,6 +152,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           padding:
                           const EdgeInsets.only(bottom: 8.0, right: 8),
                           child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black
+                              ),
                               onPressed: () {
                                 Navigator.pop(context); //close Dialog
                               },
@@ -184,10 +190,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         )
-        // FadeAnimation(
-        //     0,
-        //
-        // )
       ],
       appBar: AppBar(
         backgroundColor: Colors.grey.shade50,
@@ -216,10 +218,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               Card(
                 child: Container(
-                  height: 210,
+                  // height: 210,
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 20.0, right: 20, top: 10, bottom: 20),
+                        left: 20.0, right: 20, top: 10, bottom: 40),
                     child: Column(
                       children: [
                         TextField(
@@ -237,7 +239,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             labelStyle: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 13,
+                                fontSize: 14,
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w300),
                             labelText: "Profile name",
@@ -268,7 +270,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             labelStyle: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 13,
+                                fontSize: 14,
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w300),
                             labelText: "Phone Number",

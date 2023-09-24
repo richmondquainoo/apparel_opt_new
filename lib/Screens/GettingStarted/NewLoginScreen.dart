@@ -330,7 +330,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                       password = value;
                                     },
                                     decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.zero,
+                                      contentPadding: EdgeInsets.only(bottom: 30),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
@@ -346,6 +346,22 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                         Icons.lock,
                                         color: Colors.white,
                                       ),
+                                      suffix: IconButton(
+                                          color: Colors.white,
+                                          onPressed: () {
+                                            setState(() {
+                                              if (showPassword) {
+                                                showPassword = false;
+                                              } else {
+                                                showPassword = true;
+                                              }
+                                            });
+                                          },
+                                          icon: Icon(showPassword == true
+                                              ? Icons.remove_red_eye
+                                              : Icons.password)),
+                                      // labelStyle:
+                                      // TextStyle(color: Colors.black54, fontSize: 14),
                                       labelText: "Password",
                                       labelStyle: const TextStyle(
                                           color: Colors.white, fontSize: 14),
