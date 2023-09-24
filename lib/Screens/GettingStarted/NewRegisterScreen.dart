@@ -37,6 +37,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
   String? phone;
   String? passwordConfirm;
 
+  final textFieldFocusNode = FocusNode();
+  bool _obscured = false;
+
+  void _toggleObscured() {
+    setState(() {
+      _obscured = !_obscured;
+      if (textFieldFocusNode.hasPrimaryFocus) return; // If focus is on text field, dont unfocus
+      textFieldFocusNode.canRequestFocus = false;     // Prevents focus if tap on eye
+    });
+  }
+
   bool checkBoxValue = false;
   @override
   Widget build(BuildContext context) {
@@ -247,14 +258,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                               ),
                               child: Center(
                                 child: TextField(
-                                  obscureText: true,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  obscureText: _obscured,
+                                  focusNode: textFieldFocusNode,
                                   style: const TextStyle(color: Colors.white),
+
                                   controller: passwordController,
                                   onChanged: (value) {
                                     password = value;
                                   },
                                   decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
+                                    contentPadding: EdgeInsets.only(bottom: 30),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: const BorderSide(
@@ -262,7 +276,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                                     ),
                                     focusedBorder: const OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
+                                      BorderRadius.all(Radius.circular(10)),
                                       borderSide: BorderSide(
                                           color: Colors.amber, width: 0.7),
                                     ),
@@ -270,6 +284,21 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                                       Icons.lock,
                                       color: Colors.white,
                                     ),
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                      child: GestureDetector(
+                                        onTap: _toggleObscured,
+                                        child: Icon(
+                                          _obscured
+                                              ? Icons.visibility_rounded
+                                              : Icons.visibility_off_rounded,
+                                          size: 24,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    // labelStyle:
+                                    // TextStyle(color: Colors.black54, fontSize: 14),
                                     labelText: "Password",
                                     labelStyle: const TextStyle(
                                         color: Colors.white, fontSize: 14),
@@ -382,22 +411,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                                       // pin: pin,
                                       phone: phone!.trim(),
                                     );
-                                    new UtilityService().confirmationBox(
-                                        title: 'Confirmation',
-                                        message:
-                                            'Are you sure you want to proceed with the registration?',
-                                        context: context,
-                                        yesButtonColor: Colors.teal,
-                                        noButtonColor: LABEL_COLOR,
-                                        // color: Colors.blueAccent,
-                                        onYes: () {
-                                          print("+++++++");
-                                          Navigator.pop(context);
-                                          checkForEmail(context: context, dataModel: model);
-                                        },
-                                        onNo: () {
-                                          Navigator.pop(context);
-                                        });
+                                    checkForEmail(context: context, dataModel: model);
                                   }
                                 }
                               },

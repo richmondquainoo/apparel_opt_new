@@ -20,7 +20,6 @@ import '../../Utils/Utility.dart';
 import '../../Utils/paths.dart';
 import '../LandingPage/PreLoad.dart';
 import 'ForgotPasswordScreen.dart';
-import 'LoginScreen.dart';
 import 'NewRegisterScreen.dart';
 
 class NewLoginScreen extends StatefulWidget {
@@ -60,6 +59,17 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
 
   void initDB() async {
     await userDB.initialize();
+  }
+
+  final textFieldFocusNode = FocusNode();
+  bool _obscured = false;
+
+  void _toggleObscured() {
+    setState(() {
+      _obscured = !_obscured;
+      if (textFieldFocusNode.hasPrimaryFocus) return; // If focus is on text field, dont unfocus
+      textFieldFocusNode.canRequestFocus = false;     // Prevents focus if tap on eye
+    });
   }
 
   Future<bool> _handleLocationPermission() async {
@@ -323,8 +333,11 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                 ),
                                 child: Center(
                                   child: TextField(
-                                    obscureText: true,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    obscureText: _obscured,
+                                    focusNode: textFieldFocusNode,
                                     style: const TextStyle(color: Colors.white),
+
                                     controller: passwordController,
                                     onChanged: (value) {
                                       password = value;
@@ -346,20 +359,19 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                         Icons.lock,
                                         color: Colors.white,
                                       ),
-                                      suffix: IconButton(
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            setState(() {
-                                              if (showPassword) {
-                                                showPassword = false;
-                                              } else {
-                                                showPassword = true;
-                                              }
-                                            });
-                                          },
-                                          icon: Icon(showPassword == true
-                                              ? Icons.remove_red_eye
-                                              : Icons.password)),
+                                      suffixIcon: Padding(
+                                        padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                        child: GestureDetector(
+                                          onTap: _toggleObscured,
+                                          child: Icon(
+                                            _obscured
+                                                ? Icons.visibility_rounded
+                                                : Icons.visibility_off_rounded,
+                                            size: 24,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
                                       // labelStyle:
                                       // TextStyle(color: Colors.black54, fontSize: 14),
                                       labelText: "Password",
@@ -384,7 +396,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                       "Forgot password?",
                                       style: GoogleFonts.raleway(
                                         fontSize: 13,
-                                        fontWeight: FontWeight.w300,
+                                        fontWeight: FontWeight.w400,
                                         color: Colors.white,
                                         letterSpacing: 0.3,
                                       ),

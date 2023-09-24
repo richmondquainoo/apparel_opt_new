@@ -30,7 +30,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: FIRSTBLACK,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -53,11 +53,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 padding: const EdgeInsets.only(
                                     left: 0, top: 10, bottom: 10),
                                 child: const Icon(Icons.keyboard_arrow_left,
-                                    color: Colors.black),
+                                    color: Colors.white),
                               ),
-                              const Text('Back',
-                                  style: TextStyle(
-                                      fontSize: 16,
+                              Text('Back',
+                                  style: GoogleFonts.raleway(
+                                      fontSize: 17,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.w500))
                             ],
                           ),
@@ -99,9 +100,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     child: Text(
                       'Enter the email address',
                       style: GoogleFonts.lato(
-                          fontSize: 15,
+                          fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.blueGrey),
+                          color: Colors.white),
                     ),
                   ),
                 ),
@@ -115,9 +116,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     child: Text(
                       'associated with your account.',
                       style: GoogleFonts.lato(
-                          fontSize: 15,
+                          fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.blueGrey),
+                          color: Colors.white),
                     ),
                   ),
                 ),
@@ -132,8 +133,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       'We will send an OTP to the phone number linked to the email',
                       style: GoogleFonts.lato(
                           fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.black),
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white),
                     ),
                   ),
                 ),
@@ -154,7 +155,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: Center(
                     child: TextField(
                       obscureText: false,
-                      style: const TextStyle(color: Colors.black54),
+                      style: const TextStyle(color: Colors.white),
                       controller: emailController,
                       onChanged: (value) {
                         email = value;
@@ -164,20 +165,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: Colors.black87, width: 0.0),
+                              color: Colors.white, width: 0.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide:
-                              BorderSide(color: primaryColor, width: 0.7),
+                              BorderSide(color: Colors.white, width: 0.7),
                         ),
                         prefixIcon: const Icon(
                           Icons.mail,
-                          color: Colors.black54,
+                          color: Colors.white,
                         ),
                         labelText: "Email",
                         labelStyle: const TextStyle(
-                            color: Colors.black54, fontSize: 14),
+                            color: Colors.white, fontSize: 14),
                       ),
                     ),
                   ),
@@ -189,8 +190,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                   child: TextButtonComponent(
-                      labelColor: Colors.black,
+                      labelColor: Colors.amber,
                       label: 'Send',
+                      textColor: Colors.black,
                       onTap: () {
                         //1. Validate email field
                         bool canSendEmail = isCorrectInput(context);

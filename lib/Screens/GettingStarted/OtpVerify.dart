@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../Components/ProgressDialog.dart';
 import '../../Components/TextButtonComponent.dart';
+import '../../Constants/myColors.dart';
 import '../../Database/DBImplementation.dart';
 import '../../Database/UserDB.dart';
 import '../../Model/AppData.dart';
@@ -61,7 +62,7 @@ class _OtpVerifyState extends State<OtpVerify> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        backgroundColor: Colors.white,
+
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -108,9 +109,9 @@ class _OtpVerifyState extends State<OtpVerify> {
                     alignment: Alignment.center,
                     child: Text('Verification',
                         style: GoogleFonts.raleway(
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color: Colors.black,
                         )),
                   ),
                 ),
@@ -136,7 +137,7 @@ class _OtpVerifyState extends State<OtpVerify> {
                       style: GoogleFonts.raleway(
                           fontSize: 15,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white),
+                          color: Colors.black),
                     ),
                   ),
                 ),
@@ -152,7 +153,7 @@ class _OtpVerifyState extends State<OtpVerify> {
                       style: GoogleFonts.raleway(
                           fontSize: 15,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white),
+                          color: Colors.black),
                     ),
                   ),
                 ),
@@ -168,7 +169,7 @@ class _OtpVerifyState extends State<OtpVerify> {
                       fieldWidth: 50,
                       style: const TextStyle(color: Colors.black, fontSize: 22),
                       textFieldAlignment: MainAxisAlignment.spaceAround,
-                      fieldStyle: FieldStyle.underline,
+                      fieldStyle: FieldStyle.box,
                       onCompleted: (pin) {
                         print("Completed: " + pin);
                         setState(() {
@@ -418,7 +419,7 @@ class _OtpVerifyState extends State<OtpVerify> {
           context, MaterialPageRoute(builder: (context) => PreLoadScreen()));
       new UtilityService().showMessage(
         context: context,
-        message: 'Your registration is successful',
+        message: 'Success',
         icon: Icon(
           Icons.check_circle,
           color: Colors.lightGreenAccent,
