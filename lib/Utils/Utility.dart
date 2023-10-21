@@ -1,3 +1,5 @@
+import 'package:achievement_view/achievement_view.dart';
+import 'package:achievement_view/achievement_widget.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,6 +53,57 @@ class UtilityService {
           );
         });
   }
+
+
+  void showWarning(
+      BuildContext context, {
+        String? title,
+        required String message,
+      }) {
+    AchievementView(
+      title: title ?? 'Warning!',
+      subTitle: message,
+      icon: Icon(Icons.warning_amber_rounded, color: Colors.white),
+      typeAnimationContent: AnimationTypeAchievement.fadeSlideToUp,
+      borderRadius: BorderRadius.circular(15),
+      color: Color(0xFFFF9500),
+      iconBackgroundColor: Color.fromARGB(128, 255, 149, 0),
+      textStyleTitle: GoogleFonts.lato(),
+      textStyleSubTitle: GoogleFonts.raleway(
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.25,
+      ),
+      alignment: Alignment.topCenter,
+      duration: Duration(milliseconds: 3500),
+      // onTap: () => Navigator.of(context).pop(),
+    ).show(context);
+  }
+
+
+  void showError(
+      BuildContext context, {
+        String? title,
+        required String message,
+      }) {
+    AchievementView(
+      title: title ?? 'Error!',
+      subTitle: message,
+      icon: Icon(Icons.error_outline, color: Colors.white),
+      typeAnimationContent: AnimationTypeAchievement.fadeSlideToUp,
+      borderRadius: BorderRadius.circular(15),
+      color: Colors.red[300]!,
+      iconBackgroundColor: Colors.red,
+      textStyleTitle: GoogleFonts.lato(),
+      textStyleSubTitle: GoogleFonts.raleway(
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.25,
+      ),
+      alignment: Alignment.topCenter,
+      duration: Duration(milliseconds: 3500),
+      // onTap: () => Navigator.of(context).pop(),
+    ).show(context);
+  }
+
 
   //
   // void listBox({String title, String message, BuildContext context, Color color}) {

@@ -50,14 +50,14 @@ class _SuccessScreenState extends State<SuccessScreen> {
         backgroundColor: Colors.grey.shade50,
         elevation: 0,
         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.close, size: 24, color: Colors.black54),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //     icon: const Icon(Icons.close, size: 24, color: Colors.black54),
+        //   ),
+        // ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +70,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   Container(
                     height: 210,
                     child: Lottie.network(
-                        "https://assets10.lottiefiles.com/packages/lf20_ya4ycrti.json"),
+                        "https://lottie.host/c9eabe4f-b6ec-4083-99a5-5cfbe4e51c02/gtGTGaSuDH.json"),
                   ),
                   const SizedBox(
                     height: 10,
@@ -83,14 +83,14 @@ class _SuccessScreenState extends State<SuccessScreen> {
                         fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(
-                    height: 2,
+                    height: 10,
                   ),
                   Text(
                     "Your order placement is successful !!!",
                     style: GoogleFonts.raleway(
                         color: Colors.teal,
                         fontSize: 14,
-                        fontWeight: FontWeight.w400),
+                        fontWeight: FontWeight.w600),
                   ),
                 ],
               ),

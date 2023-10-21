@@ -66,6 +66,7 @@ dependencies:
   modal_bottom_sheet: ^2.1.2
   we_slide: ^2.4.0
   flutter_spinkit: ^5.1.0
+  achievement_view: ^1.0.0
 
 
 

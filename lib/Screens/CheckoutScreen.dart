@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:achievement_view/achievement_view.dart';
+import 'package:achievement_view/achievement_widget.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:apparel_options/Database/DeliveryCostDB.dart';
 import 'package:apparel_options/Model/NewOrderModel.dart';
@@ -11,7 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-
+import '../../Utils/Utility.dart';
 import '../Components/ProgressDialog.dart';
 import '../Constants/constantColors.dart';
 import '../Constants/myColors.dart';
@@ -52,6 +55,8 @@ class _CheckOutScreenState extends State<CheckOutScreen>
   ConfigDB configDB = ConfigDB();
   UserProfileModel userModel = UserProfileModel();
   UserProfileModel user = UserProfileModel();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int selectedPayMethod = 0;
   String? locationName;
@@ -870,7 +875,6 @@ class _CheckOutScreenState extends State<CheckOutScreen>
     print("overall cost: $overallTotal");
   }
 
-
   Future<void> getUserLocation() async {
 
     var position = await geo.GeolocatorPlatform.instance.getCurrentPosition(
@@ -1142,6 +1146,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
   Widget build(BuildContext context) {
     final cart = Provider.of<AppData>(context);
     return Scaffold(
+      key: _scaffoldKey,
       persistentFooterButtons: [
         Consumer<AppData>(builder: (context, value, child) {
           return Visibility(
@@ -1262,7 +1267,7 @@ class _CheckOutScreenState extends State<CheckOutScreen>
                                           debugPrint("PRODUCT FOR POSTING ********: ${newOrderModel.products}");
                                           print("Order Model: $newOrderModel");
                                           // Navigator.pop(context);
-                                          sendOrder(context: context, dataModel: newOrderModel);
+                                          await sendOrder(context: context, dataModel: newOrderModel);
                                         },
                                         child: Text(
                                           "Yes",
@@ -1406,12 +1411,14 @@ class _CheckOutScreenState extends State<CheckOutScreen>
 
   Future<void> sendOrder({BuildContext? context, NewOrderModel? dataModel}) async {
     try {
-      showDialog(
-        context: context!,
-        builder: (context) {
-          return ProgressDialog(displayMessage: 'Please wait...');
-        },
-      );
+      // showDialog(
+      //   context: context!,
+      //   builder: (context) {
+      //     return ProgressDialog(displayMessage: 'Please wait...');
+      //   },
+      // );
+
+      EasyLoading.show(status: 'Placing order...');
 
       print('order request object: $dataModel');
 
@@ -1425,78 +1432,97 @@ class _CheckOutScreenState extends State<CheckOutScreen>
 
         var data = jsonDecode(response.body);
         int status = data['status'];
-        print('Status 123: $status');
-      new UtilityService().showMessage(
-        message: 'An error has occurred. Please try again',
-        icon: Icon(
-          Icons.error_outline,
-          color: Colors.red,
-        ),
-        context: context,
-      );
-      Navigator.of(context!, rootNavigator: true).pop();
+        print('Status Code: $status');
+
+      if (data['status'] == 201) {
+        EasyLoading.dismiss();
+        //go to payment page, if electronic
+        if (dataModel!.paymentMode == 'Electronic') {
+          CheckoutModel model = CheckoutModel(
+            checkoutURL: data['data']['checkoutURL'].toString(),
+            checkoutDirectURL: data['data']['checkoutDirectURL'].toString(),
+            clientReference: data['data']['clientReference'].toString(),
+            checkoutID: data['data']['checkoutID'].toString(),
+          );
+          print("CHECKOUT MODEL: $model");
+
+          Navigator.pushReplacement(
+            _scaffoldKey.currentContext!,
+            MaterialPageRoute(
+              builder: (context) => PaymentScreen(
+                clientReference: model.clientReference,
+                checkoutModel: model,
+              ),
+            ),
+          );
+        } else {
+          new UtilityService().showMessage(
+            context: _scaffoldKey.currentContext,
+            message: 'Order placed successfully',
+            icon: Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          );
+          Navigator.pushReplacement(
+            _scaffoldKey.currentContext!,
+            MaterialPageRoute(
+              builder: (context) => SuccessScreen(),
+            ),
+          );
+        }
+        print('successfully sent');
+      }
+
         if (status == 500 || status == 404 || status == 403) {
-          Navigator.pop(context);
+          EasyLoading.dismiss();
           new UtilityService().showMessage(
             message: 'An error has occurred. Please try again',
             icon: Icon(
               Icons.error_outline,
               color: Colors.red,
             ),
-            context: context,
+            context: _scaffoldKey.currentContext,
           );
-          Navigator.pop(context);
-        } else if (status == 201) {
-          Navigator.of(context, rootNavigator: true).pop();
-
-          //go to payment page, if electronic
-          if (dataModel!.paymentMode == 'Electronic') {
-            CheckoutModel model = CheckoutModel(
-              checkoutURL: data['data']['checkoutURL'].toString(),
-              checkoutDirectURL: data['data']['checkoutDirectURL'].toString(),
-              clientReference: data['data']['clientReference'].toString(),
-              checkoutID: data['data']['checkoutID'].toString(),
-            );
-            print("CHECKOUT MODEL: $model");
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PaymentScreen(
-                  clientReference: model.clientReference,
-                  checkoutModel: model,
-                ),
-              ),
-            );
-          } else {
-            new UtilityService().showMessage(
-              context: context,
-              message: 'Order created successfully',
-              icon: Icon(
-                Icons.check,
-                color: Colors.teal,
-              ),
-            );
-            Navigator.pushReplacement(
-              context!,
-              MaterialPageRoute(
-                builder: (context) => SuccessScreen(),
-              ),
-            );
-          }
-          print('successfully sent');
         }
+
     } catch (e) {
       print('postUserData error: $e');
+      EasyLoading.dismiss();
       new UtilityService().showMessage(
-        context: context,
+        context: _scaffoldKey.currentContext,
         message: 'An error has occurred. Please try again',
         icon: Icon(
           Icons.error_outline,
           color: Colors.red,
         ),
       );
-      Navigator.of(context!, rootNavigator: true).pop();
+      // Navigator.of(context!, rootNavigator: true).pop();
     }
   }
+}
+
+
+void showError(
+    BuildContext context, {
+      String? title,
+      required String message,
+    }) {
+  AchievementView(
+    title: title ?? 'Error!',
+    subTitle: message,
+    icon: Icon(Icons.error_outline, color: Colors.white),
+    typeAnimationContent: AnimationTypeAchievement.fadeSlideToUp,
+    borderRadius: BorderRadius.circular(15),
+    color: Colors.red[300]!,
+    iconBackgroundColor: Colors.red,
+    textStyleTitle: GoogleFonts.lato(),
+    textStyleSubTitle: GoogleFonts.raleway(
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.25,
+    ),
+    alignment: Alignment.topCenter,
+    duration: Duration(milliseconds: 3500),
+    // onTap: () => Navigator.of(context).pop(),
+  ).show(context);
 }

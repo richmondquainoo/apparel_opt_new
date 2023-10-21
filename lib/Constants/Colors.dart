@@ -13,6 +13,7 @@ const PRIMARY_YELLOW = Color(0xFFF8B400);
 const PRIMARY_BLACK = Color(0xFF141E27);
 const DEEP_YELLOW = Color(0xFFFFC300);
 const NAVBAR_BACKGROUND_COLOR = Color(0xFFe7eaf3);
+const LIGHT_YELLOW = Color(0xFFFFFAF4);
 
 Color hexToColor(String hex) {
   assert(RegExp(r'^#([0-9a-fA-F]{6})|([0-9a-fA-F]{8})$').hasMatch(hex),

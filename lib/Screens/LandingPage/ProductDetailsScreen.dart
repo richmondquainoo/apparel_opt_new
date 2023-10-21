@@ -150,7 +150,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     EasyLoading.show(status: 'loading...');
     initDB();
     EasyLoading.dismiss();
-
+    menuItem.size = "Select Size";
 
   }
 
@@ -361,12 +361,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           padding: const EdgeInsets.only(bottom: 20.0),
           child: MaterialButton(
             onPressed: () async {
-              List<MenuModel> allOptions = [];
+               print("THE SELECTED SIZE: ${menuItem.size}");
 
-              if(selectedImage !< 0
+              List<MenuModel> allOptions = [];
+              if(selectedImage !< 0){
+                UtilityService().showMessage(
+                  message: 'Please choose available variant and size',
+                  context: context,
+                  icon: const Icon(
+                    Icons.cancel,
+                    color: Colors.redAccent,
+                  ),
+                );
+              }
+              else if(menuItem.size.toString().contains("Select Size")
               ){
                 UtilityService().showMessage(
-                  message: 'Please choose available variant and a size',
+                  message: 'Please select your size',
                   context: context,
                   icon: const Icon(
                     Icons.cancel,
@@ -855,11 +866,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           height: 2,
                                         ),
                                         MultiSelectContainer(
+                                        singleSelectedItem: true,
                                         maxSelectableCount: 1,
                                         itemsDecoration: MultiSelectDecorations(
                                           decoration: BoxDecoration(
                                               gradient: LinearGradient(colors: [
-                                                Colors.green.withOpacity(0.1),
+                                                Colors.yellow.withOpacity(0.1),
                                                 Colors.yellow.withOpacity(0.1),
                                               ]),
                                               border: Border.all(color: Colors.green[200]!),

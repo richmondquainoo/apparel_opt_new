@@ -6,6 +6,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../Components/ProgressDialog.dart';
 import '../Components/settingCardComponent.dart';
@@ -15,6 +16,7 @@ import '../Database/MenuDB.dart';
 import '../Database/ProductDetailsDB.dart';
 import '../Database/ProductSpecificationDB.dart';
 import '../Database/ProductVariantDB.dart';
+import '../Model/AppData.dart';
 import '../Model/ProductVariantModel.dart';
 import 'LandingPage/AboutScreen.dart';
 import 'LandingPage/EditProfileScreen.dart';
@@ -36,6 +38,8 @@ class _AccountScreenState extends State<AccountScreen> {
   ProductVariantDB? productVariantDB = ProductVariantDB();
   ProductSpecificationDB? productSpecificationDB = ProductSpecificationDB();
   ProductDetailsDB? productDetailsDB = ProductDetailsDB();
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -154,6 +158,7 @@ class _AccountScreenState extends State<AccountScreen> {
       await productDetailsDB!.deleteAll();
 
 
+
     } catch (e) {
       print("Error on clean up logout");
     }
@@ -162,6 +167,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartItems = Provider.of<AppData>(context).cartItemNew;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -489,6 +495,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       leadingIcon: Icons.logout_outlined,
                       bgIconColor: Colors.redAccent,
                       onTap: () {
+
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -532,6 +539,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                           );
                                           //close Dialog
                                           cleanUp();
+                                          formKey.currentState?.reset();
                                           print("CLEAN UP COMPLETE!!!!!!!!!!!!!!");
                                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>NewLoginScreen()));
                                           // SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');

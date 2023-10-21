@@ -109,7 +109,7 @@ class _CategoryScreenState extends State<CategoryScreen>
           )
               : Container(),
           title: Text(
-            "MENU",
+            "Category",
             style: GoogleFonts.raleway(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -169,7 +169,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                 ),
               ),
               SizedBox(
-                height: 1,
+                height: 10,
               ),
               Expanded(
                 child:
@@ -302,81 +302,163 @@ class _CategoryScreenState extends State<CategoryScreen>
                         ),
                       );
                     },
-                    child: Container(
-                      height: 110,
-                      child: Card(
-                        color: Colors.white,
+                    child: Card(
+                      child: Container(
+                        height: 130,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9) ,
+                          color: LIGHT_YELLOW,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 17.0),
-                              child: CachedNetworkImage(
-                                imageUrl: category.imageUrl.toString(),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(48),
-                                        border: Border.all(
-                                          color: Colors
-                                              .black12, //                   <--- border color
-                                          width: 1.0,
-                                        ),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                height: 80,
-                                width: 80,
-                                fit: BoxFit.cover,
-                                color: Colors.black12,
-                                colorBlendMode: BlendMode.darken,
-                                placeholder: (context, url) => Container(
-                                  child: Image.asset(
-                                    "assets/images/tshirt.png",
-                                    cacheHeight: 30,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Container(
-                                  height: 30,
-                                  child: Image.asset(
-                                    "assets/images/tshirt.png",
-                                    cacheHeight: 37,
-                                  ),
-                                ),
-                              ),
-                            ),
                             Expanded(
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 15.0),
+                                    padding: const EdgeInsets.only(left: 25.0),
                                     child: Container(
-                                      child: Text(
-                                        category.category!,
+                                      child: Text(category.category!,
                                         style: GoogleFonts.raleway(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: kPrimaryTextColor,
-                                            ),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing: 1,
+                                          color: kPrimaryTextColor,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 15,
-                                )),
+                            Transform.rotate(
+                              angle: 3.14159 / 2,
+                              child: ClipPath(
+                                clipper: ClipPathClass(),
+                                child: SizedBox(
+                                    width: 130,
+                                    child: Container(
+                                      child: Transform.rotate(
+                                        angle: -3.14159 / 2,
+                                        child: CachedNetworkImage(
+                                          imageUrl: category.imageUrl.toString(),
+                                          imageBuilder: (context, imageProvider) =>
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(0),
+                                                  image: DecorationImage(
+                                                    colorFilter: ColorFilter.mode(
+                                                        Colors.black.withOpacity(0.05),
+                                                        BlendMode.darken),
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                          height: 130,
+                                          width: 130,
+                                          fit: BoxFit.cover,
+                                          color: Colors.black12,
+                                          colorBlendMode: BlendMode.darken,
+                                          placeholder: (context, url) => Container(
+                                            child: Image.asset(
+                                              "assets/images/tshirt.png",
+                                              cacheHeight: 30,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) => Container(
+                                            height: 30,
+                                            child: Image.asset(
+                                              "assets/images/tshirt.png",
+                                              cacheHeight: 37,
+                                            ),
+                                          ),
+                                        ),
+
+                                      ),
+                                    )
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
                     ),
+                    // child: Container(
+                    //   height: 110,
+                    //   child: Card(
+                    //     color: Colors.white,
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.start,
+                    //       children: [
+                    //         Padding(
+                    //           padding: const EdgeInsets.only(left: 17.0),
+                    //           child: CachedNetworkImage(
+                    //             imageUrl: category.imageUrl.toString(),
+                    //             imageBuilder: (context, imageProvider) =>
+                    //                 Container(
+                    //                   decoration: BoxDecoration(
+                    //                     borderRadius: BorderRadius.circular(48),
+                    //                     border: Border.all(
+                    //                       color: Colors
+                    //                           .black12, //                   <--- border color
+                    //                       width: 1.0,
+                    //                     ),
+                    //                     image: DecorationImage(
+                    //                       image: imageProvider,
+                    //                       fit: BoxFit.cover,
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //             height: 80,
+                    //             width: 80,
+                    //             fit: BoxFit.cover,
+                    //             color: Colors.black12,
+                    //             colorBlendMode: BlendMode.darken,
+                    //             placeholder: (context, url) => Container(
+                    //               child: Image.asset(
+                    //                 "assets/images/tshirt.png",
+                    //                 cacheHeight: 30,
+                    //               ),
+                    //             ),
+                    //             errorWidget: (context, url, error) => Container(
+                    //               height: 30,
+                    //               child: Image.asset(
+                    //                 "assets/images/tshirt.png",
+                    //                 cacheHeight: 37,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         Expanded(
+                    //           child: Row(
+                    //             children: [
+                    //               Padding(
+                    //                 padding: const EdgeInsets.only(left: 15.0),
+                    //                 child: Container(
+                    //                   child: Text(
+                    //                     category.category!,
+                    //                     style: GoogleFonts.raleway(
+                    //                         fontSize: 14,
+                    //                         fontWeight: FontWeight.w500,
+                    //                         color: kPrimaryTextColor,
+                    //                         ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //         IconButton(
+                    //             onPressed: () {},
+                    //             icon: Icon(
+                    //               Icons.arrow_forward_ios,
+                    //               size: 15,
+                    //             )),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                 ),
                 // Padding(
@@ -466,4 +548,30 @@ class _CategoryScreenState extends State<CategoryScreen>
       return null!;
     }
   }
+}
+
+class ClipPathClass extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0.0, size.height - 30);
+
+    var firstControlPoint = Offset(size.width / 4, size.height);
+    var firstPoint = Offset(size.width / 2, size.height);
+    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
+        firstPoint.dx, firstPoint.dy);
+
+    var secondControlPoint = Offset(size.width - (size.width / 4), size.height);
+    var secondPoint = Offset(size.width, size.height - 30);
+    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
+        secondPoint.dx, secondPoint.dy);
+
+    path.lineTo(size.width, 0.0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
