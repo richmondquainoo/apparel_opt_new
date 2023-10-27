@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AppData(),
       child: MaterialApp(
+        themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
         title: 'Apparel Options',
         theme: new ThemeData(

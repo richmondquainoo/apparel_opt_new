@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:apparel_options/Constants/myColors.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +20,7 @@ import '../../Model/UserProfileModel.dart';
 import '../../Services/NetworkUtility.dart';
 import '../../Utils/Utility.dart';
 import '../../Utils/paths.dart';
+import '../CheckoutScreen.dart';
 import '../LandingPage/PreLoad.dart';
 import 'ForgotPasswordScreen.dart';
 import 'NewRegisterScreen.dart';
@@ -443,11 +446,20 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                   bool canProceed = isValidEntries(context);
                                   const CircularProgressIndicator();
                                   if (canProceed) {
-                                    OTPModel model = OTPModel(
-                                      email: email!.trim(),
-                                      password: password!.trim(),
-                                    );
-                                    serverAuthentication(model);
+                                    var connectivityResult = await (Connectivity().checkConnectivity());
+                                    if (connectivityResult == ConnectivityResult.mobile ||
+                                    connectivityResult == ConnectivityResult.wifi) {
+                                      OTPModel model = OTPModel(
+                                        email: email!.trim(),
+                                        password: password!.trim(),
+                                      );
+                                      serverAuthentication(model);
+                                    }else{
+                                      showError(
+                                        context,
+                                        message: 'Please check your internet connection!',
+                                      );
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -568,12 +580,13 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
 
   void serverAuthentication(OTPModel userProfileModel) async {
     try {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return ProgressDialog(displayMessage: 'Authenticating...');
-        },
-      );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return ProgressDialog(displayMessage: 'Authenticating...');
+      //   },
+      // );
+      EasyLoading.show(status: 'Authenticating...');
 
       var jsonBody = jsonEncode(userProfileModel);
       NetworkUtility networkUtility = NetworkUtility();
@@ -584,8 +597,9 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
 
       print('auth response: ${response!.body}');
 
-      Navigator.of(context, rootNavigator: true).pop();
+
       if (response == null) {
+        EasyLoading.dismiss();
         //error handling
         new UtilityService().showMessage(
           context: context,
@@ -609,6 +623,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
           userModel.phone = data['data']['phone'];
           userModel.password = passwordController.text;
           print("The user model at the login auth: ${userModel}");
+          EasyLoading.dismiss();
 
           await saveUserInfoLocally(userModel);
           // showOrderDetails(context);
@@ -619,6 +634,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
             ),
           );
         } else {
+          EasyLoading.dismiss();
           new UtilityService().showMessage(
             context: context,
             message: data['message'],
@@ -630,6 +646,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
         }
       }
     } catch (e) {
+      EasyLoading.dismiss();
       new UtilityService().showMessage(
         context: context,
         message: "Invalid username or password",

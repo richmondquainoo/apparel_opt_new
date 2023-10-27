@@ -1,13 +1,19 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:apparel_options/Constants/constantColors.dart';
+import 'package:apparel_options/Screens/LandingPage/StepperScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 
 import 'package:provider/provider.dart';
 
 import '../../Components/GenericCardComponent.dart';
+import '../../Constants/myColors.dart';
 import '../../Database/OrderDB.dart';
 import '../../Database/UserDB.dart';
 import '../../Model/AppData.dart';
@@ -21,16 +27,23 @@ import '../../index.dart';
 class OrderScreen extends StatefulWidget {
   final bool? showBackButton;
   final bool? goToHome;
-  const OrderScreen({Key? key, this.showBackButton, this.goToHome})
+  final String? track;
+  const OrderScreen({Key? key, this.showBackButton, this.goToHome, this.track})
       : super(key: key);
 
   @override
   State<OrderScreen> createState() =>
-      _OrderScreenState(showBackButton: showBackButton!, goToHome: goToHome);
+      _OrderScreenState(showBackButton: showBackButton!, goToHome: goToHome, track: track);
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final Completer<GoogleMapController> mapController = Completer();
+  GoogleMapController? newGoogleMapController;
+  final String? track;
   final bool? showBackButton;
+  bool? showButton = false;
+  bool? showMap = false;
   final bool? goToHome;
   List<NewOrderModel> orderList = [];
   int pending = 0;
@@ -38,6 +51,9 @@ class _OrderScreenState extends State<OrderScreen> {
   int delivered = 0;
   int cancelled = 0;
   int total = 0;
+  Set<Marker> _markers = {};
+  Map<PolylineId, Polyline> polylines = {};
+  PolylinePoints polylinePoints = PolylinePoints();
 
   int step1 = 1;
   int step2 = 2;
@@ -47,22 +63,67 @@ class _OrderScreenState extends State<OrderScreen> {
   int step6 = 6;
   int step7 = 7;
 
+  double? agentLatitude;
+  double? agentLongitude;
   int upperBound = 7;
   int currentStep = 0;
   List<NewOrderModel> listOfOrders = [];
   List<NewOrderModel> foundItem = [];
   bool showSpinner = true;
-
+  LatLng? initialPosition;
+  LatLng? currentLocation;
   UserDB userDB = UserDB();
   OrderDB orderDB = OrderDB();
   UserProfileModel userProfileModel = UserProfileModel();
 
+  final PageController controller = PageController(initialPage: 0);
+  BitmapDescriptor? _customSource;
+  BitmapDescriptor? _customDestination;
+
   @override
   void initState() {
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(60, 60)), 'assets/images/source.png')
+        .then((customMarker) {
+      _customSource = customMarker;
+    });
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(60, 60)),
+        'assets/images/destination.png')
+        .then((customMarkerDestination) {
+      _customDestination = customMarkerDestination;
+    });
+    super.initState();
+    // fetchRequestByID(context);
+
+    getUserLocation();
+    // print("THE AGENT COORDINATES: ${Provider.of<AppData>(context, listen: false).agentLatLng}");
+    setState(() {});
+
     initDB();
     // TODO: implement initState
     super.initState();
 
+  }
+
+  void getUserLocation() async {
+    var position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.bestForNavigation));
+
+    setState(() {
+      initialPosition = LatLng(position.latitude, position.longitude);
+      currentLocation = initialPosition;
+      print(currentLocation);
+    });
+    // await agentLocation(context);
+
+    _setMarker();
+    // await getDirections();
+    final GoogleMapController controller = await mapController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLng(currentLocation!),
+    );
   }
 
   void initDB() async {
@@ -76,6 +137,23 @@ class _OrderScreenState extends State<OrderScreen> {
     } catch (e) {
       print("Error on init DB");
     }
+  }
+
+  void _setMarker() async {
+    Set<Marker> newMarker = new Set<Marker>();
+    newMarker.add(Marker(
+      markerId: MarkerId('source'),
+      position: currentLocation!,
+      icon: _customSource!,
+    ));
+    newMarker.add(Marker(
+      markerId: MarkerId('destination'),
+      position: LatLng(agentLatitude!, agentLongitude!),
+      icon: _customDestination!,
+    ));
+    setState(() {
+      _markers = newMarker;
+    });
   }
 
 
@@ -128,15 +206,16 @@ class _OrderScreenState extends State<OrderScreen> {
     print('listOfOrders after: $orderList');
   }
 
-  _OrderScreenState({this.showBackButton, this.goToHome});
+  _OrderScreenState({this.showBackButton, this.goToHome, this.track});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         leading: (showBackButton!)
             ? IconButton(
                 onPressed: () {
-                  (goToHome != null && goToHome == true)
+                  ((goToHome != null && goToHome == true )|| track.toString().contains("Success Screen"))
                       ? Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -157,12 +236,12 @@ class _OrderScreenState extends State<OrderScreen> {
         elevation: 0.2,
         automaticallyImplyLeading: false,
         title: Text(
-          "MY ORDERS",
+          "My Orders",
           style: GoogleFonts.raleway(
             fontSize: 18,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
             color: Colors.black,
-            letterSpacing: .75,
+            letterSpacing: .5,
           ),
         ),
       ),
@@ -316,7 +395,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   children: [
                                     Text(
                                       '$delivered',
-                                      style: GoogleFonts.lato(
+                                      style: GoogleFonts.raleway(
                                         color: Colors.black,
                                         fontSize: 16,
                                       ),
@@ -326,7 +405,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     ),
                                     Text(
                                       'DELIVERED',
-                                      style: GoogleFonts.lato(
+                                      style: GoogleFonts.raleway(
                                         color: Colors.green,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 10,
@@ -340,7 +419,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   children: [
                                     Text(
                                       '$cancelled',
-                                      style: GoogleFonts.lato(
+                                      style: GoogleFonts.raleway(
                                         color: Colors.black,
                                         fontSize: 16,
                                       ),
@@ -350,7 +429,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     ),
                                     Text(
                                       'CANCELLED',
-                                      style: GoogleFonts.lato(
+                                      style: GoogleFonts.raleway(
                                         color: Colors.redAccent,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 10,
@@ -441,18 +520,18 @@ class _OrderScreenState extends State<OrderScreen> {
       setState(() {
         showSpinner = true;
       });
-
       NetworkUtility networkUtility = NetworkUtility();
       Response? response = await networkUtility.getDataWithAuth(
           url: '${FETCH_LIST_OF_ORDERS_BY_EMAIL}/${userProfileModel.email}',
           auth: 'Bearer $ACCESS_TOKEN');
-      print(
-          "The url: ${FETCH_LIST_OF_ORDERS_BY_EMAIL}/${userProfileModel.email}");
+      print("************");
+
+      print("The url: ${FETCH_LIST_OF_ORDERS_BY_EMAIL}/${userProfileModel.email}");
 
       debugPrint('order response: ${response!.body}');
 
       print("UserModel email: ${userProfileModel.email}");
-      if (response!.statusCode == 200 && response != null) {
+      if (response.statusCode == 200 && response != null) {
         //parse data received
         var data = jsonDecode(response.body);
 
@@ -557,7 +636,7 @@ class _OrderScreenState extends State<OrderScreen> {
       } else {
         UtilityService().showMessage(
           message: 'Sorry, an error occurred while fetching data',
-          context: context,
+          context: _scaffoldKey.currentContext,
           icon: const Icon(
             Icons.cancel,
             color: Colors.redAccent,
@@ -574,7 +653,7 @@ class _OrderScreenState extends State<OrderScreen> {
       });
       UtilityService().showMessage(
         message: 'Sorry, an error occurred while order list',
-        context: context,
+        context: _scaffoldKey.currentContext,
         icon: const Icon(
           Icons.cancel,
           color: Colors.redAccent,
@@ -591,7 +670,13 @@ class _OrderScreenState extends State<OrderScreen> {
 
       if (orderList != null) {
         for (NewOrderModel order in orderList) {
-          int curStep = 0;
+          int curStep = 3;
+          if(currentStep == 4){
+            showButton == true;
+          }
+          if(currentStep == 3){
+            showMap == false;
+          }
           list.add(
             Column(
               children: [
@@ -600,27 +685,138 @@ class _OrderScreenState extends State<OrderScreen> {
                         left: 4.0, right: 4, top: 0, bottom: 4),
                     child: GestureDetector(
                       onTap: () async {
-                        if (order.orderStatus == 'Pending') {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> StepperScreen()));
+
+                        if (order.orderStatus == 'Assigned to a dispatch rider') {
                           curStep = 0;
                         }
-                        if (order.orderStatus == 'Processing') {
+                        if (order.orderStatus == 'Dispatch rider has receive alert') {
                           curStep = 1;
                         }
-                        if (order.orderStatus == 'Processed') {
+                        if (order.orderStatus == 'Dispatch has accepted order') {
                           curStep = 2;
                         }
-                        if (order.orderStatus == 'Dispatched') {
+                        if (order.orderStatus == 'Dispatch begins delivery') {
                           curStep = 3;
                         }
-                        if (order.orderStatus == 'PickedUp') {
+                        if (order.orderStatus == 'Dispatch arrives at delivery location') {
                           curStep = 4;
                         }
-                        if (order.orderStatus == 'Delivering') {
+                        if (order.orderStatus == 'Item delivered successfully') {
                           curStep = 5;
                         }
                         if (order.orderStatus == 'Delivered') {
                           curStep = 6;
                         }
+
+
+                        // showModalBottomSheet(
+                        //   isScrollControlled: true,
+                        //   context: context,
+                        //   backgroundColor: Colors.white,
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadiusDirectional.only(
+                        //       topEnd: Radius.circular(25),
+                        //       topStart: Radius.circular(25),
+                        //     ),
+                        //   ),
+                        //   builder: (context) => Container(
+                        //     padding: EdgeInsetsDirectional.only(
+                        //       start: 20,
+                        //       end: 20,
+                        //       bottom: 30,
+                        //       top: 8,
+                        //     ),
+                        //     child: Column(
+                        //       mainAxisSize: MainAxisSize.min,
+                        //       children: [
+                        //         Container(
+                        //           height: MediaQuery.of(context).size.height /1.16,
+                        //           child: PageView(
+                        //             controller: controller,
+                        //             children: <Widget>[
+                        //               Column(
+                        //                 children: [
+                        //                   Padding(
+                        //                     padding: const EdgeInsets.only(top: 18.0, left: 10),
+                        //                     child: Row(
+                        //                       children: [
+                        //                         Container(
+                        //                           child: Text("Order No : ",
+                        //                               style: GoogleFonts.raleway(
+                        //                                   fontSize: 14,
+                        //                                   color: Colors.black,
+                        //                                   fontWeight:
+                        //                                   FontWeight.w600)),
+                        //                         ),
+                        //                         Container(
+                        //                           child: Text(
+                        //                               order.orderNo.toString() ??
+                        //                                   "-",
+                        //                               style: GoogleFonts.raleway(
+                        //                                   fontSize: 15,
+                        //                                   color: Colors.teal,
+                        //                                   fontWeight:
+                        //                                   FontWeight.w400)),
+                        //                         ),
+                        //                       ],
+                        //                     ),
+                        //                   ),
+                        //                   Theme(
+                        //                     data: ThemeData(
+                        //                       colorScheme: Theme.of(context)
+                        //                           .colorScheme
+                        //                           .copyWith(
+                        //                         primary: Colors.lightGreen,
+                        //                         onPrimary: Colors
+                        //                             .lightGreen, // <-- SEE HERE
+                        //                       ),
+                        //                     ),
+                        //                     child: Stepper(
+                        //                       controlsBuilder: (context, _) {
+                        //                         return Container();
+                        //                       },
+                        //                       type: StepperType.vertical,
+                        //                       steps: getSteps(curStep, order),
+                        //                       currentStep: currentStep,
+                        //                       onStepContinue: () {
+                        //                         final isLastStep = currentStep ==
+                        //                             getSteps(curStep, order)
+                        //                                 .length -
+                        //                                 1;
+                        //                         if (isLastStep) {
+                        //                           debugPrint("completed");
+                        //                           //  Post data to server
+                        //                         } else {
+                        //                           setState(() {
+                        //                             currentStep += 1;
+                        //                           });
+                        //                         }
+                        //                       },
+                        //                       onStepTapped: (step) =>
+                        //                           setState(() {
+                        //                             currentStep = step;
+                        //                           }),
+                        //                       onStepCancel: currentStep == 0
+                        //                           ? null
+                        //                           : () {
+                        //                         setState(() {
+                        //                           currentStep -= 1;
+                        //                         });
+                        //                       },
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // );
+
+
 
                         // showMaterialModalBottomSheet(
                         //     context: context,
@@ -740,12 +936,12 @@ class _OrderScreenState extends State<OrderScreen> {
                                                   child: Text("Order No: ",
                                                       style:
                                                       GoogleFonts.raleway(
-                                                          fontSize: 13,
+                                                          fontSize: 14,
                                                           color: Colors
                                                               .black54,
                                                           fontWeight:
                                                           FontWeight
-                                                              .w500)),
+                                                              .w600)),
                                                 ),
                                                 Container(
                                                   child: Text(
@@ -985,21 +1181,12 @@ class _OrderScreenState extends State<OrderScreen> {
           ? StepState.complete
           : StepState.disabled,
       isActive: currentStep >= 0,
-      title: const Text("Pending"),
-      content: Container(
-        width: MediaQuery.of(context).size.width,
-        // color: Colors.red,
-        child: Padding(
-            padding: const EdgeInsets.only(
-                top: 0, left: 14, right: 14, bottom: 14),
-            child: Text(
-              "Your order is pending",
-              style: GoogleFonts.raleway(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                  fontSize: 13),
-            )),
-      ),
+      title: Text("Assigned to a dispatch rider",
+          style: GoogleFonts.raleway(
+          fontSize: 13,
+          color: Colors.black,
+          fontWeight: FontWeight.w500)),
+      content: Container(),
     ),
     Step(
       state: currentStep == 1
@@ -1008,21 +1195,12 @@ class _OrderScreenState extends State<OrderScreen> {
           ? StepState.complete
           : StepState.disabled,
       isActive: currentStep >= 1,
-      title: const Text("Processing"),
-      content: Container(
-        width: MediaQuery.of(context).size.width,
-        // color: Colors.red,
-        child: Padding(
-            padding: const EdgeInsets.only(
-                top: 0, left: 14, right: 14, bottom: 14),
-            child: Text(
-              "Your order is being processed",
-              style: GoogleFonts.raleway(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                  fontSize: 13),
-            )),
-      ),
+      title: Text("Dispatch rider has received alert",
+          style: GoogleFonts.raleway(
+          fontSize: 13,
+          color:Colors.black,
+          fontWeight: FontWeight.w500)),
+      content: Container(),
     ),
     Step(
       state: currentStep == 2
@@ -1031,7 +1209,13 @@ class _OrderScreenState extends State<OrderScreen> {
           ? StepState.complete
           : StepState.disabled,
       isActive: currentStep >= 2,
-      title: const Text("Processed"),
+      title: Text("Dispatch has accepted order",
+          style:
+          GoogleFonts.raleway(
+              fontSize: 13,
+              color: Colors.black,
+              fontWeight: FontWeight.w500)
+      ),
       content: Container(
         width: MediaQuery.of(context).size.width,
         // color: Colors.red,
@@ -1054,149 +1238,147 @@ class _OrderScreenState extends State<OrderScreen> {
           ? StepState.complete
           : StepState.disabled,
       isActive: currentStep >= 3,
-      title: const Text("Assigned to rider"),
+      title: Text("Dispatch begins delivery",
+          style: GoogleFonts.raleway(
+          fontSize: 13,
+          color: Colors.black,
+          fontWeight: FontWeight.w500)),
       content: Container(
-        width: MediaQuery.of(context).size.width,
-        // color: Colors.red,
-        child: Padding(
-            padding: const EdgeInsets.only(
-                top: 0, left: 14, right: 14, bottom: 14),
-            child: Text(
-              "Your order has been assigned to a rider",
-              style: GoogleFonts.raleway(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                  fontSize: 13),
-            )),
+        child: showMap == false
+            ? Column(
+          children: <Widget>[
+            initialPosition == null
+                ? const Center(child: Text("Please Wait..."))
+                : Container(
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.25,
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                      target: initialPosition!, zoom: 14.5),
+                  myLocationEnabled: true,
+                  polylines: Set<Polyline>.of(polylines.values),
+                  markers: _markers,
+                  myLocationButtonEnabled: false,
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController.complete(controller);
+
+                    newGoogleMapController = controller;
+                    // newGoogleMapController!
+                    //     .showMarkerInfoWindow(MarkerId("source"));
+                    // newGoogleMapController!
+                    //     .showMarkerInfoWindow(MarkerId("destination"));
+
+                    // //for black theme google map
+                    newGoogleMapController!.setMapStyle('''
+                    [
+    {
+        "featureType": "all",
+        "elementType": "all",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "gamma": 0.5
+            }
+        ]
+    }
+]
+                ''');
+                  },
+                )),
+            Container(
+              child: ElevatedButton(
+                style:
+                ElevatedButton.styleFrom(backgroundColor: kPrimaryTheme),
+                onPressed: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => StatusScreen(
+                  //           requestModel: requestDetails,
+                  //         )));
+                },
+                child: Text(
+                  "View on map",
+                  style: GoogleFonts.raleway(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+            : Container(child: Text("123"),
+        ),
       ),
     ),
-    // Step(
-    //   state: currentStep == 4
-    //       ? StepState.indexed
-    //       : (currentStep > 4)
-    //       ? StepState.complete
-    //       : StepState.disabled,
-    //   isActive: currentStep >= 4,
-    //   title: const Text("Picked up by rider"),
-    //   content: Container(
-    //     width: MediaQuery.of(context).size.width,
-    //     // color: Colors.red,
-    //     child: Padding(
-    //         padding: const EdgeInsets.only(
-    //             top: 0, left: 14, right: 14, bottom: 14),
-    //         child: Column(
-    //           children: [
-    //             Text(
-    //               "Your order has been picked up by ${orderModel.dispatcher}",
-    //               style: GoogleFonts.raleway(
-    //                   fontWeight: FontWeight.w400,
-    //                   color: Colors.black,
-    //                   fontSize: 13),
-    //             ),
-    //             SizedBox(
-    //               height: 7,
-    //             ),
-    //             GestureDetector(
-    //               onTap: () {
-    //                 _makePhoneCall(orderModel.dispatcherPhone.toString());
-    //               },
-    //               child: Container(
-    //                 height: 37,
-    //                 width: 120,
-    //                 child: Center(
-    //                   child: Text(
-    //                     "Call Rider",
-    //                     style: GoogleFonts.raleway(
-    //                         fontWeight: FontWeight.w400,
-    //                         fontSize: 16,
-    //                         color: Colors.white),
-    //                   ),
-    //                 ),
-    //                 decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(5),
-    //                     color: Colors.teal),
-    //               ),
-    //             )
-    //           ],
-    //         )),
-    //   ),
-    // ),
-    // Step(
-    //   state: currentStep == 5
-    //       ? StepState.indexed
-    //       : (currentStep > 5)
-    //       ? StepState.complete
-    //       : StepState.disabled,
-    //   isActive: currentStep >= 5,
-    //   title: const Text("Delivering"),
-    //   content: Container(
-    //     width: MediaQuery.of(context).size.width,
-    //     // color: Colors.red,
-    //     child: Column(
-    //       children: [
-    //         Padding(
-    //             padding: const EdgeInsets.only(
-    //                 top: 4.0, left: 4, right: 4, bottom: 14),
-    //             child: Text(
-    //               "Your order is being delivered",
-    //               style: GoogleFonts.raleway(
-    //                   fontWeight: FontWeight.w400,
-    //                   color: Colors.black,
-    //                   fontSize: 13),
-    //             )),
-    //         Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //           children: [
-    //             GestureDetector(
-    //               onTap: () async {
-    //                 await fetchRiderLocationData(
-    //                     context, orderModel.dispatcherPhone);
-    //                 // Navigator.push(context,
-    //                 //     MaterialPageRoute(builder: (context) => TrackMap()));
-    //               },
-    //               child: Container(
-    //                 height: 35,
-    //                 width: 100,
-    //                 decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(5),
-    //                     color: Colors.teal),
-    //                 child: Center(
-    //                     child: Text(
-    //                       "View on Map",
-    //                       style: GoogleFonts.raleway(
-    //                           fontSize: 14,
-    //                           color: Colors.white,
-    //                           fontWeight: FontWeight.w500),
-    //                     )),
-    //               ),
-    //             ),
-    //             GestureDetector(
-    //               onTap: () {
-    //                 _makePhoneCall(orderModel.dispatcherPhone.toString());
-    //               },
-    //               child: Container(
-    //                 height: 37,
-    //                 width: 120,
-    //                 child: Center(
-    //                   child: Text(
-    //                     "Call Rider",
-    //                     style: GoogleFonts.raleway(
-    //                         fontWeight: FontWeight.w400,
-    //                         fontSize: 16,
-    //                         color: Colors.white),
-    //                   ),
-    //                 ),
-    //                 decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(5),
-    //                     color: Colors.teal),
-    //               ),
-    //             )
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // ),
+    Step(
+      state: currentStep == 4
+          ? StepState.indexed
+          : (currentStep > 4)
+          ? StepState.complete
+          : StepState.disabled,
+      isActive: currentStep >= 4,
+      title: Text("Dispatch arrives at delivery location",
+        style: GoogleFonts.raleway(
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+            fontSize: 13),
+      ),
+      content: Container(
+          child: showButton == true
+           ? Container()
+           : Container(
+            width: MediaQuery.of(context).size.width,
+            // color: Colors.red,
+            child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 0, left: 14, right: 14, bottom: 14),
+                child: Column(
+                  children: [
+                    Text(
+                      "Your order has been picked up by ${orderModel.dispatcher}",
+                      style: GoogleFonts.raleway(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: 13),
+                    ),
+                    SizedBox(
+                      height: 7,
+                    ),
+                    InkWell(
+                      splashColor: Colors.green,
+                      hoverColor: Colors.green,
+                      onTap: () {
+                        // _makePhoneCall(orderModel.dispatcherPhone.toString());
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height *0.05,
+                        width: MediaQuery.of(context).size.width *0.56,
+                        child: Center(
+                          child: Text(
+                            "Confirm arrival",
+                            style: GoogleFonts.raleway(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Colors.white),
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: Colors.grey),
+                      ),
+                    )
+                  ],
+                )),
+          ),
+      ),
+    ),
     Step(
       state: currentStep == 6
           ? StepState.indexed
@@ -1204,7 +1386,12 @@ class _OrderScreenState extends State<OrderScreen> {
           ? StepState.complete
           : StepState.disabled,
       isActive: currentStep >= 6,
-      title: const Text("Delivered"),
+      title:  Text("Item delivered successfully",
+        style: GoogleFonts.raleway(
+          fontWeight: FontWeight.w500,
+          color: Colors.black
+        ),
+      ),
       content: Container(
         width: MediaQuery.of(context).size.width,
         // color: Colors.red,

@@ -10,7 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../Constants/constantColors.dart';
 import '../../Constants/myColors.dart';
 import '../../Database/UserDB.dart';
@@ -19,6 +19,7 @@ import '../../Model/AppData.dart';
 import '../../Model/UserModel.dart';
 import '../../Model/UserProfileModel.dart';
 import '../../Services/services/location_service.dart';
+import '../CheckoutScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -114,12 +115,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
       //if user exists, go to select branch page
       if (users.isNotEmpty) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Index(),
-          ),
-        );
+        var connectivityResult = await (Connectivity().checkConnectivity());
+        if (connectivityResult == ConnectivityResult.mobile ||
+            connectivityResult == ConnectivityResult.wifi) {
+          print("CONNECTIVITY : ${connectivityResult.name}");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Index(),
+            ),
+          );
+        }else {
+          showError(
+            context,
+            message: 'Please check your internet connection and retry',
+          );
+        }
       }
       //if no user exists, go to select login page
       else if(users.isEmpty) {

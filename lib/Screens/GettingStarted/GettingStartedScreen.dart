@@ -41,7 +41,7 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
             Image.asset(
               "assets/images/backgroungImg.jpg",
               fit: BoxFit.cover,
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withOpacity(0.1),
               colorBlendMode: BlendMode.darken,
             ),
             SizedBox(
@@ -52,7 +52,7 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
                   vertical: 220,
                 ),
                 decoration: BoxDecoration(
-                  color: BLACK_COLOR.withOpacity(0.35),
+                  color: BLACK_COLOR.withOpacity(0.65),
                 ),
               ),
             ),

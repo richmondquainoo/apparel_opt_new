@@ -3179,7 +3179,8 @@ class _ExplorePageState extends State<ExplorePage>
       // debugPrint('Menu request url: ${FETCH_LIST_OF_POPULAR_MENUS_BY_BRANCH}/${branch}');
 
       if (response!.statusCode == 200 && response != null) {
-        EasyLoading.showSuccess('Success!');
+        EasyLoading.showSuccess("");
+
         //clear db
         await menuDB!.deleteAll();
         await productVariantDB!.deleteAll();
@@ -3278,7 +3279,8 @@ class _ExplorePageState extends State<ExplorePage>
         getPopularItemList();
         // Navigator.of(context).pop();
 
-        if (list!.isNotEmpty) {
+        if (list.isNotEmpty) {
+          EasyLoading.dismiss();
           UtilityService().showMessage(
             message: 'Products downloaded successfully',
             context: context,
@@ -3291,6 +3293,7 @@ class _ExplorePageState extends State<ExplorePage>
           // fetchLikesData(context);
           // fetchConfigData(context);
         } else {
+          EasyLoading.dismiss();
           UtilityService().showMessage(
             message: 'Sorry, no menu info found for the selected branch',
             context: context,
@@ -3301,6 +3304,7 @@ class _ExplorePageState extends State<ExplorePage>
           );
         }
       } else {
+        EasyLoading.dismiss();
         UtilityService().showMessage(
           message: 'Sorry, an error occurred while fetching app data',
           context: context,
@@ -3311,6 +3315,7 @@ class _ExplorePageState extends State<ExplorePage>
         );
       }
     } catch (e) {
+      EasyLoading.dismiss();
       debugPrint('fetch bill data error: $e');
       UtilityService().showMessage(
         message: 'Sorry, an error occurred while fetching app data',
