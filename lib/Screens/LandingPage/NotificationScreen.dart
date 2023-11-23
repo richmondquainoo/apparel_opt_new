@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,6 +10,7 @@ class NotificationScreen extends StatefulWidget {
     Key? key,
     this.showBackButton,
   }) : super(key: key);
+  static const route = '/notification-screen';
 
   @override
   State<NotificationScreen> createState() =>
@@ -104,6 +106,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
+    print("THE MESSAGE NOTIF: ${message}");
+
     return Scaffold(
       appBar: AppBar(
         leading: (showBackButton != null && showBackButton!)
@@ -138,23 +143,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 2, top: 2, right: 5, left: 5),
-                child: Center(
-                  child: Text(
-                    "There are no notifications",
-                    style: GoogleFonts.raleway(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                      letterSpacing: 0.3,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-              ),
+              Text('${message.notification!.title}'),
+              Text('${message.notification!.body}'),
+              Text('${message.data}'),
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.only(bottom: 2, top: 2, right: 5, left: 5),
+              //   child: Center(
+              //     child: Text(
+              //       "There are no notifications",
+              //       style: GoogleFonts.raleway(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w400,
+              //         color: Colors.black,
+              //         letterSpacing: 0.3,
+              //       ),
+              //       overflow: TextOverflow.ellipsis,
+              //       maxLines: 1,
+              //     ),
+              //   ),
+              // ),
             ]),
       ),
     );

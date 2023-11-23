@@ -61,7 +61,11 @@ import 'SearchScreen.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key, this.otpModel}) : super(key: key);
+
+  static const route = '/home-screen';
   final UserModel? otpModel;
+
+
 
   @override
   _ExplorePageState createState() => _ExplorePageState(otpModel: otpModel);

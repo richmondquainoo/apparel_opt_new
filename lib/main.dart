@@ -1,3 +1,7 @@
+import 'package:apparel_options/Screens/LandingPage/NotificationScreen.dart';
+import 'package:apparel_options/Screens/LandingPage/OrderScreen.dart';
+import 'package:apparel_options/Screens/home/home_screen.dart';
+import 'package:apparel_options/api/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +9,17 @@ import 'package:provider/provider.dart';
 import 'Model/AppData.dart';
 import 'Screens/GettingStarted/SplashScreen.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:apparel_options/firebase_options.dart';
+
+import 'Screens/LandingPage/explore.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
   runApp(MyApp());
   configLoading();
 }
@@ -42,6 +56,12 @@ class MyApp extends StatelessWidget {
         ),
         home: SplashScreen(),
         builder: EasyLoading.init(),
+        navigatorKey: navigatorKey,
+        routes: {
+          OrderScreen.route:(context) => const OrderScreen(),
+          NotificationScreen.route:(context) => const NotificationScreen(),
+          ExplorePage.route:(context) => const ExplorePage()
+        },
       ),
     );
   }

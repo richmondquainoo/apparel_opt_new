@@ -30,6 +30,7 @@ class OrderScreen extends StatefulWidget {
   final String? track;
   const OrderScreen({Key? key, this.showBackButton, this.goToHome, this.track})
       : super(key: key);
+  static const route = '/order-screen';
 
   @override
   State<OrderScreen> createState() =>

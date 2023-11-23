@@ -69,10 +69,12 @@ dependencies:
   achievement_view: ^1.0.0
   connectivity_plus:
   firebase_core_platform_interface: ^4.8.0
-  firebase_core: ^2.15.1
+  firebase_core: ^2.17.0
+  firebase_messaging:
 #  firebase_messaging:
   flutter_polyline_points: ^1.0.0
-#  flutter_local_notifications: ^12.0.4
+  flutter_local_notifications:
+  package_info_plus: ^4.2.0 
 
 
 
