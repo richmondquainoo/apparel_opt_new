@@ -1,4 +1,5 @@
 import 'package:apparel_options/Constants/Colors.dart';
+import 'package:apparel_options/Screens/LandingPage/FavoritesScreen.dart';
 import 'package:apparel_options/Screens/LandingPage/explore.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -115,7 +116,9 @@ class _IndexState extends State<Index> {
         showBackButton: false,
       );
     } else if (index == 3) {
-      return NotificationScreen();
+      return FavoritesScreen(
+
+      );
     }
     // else if (index == 3) {
     //   return const LitigationScreen();

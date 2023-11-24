@@ -9,7 +9,7 @@ class ApiConfig extends ChangeNotifier{
   // static const String otpLogin = "";
   // static const String otpVerifyAPI = "";
 
-  static const String googleApiKey = "AIzaSyCKM_cLs6dNLYnGn2aS5B599LGepkQlapM";
+  static const String googleApiKey = "AIzaSyBs8FVfQELaqa8Dljz5fz7virSMdU3va4I";
   static const String token =
       "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNeUZpdGEiLCJpc3MiOiJTeXNfQWRtaW4iLCJleHAiOjE4MjQzMDczMzl9.PkQ8rDloMwDu3laJoq6k7cE7K14pyhFVMupdBRGGp5o";
 

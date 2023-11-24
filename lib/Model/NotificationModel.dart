@@ -4,69 +4,35 @@
 
 import 'dart:convert';
 
-NotificationModel notificationModelFromJson(String str) =>
-    NotificationModel.fromJson(json.decode(str));
-
-String notificationModelToJson(NotificationModel data) =>
-    json.encode(data.toJson());
+String notificationModelToJson(NotificationModel data) => json.encode(data.toJson());
 
 class NotificationModel {
-  NotificationModel({
-    this.orderNumber,
-    this.orderStatus,
-    this.title,
-    this.message,
-    this.dateSent,
-    this.email,
-  });
+  NotificationModel({this.subject, this.content, this.image, this.requestId, this.userModel});
 
-  String? orderNumber;
-  String? orderStatus;
-  String? title;
-  String? message;
-  String? dateSent;
-  String? email;
-
-  factory NotificationModel.fromJson(Map<String, dynamic> json) =>
-      NotificationModel(
-        orderNumber: json["orderNumber"],
-        orderStatus: json["orderStatus"],
-        title: json["title"],
-        message: json["message"],
-        dateSent: json["dateSent"],
-        email: json["email"],
-      );
-
-  factory NotificationModel.fromMap(Map<String, dynamic> json) =>
-      NotificationModel(
-        orderNumber: json["orderNumber"],
-        orderStatus: json["orderStatus"],
-        title: json["title"],
-        message: json["message"],
-        dateSent: json["dateSent"],
-        email: json["email"],
-      );
+  String? subject;
+  String? content;
+  String? image;
+  String? requestId;
+  String? userModel;
 
   Map<String, dynamic> toJson() => {
-    "orderNumber": orderNumber,
-    "orderStatus": orderStatus,
-    "title": title,
-    "message": message,
-    "dateSent": dateSent,
-    "email": email,
+    "subject": subject,
+    "content": content,
+    "requestId": requestId,
+    "image": image,
+    "userModel": userModel,
   };
 
   Map<String, dynamic> toMap() => {
-    "orderNumber": orderNumber,
-    "orderStatus": orderStatus,
-    "title": title,
-    "message": message,
-    "dateSent": dateSent,
-    "email": email,
+    "subject": subject,
+    "content": content,
+    "requestId": requestId,
+    "image": image,
+    "userModel": userModel,
   };
 
   @override
   String toString() {
-    return 'NotificationModel{orderNumber: $orderNumber, orderStatus: $orderStatus, title: $title, message: $message, dateSent: $dateSent, email: $email}';
+    return 'NotificationModel{subject: $subject, content: $content, image: $image, requestId: $requestId, userModel: $userModel}';
   }
 }

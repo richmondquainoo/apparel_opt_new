@@ -74,8 +74,8 @@ dependencies:
 #  firebase_messaging:
   flutter_polyline_points: ^1.0.0
   flutter_local_notifications:
-  package_info_plus: ^4.2.0 
-
+  package_info_plus: ^4.2.0
+  overlay_support: ^2.0.1
 
 
 

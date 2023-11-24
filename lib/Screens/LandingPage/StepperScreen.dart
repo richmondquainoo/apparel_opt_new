@@ -214,7 +214,7 @@ class _StepperScreenState extends State<StepperScreen> {
     //   setState(() {
     //     _currentStep == 5;
     //   });
-    // } else if (requestModel!.requestStatus!.contains("on_route")) {
+    // } else if (requestModel!.requestStatus!.contvains("on_route")) {
     //   setState(() {
     //     _currentStep == 3;
     //   });

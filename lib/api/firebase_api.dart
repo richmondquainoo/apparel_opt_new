@@ -3,7 +3,9 @@
 import 'dart:convert';
 
 import 'package:apparel_options/Screens/LandingPage/NotificationScreen.dart';
+import 'package:apparel_options/Services/notification/notificationservice.dart';
 import 'package:apparel_options/main.dart';
+import 'package:apparel_options/push_notifications/push_notification_system.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -27,6 +29,10 @@ class FirebaseApi{
     print("Title: ${message.notification!.title}");
     print("Body: ${message.notification!.body}");
     print("Payload: ${message.data}");
+    print("BACK_GROUND");
+    LocalNotificationService().showNotification(id: 1, title: "${message.notification!.title}", body: "${message.notification!.body}");
+
+
   }
 
   Future<void> initNotifications()async{
@@ -36,6 +42,7 @@ class FirebaseApi{
    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
    initPushNotifications();
    initLocalNotifications();
+   PushNotificationSystem;
 
   }
 
@@ -62,6 +69,7 @@ class FirebaseApi{
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if(notification == null)return;
+
         _localNotifications.show(
           notification.hashCode,
           notification.title,
@@ -71,30 +79,37 @@ class FirebaseApi{
                 _androidChannel.id,
                 _androidChannel.name,
               channelDescription: _androidChannel.description,
-              icon: '@mipmap-hdpi/ic_launcher.png'
+              icon: '@drawable/ic_launcher'
             ),
           ),
           payload: jsonEncode(message.toMap())
             );
+      LocalNotificationService().showNotification(id: 1, title: "${notification.title}", body: "${notification.body}");
     });
   }
 
 
 
   Future initLocalNotifications()async {
+    print("LOCAL NOTIFICATION");
     const iOS = IOSInitializationSettings();
     const android = AndroidInitializationSettings('@drawable/ic_launcher');
     const settings = InitializationSettings(android: android, iOS: iOS);
+    await LocalNotificationService().initialize();
+    print("LOCAL NOTIFICATION NEW");
 
-    await _localNotifications.initialize(
-      settings,
-      onSelectNotification: (payload){
-        final message = RemoteMessage.fromMap(jsonDecode(payload!));
-        handleMessage(message);
-      }
-    );
+    // await _localNotifications.initialize(
+    //   settings,
+    //   onSelectNotification: (payload){
+    //     print("LOCAL NOTIFICATION NEW");
+    //     final message = RemoteMessage.fromMap(jsonDecode(payload!));
+    //     handleMessage(message);
+    //   }
+    // );
 
     final platform = _localNotifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await platform?.createNotificationChannel(_androidChannel);
   }
+
+
 }

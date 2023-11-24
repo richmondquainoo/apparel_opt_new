@@ -279,9 +279,9 @@ class _OrderScreenState extends State<OrderScreen> {
                     decoration: InputDecoration(
                       hintText: "Search...",
                       hintStyle: const TextStyle(
-                          color: Colors.black87,
+                          color: Colors.black,
                           fontSize: 14,
-                          fontWeight: FontWeight.w300),
+                          fontWeight: FontWeight.w400),
                       suffixIcon: const Icon(
                         Icons.search,
                         color: Colors.black87,
@@ -356,7 +356,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     ),
                                     Text(
                                       'PENDING',
-                                      style: GoogleFonts.lato(
+                                      style: GoogleFonts.raleway(
                                         color: Colors.orangeAccent,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 11,

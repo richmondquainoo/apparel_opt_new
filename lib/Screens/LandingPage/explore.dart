@@ -38,6 +38,7 @@ import '../../Model/UserModel.dart';
 import '../../Model/UserProfileModel.dart';
 import '../../Model/predicted_places.dart';
 import '../../Services/NetworkUtility.dart';
+import '../../Services/notification/notificationservice.dart';
 import '../../Services/services/api/PlacePredictionTile.dart';
 import '../../Services/services/api/api_service.dart';
 import '../../Services/services/api/direction.dart';
@@ -947,6 +948,8 @@ class _ExplorePageState extends State<ExplorePage>
                                        padding: const EdgeInsets.all(8.0),
                                        child: InkWell(
                                          onTap: (){
+                                           LocalNotificationService().showNotification(id: 1, title: "title", body: "body");
+
                                            print("++++++++");
                                            // const BottomSheetExample();
                                            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPlacesScreen()));

@@ -1,8 +1,14 @@
+
+
+import 'package:apparel_options/Constants/constantColors.dart';
+import 'package:apparel_options/push_notifications/push_notification_system.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../Constants/myColors.dart';
 
 class NotificationScreen extends StatefulWidget {
   final bool? showBackButton;
@@ -24,6 +30,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   String? _currentAddress;
   Position? _currentPosition;
+  bool? notifIsPresent;
 
 
 
@@ -100,16 +107,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
     print("HEYYY");
     _getCurrentPosition();
     super.initState();
-
-
   }
 
   @override
   Widget build(BuildContext context) {
     final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
+    // PushNotificationSystem;
+    if(message.data.isEmpty){
+      notifIsPresent = true;
+    }else{
+      notifIsPresent = false;
+    }
     print("THE MESSAGE NOTIF: ${message}");
 
     return Scaffold(
+
       appBar: AppBar(
         leading: (showBackButton != null && showBackButton!)
             ? IconButton(
@@ -131,7 +143,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           "Notifications",
           style: GoogleFonts.raleway(
             fontSize: 18,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w500,
             color: Colors.black,
             letterSpacing: .75,
           ),
@@ -140,29 +152,88 @@ class _NotificationScreenState extends State<NotificationScreen> {
       body: RefreshIndicator(
         onRefresh: () async {},
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text('${message.notification!.title}'),
-              Text('${message.notification!.body}'),
-              Text('${message.data}'),
-              // Padding(
-              //   padding:
-              //       const EdgeInsets.only(bottom: 2, top: 2, right: 5, left: 5),
-              //   child: Center(
-              //     child: Text(
-              //       "There are no notifications",
-              //       style: GoogleFonts.raleway(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w400,
-              //         color: Colors.black,
-              //         letterSpacing: 0.3,
-              //       ),
-              //       overflow: TextOverflow.ellipsis,
-              //       maxLines: 1,
-              //     ),
-              //   ),
-              // ),
+              // Text('${message.notification!.title}'),
+              // Text('${message.notification!.body}'),
+              // Text('${message.data}'),
+              Container(
+                child: notifIsPresent == true
+                ?Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Container(
+                      // height: 130,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                  color: Colors.green,
+                                borderRadius:BorderRadius.circular(2)
+                              ),
+                              child: Icon(
+                                Icons.notification_add_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 14,left: 6,bottom:16,right: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${message.notification!.title}",
+                                  style: GoogleFonts.raleway(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                SizedBox(height: 4,),
+                                Text(
+                                  "${message.notification!.body}",
+                                  style: GoogleFonts.raleway(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+
+                    ),
+                  ),
+                )
+                :  Padding(
+                  padding:
+                  const EdgeInsets.only(bottom: 2, top: 2, right: 5, left: 5),
+                  child: Center(
+                    child: Text(
+                      "There are no notifications",
+                      style: GoogleFonts.raleway(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                        letterSpacing: 0.3,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                ),
+              ),
+
             ]),
       ),
     );
