@@ -317,7 +317,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         children: [
                           Text(
                             'Track My Order(s)',
-                            style: GoogleFonts.lato(
+                            style: GoogleFonts.raleway(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               // decoration: TextDecoration.underline,
@@ -333,7 +333,7 @@ class _OrderScreenState extends State<OrderScreen> {
                             padding: const EdgeInsets.only(bottom: 20.0),
                             child: Container(
                               child: Image.asset(
-                                'assets/images/orderImage.png',
+                                'assets/images/box.png',
                                 height: 100,
                               ),
                             ),
@@ -346,9 +346,10 @@ class _OrderScreenState extends State<OrderScreen> {
                                   children: [
                                     Text(
                                       "$pending",
-                                      style: GoogleFonts.lato(
+                                      style: GoogleFonts.raleway(
                                         color: Colors.black,
                                         fontSize: 16,
+                                        fontWeight: FontWeight.w600
                                       ),
                                     ),
                                     SizedBox(
@@ -371,9 +372,10 @@ class _OrderScreenState extends State<OrderScreen> {
                                   children: [
                                     Text(
                                       '$progress',
-                                      style: GoogleFonts.lato(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                      style: GoogleFonts.raleway(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600
                                       ),
                                     ),
                                     SizedBox(
@@ -397,8 +399,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                     Text(
                                       '$delivered',
                                       style: GoogleFonts.raleway(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600
                                       ),
                                     ),
                                     SizedBox(
@@ -421,8 +424,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                     Text(
                                       '$cancelled',
                                       style: GoogleFonts.raleway(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600
                                       ),
                                     ),
                                     SizedBox(
@@ -686,6 +690,9 @@ class _OrderScreenState extends State<OrderScreen> {
                         left: 4.0, right: 4, top: 0, bottom: 4),
                     child: GestureDetector(
                       onTap: () async {
+
+
+
                         Navigator.push(context, MaterialPageRoute(builder: (context)=> StepperScreen()));
 
                         if (order.orderStatus == 'Assigned to a dispatch rider') {
@@ -925,77 +932,93 @@ class _OrderScreenState extends State<OrderScreen> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.center,
                                       children: [
+
                                         Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  child: Text("Order No: ",
-                                                      style:
-                                                      GoogleFonts.raleway(
-                                                          fontSize: 14,
-                                                          color: Colors
-                                                              .black54,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w600)),
+                                            Container(
+                                              height: MediaQuery.of(context).size.height * 0.046,
+                                              width: MediaQuery.of(context).size.width * 0.089,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  color: LABEL_GREEN_BACKGROUND,
+                                              ),
+                                              child: Center(
+                                                child: Image.asset("assets/images/orderCard.png",
+                                                  height: MediaQuery.of(context).size.height * 0.026,
                                                 ),
-                                                Container(
-                                                  child: Text(
-                                                      order.orderNo
-                                                          .toString() ??
-                                                          "",
-                                                      style:
-                                                      GoogleFonts.raleway(
-                                                          fontSize: 13,
-                                                          color: Colors
-                                                              .black54,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w400)),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                            Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.024,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Container(
-                                                  child: Text("Ordered Qty: ",
-                                                      style:
-                                                      GoogleFonts.raleway(
-                                                          fontSize: 13,
-                                                          color: Colors
-                                                              .black54,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w500)),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      child: Text("Order No:   ",
+                                                          style:
+                                                          GoogleFonts.raleway(
+                                                              fontSize: 14,
+                                                              color: Colors.black,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w600)),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                          order.orderNo.toString() ?? "",
+                                                          style:
+                                                          GoogleFonts.lato(
+                                                              fontSize: 13,
+                                                              color: Colors.black,
+                                                              fontWeight: FontWeight.w400)),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Container(
-                                                  child: Text(
-                                                      order.orderQuantity
-                                                          .toString() ??
-                                                          "-",
-                                                      style:
-                                                      GoogleFonts.raleway(
-                                                          fontSize: 13,
-                                                          color:
-                                                          Colors.black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w400)),
+                                                SizedBox(
+                                                  height: MediaQuery.of(context).size.height * 0.009,
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      child: Text("Ordered Qty: ",
+                                                          style:
+                                                          GoogleFonts.raleway(
+                                                              fontSize: 13,
+                                                              color: Colors.black,
+                                                              fontWeight:
+                                                              FontWeight.w600)),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                          order.orderQuantity
+                                                              .toString() ??
+                                                              "-",
+                                                          style:
+                                                          GoogleFonts.raleway(
+                                                              fontSize: 13,
+                                                              color:
+                                                              Colors.black,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w400)),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
                                           ],
                                         ),
                                         Divider(
-                                          thickness: 0.18,
-                                          color: Colors.black,
+                                          thickness: 0.14,
+                                          color: Colors.black54,
                                         ),
                                         SizedBox(
                                           height: 6,
@@ -1018,7 +1041,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                                           Colors.black,
                                                           fontWeight:
                                                           FontWeight
-                                                              .w500)),
+                                                              .w600)),
                                                 ),
                                                 Container(
                                                   child: Text(
@@ -1030,7 +1053,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                                           Colors.teal,
                                                           fontWeight:
                                                           FontWeight
-                                                              .w400)),
+                                                              .w600)),
                                                 ),
                                               ],
                                             ),
@@ -1042,14 +1065,10 @@ class _OrderScreenState extends State<OrderScreen> {
                                                   Container(
                                                     child: Text(
                                                         "Delivery Location",
-                                                        style:
-                                                        GoogleFonts.raleway(
+                                                        style: GoogleFonts.raleway(
                                                             fontSize: 13,
-                                                            color: Colors
-                                                                .black,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w500)),
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.w600)),
                                                   ),
                                                   Container(
                                                     child: Text(
@@ -1088,7 +1107,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                                           Colors.black,
                                                           fontWeight:
                                                           FontWeight
-                                                              .w500)),
+                                                              .w600)),
                                                 ),
                                                 Container(
                                                   child: Text(
@@ -1101,7 +1120,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                                               null &&
                                                               order.orderStatus ==
                                                                   'Pending')
-                                                              ? Colors.black
+                                                              ? Colors.orange
                                                               : (order.orderStatus !=
                                                               null &&
                                                               order.orderStatus ==
@@ -1117,7 +1136,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                                               .blue,
                                                           fontWeight:
                                                           FontWeight
-                                                              .w400)),
+                                                              .w600)),
                                                 ),
                                               ],
                                             ),
@@ -1134,19 +1153,19 @@ class _OrderScreenState extends State<OrderScreen> {
                                                           Colors.black,
                                                           fontWeight:
                                                           FontWeight
-                                                              .w500)),
+                                                              .w600)),
                                                 ),
                                                 Container(
                                                   child: Text(
                                                       "${order.eta} min" ?? "-",
                                                       style:
                                                       GoogleFonts.raleway(
-                                                          fontSize: 13,
+                                                          fontSize: 15,
                                                           color: Colors
                                                               .black54,
                                                           fontWeight:
                                                           FontWeight
-                                                              .w300)),
+                                                              .w600)),
                                                 ),
                                               ],
                                             ),

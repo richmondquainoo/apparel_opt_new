@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:apparel_options/Screens/LandingPage/RatingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -796,28 +797,25 @@ class _StepperScreenState extends State<StepperScreen> {
                   padding: const EdgeInsets.all(5.0),
                   child: MaterialButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => OrderScreen(
-                      //           track: "Success Screen",
-                      //           showBackButton: true,
-                      //         )));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RatingScreen()));
                     },
                     height: MediaQuery.of(context).size.height * 0.06,
                     minWidth: MediaQuery.of(context).size.width /0.3,
                     elevation: 0,
                     splashColor: Colors.yellow[700],
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
-                    color: Colors.black,
+                        borderRadius: BorderRadius.circular(3)),
+                    color: Colors.green,
                     child: Center(
                       child: Text(
                         "Proceed",
                         style: GoogleFonts.raleway(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
