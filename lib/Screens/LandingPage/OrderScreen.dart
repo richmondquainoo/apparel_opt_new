@@ -170,8 +170,8 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   Future<void> loadOrdersFromLocalStorage() async {
-    List<NewOrderModel> orders = await orderDB
-        .getOrdersByPhone(int.parse(userProfileModel.phone!).toString());
+    List<NewOrderModel> orders = await orderDB.getOrdersByPhone(int.parse(userProfileModel.phone!).toString());
+    print('order from DB: $orders');
     setState(() {
       orderList = orders;
     });
@@ -691,31 +691,257 @@ class _OrderScreenState extends State<OrderScreen> {
                     child: GestureDetector(
                       onTap: () async {
 
+                        if(order.deliveryOption!.contains("Pick Up")){
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusDirectional.only(
+                                topEnd: Radius.circular(25),
+                                topStart: Radius.circular(25),
+                              ),
+                            ),
+                            builder: (context) => Container(
+                              padding: EdgeInsetsDirectional.only(
+                                start: 20,
+                                end: 20,
+                                bottom: 30,
+                                top: 8,
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height /3.16,
+                                    child: PageView(
+                                      controller: controller,
+                                      children: <Widget>[
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 18.0, left: 10),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    child: Text("Order No : ",
+                                                        style: GoogleFonts.raleway(
+                                                            fontSize: 14,
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                            FontWeight.w600)),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                        order.orderNo.toString() ??
+                                                            "-",
+                                                        style: GoogleFonts.raleway(
+                                                            fontSize: 14,
+                                                            color: Colors.black54,
+                                                            fontWeight:
+                                                            FontWeight.w400)),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Divider(
+                                              thickness: 0.15,
+                                              color: Colors.black,
+                                            ),
+                                            SizedBox(height: MediaQuery.of(context).size.height * 0.002),
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 18.0, left: 10),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Container(
+                                                          child: Text("Kindly go to the pick up location to retrieve your package.",
+                                                              style: GoogleFonts.raleway(
+                                                                  fontSize: 15,
+                                                                  color: Colors.black54,
+                                                                  fontWeight:
+                                                                  FontWeight.w500)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: MediaQuery.of(context).size.height * 0.033),
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.location_on_sharp, color: Colors.black,size: 28,),
+
+                                                      Expanded(
+                                                        child: Container(
+                                                          child: Text("Apparel Options, Osu No. 11 Street",
+                                                              style: GoogleFonts.raleway(
+                                                                  fontSize: 15,
+                                                                  color: Colors.black,
+                                                                  fontWeight:
+                                                                  FontWeight.w500)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: MediaQuery.of(context).size.height * 0.033),
+                                                  Container(
+                                                    height: 56,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        color: Colors.amber,
+                                                        boxShadow: const [
+                                                          BoxShadow(
+                                                            color: Colors.black12,
+                                                            blurRadius: 1,
+                                                            spreadRadius: 1,
+                                                            offset: Offset(1, 1.3),
+                                                          ),
+                                                        ]),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 0.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          Text(
+                                                            "View on map",
+                                                            style: GoogleFonts.raleway(
+                                                                fontSize: 18,
+                                                                fontWeight: FontWeight.w700,
+                                                                color: Colors.black),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
 
 
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> StepperScreen()));
 
-                        if (order.orderStatus == 'Assigned to a dispatch rider') {
-                          curStep = 0;
+                          // showMaterialModalBottomSheet(
+                          //     context: context,
+                          //     builder: (context) =>
+                          //         StatefulBuilder(builder: (context, setState) {
+                          //           return SingleChildScrollView(
+                          //             physics: ClampingScrollPhysics(),
+                          //             child: Column(
+                          //               children: [
+                          //                 Padding(
+                          //                   padding: const EdgeInsets.only(
+                          //                       top: 18.0, left: 10),
+                          //                   child: Row(
+                          //                     children: [
+                          //                       Container(
+                          //                         child: Text("Order No: ",
+                          //                             style: GoogleFonts.raleway(
+                          //                                 fontSize: 13,
+                          //                                 color: Colors.black,
+                          //                                 fontWeight:
+                          //                                 FontWeight.w500)),
+                          //                       ),
+                          //                       Container(
+                          //                         child: Text(
+                          //                             order.orderNo.toString() ??
+                          //                                 "",
+                          //                             style: GoogleFonts.raleway(
+                          //                                 fontSize: 15,
+                          //                                 color: Colors.teal,
+                          //                                 fontWeight:
+                          //                                 FontWeight.w400)),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 Theme(
+                          //                   data: ThemeData(
+                          //                     colorScheme: Theme.of(context)
+                          //                         .colorScheme
+                          //                         .copyWith(
+                          //                       primary: Colors.black,
+                          //                       onPrimary: Colors
+                          //                           .black, // <-- SEE HERE
+                          //                     ),
+                          //                   ),
+                          //                   child: Stepper(
+                          //                     controlsBuilder: (context, _) {
+                          //                       return Container();
+                          //                     },
+                          //                     type: StepperType.vertical,
+                          //                     steps: getSteps(curStep, order),
+                          //                     currentStep: currentStep,
+                          //                     onStepContinue: () {
+                          //                       final isLastStep = currentStep ==
+                          //                           getSteps(curStep, order)
+                          //                               .length -
+                          //                               1;
+                          //                       if (isLastStep) {
+                          //                         debugPrint("completed");
+                          //                         //  Post data to server
+                          //                       } else {
+                          //                         setState(() {
+                          //                           currentStep += 1;
+                          //                         });
+                          //                       }
+                          //                     },
+                          //                     onStepTapped: (step) =>
+                          //                         setState(() {
+                          //                           currentStep = step;
+                          //                         }),
+                          //                     onStepCancel: currentStep == 0
+                          //                         ? null
+                          //                         : () {
+                          //                       setState(() {
+                          //                         currentStep -= 1;
+                          //                       });
+                          //                     },
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           );
+                          //         }));
                         }
-                        if (order.orderStatus == 'Dispatch rider has receive alert') {
-                          curStep = 1;
+                        else{
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> StepperScreen()));
+
+                          if (order.orderStatus == 'Assigned to a dispatch rider') {
+                            curStep = 0;
+                          }
+                          if (order.orderStatus == 'Dispatch rider has receive alert') {
+                            curStep = 1;
+                          }
+                          if (order.orderStatus == 'Dispatch has accepted order') {
+                            curStep = 2;
+                          }
+                          if (order.orderStatus == 'Dispatch begins delivery') {
+                            curStep = 3;
+                          }
+                          if (order.orderStatus == 'Dispatch arrives at delivery location') {
+                            curStep = 4;
+                          }
+                          if (order.orderStatus == 'Item delivered successfully') {
+                            curStep = 5;
+                          }
+                          if (order.orderStatus == 'Delivered') {
+                            curStep = 6;
+                          }
                         }
-                        if (order.orderStatus == 'Dispatch has accepted order') {
-                          curStep = 2;
-                        }
-                        if (order.orderStatus == 'Dispatch begins delivery') {
-                          curStep = 3;
-                        }
-                        if (order.orderStatus == 'Dispatch arrives at delivery location') {
-                          curStep = 4;
-                        }
-                        if (order.orderStatus == 'Item delivered successfully') {
-                          curStep = 5;
-                        }
-                        if (order.orderStatus == 'Delivered') {
-                          curStep = 6;
-                        }
+
+
+
+
 
 
                         // showModalBottomSheet(

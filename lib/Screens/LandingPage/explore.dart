@@ -26,11 +26,13 @@ import '../../Constants/Colors.dart';
 import '../../Constants/constantColors.dart';
 import '../../Constants/myColors.dart';
 import '../../Database/MenuDB.dart';
+import '../../Database/OrderDB.dart';
 import '../../Database/UserDB.dart';
 import '../../Model/AppData.dart';
 import '../../Model/DeliveryAddressModel.dart';
 import '../../Model/MenuModel.dart';
 import '../../Model/NewMenuModel.dart';
+import '../../Model/NewOrderModel.dart';
 import '../../Model/ProductDetailsModel.dart';
 import '../../Model/ProductNew.dart';
 import '../../Model/ProductSpecificationModel.dart';
@@ -81,8 +83,9 @@ class _ExplorePageState extends State<ExplorePage>
   ProductVariantModel? productVariantModel = ProductVariantModel();
   ProductVariantDB? productVariantDB = ProductVariantDB();
   ProductSpecificationDB? productSpecificationDB = ProductSpecificationDB();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ProductDetailsDB? productDetailsDB = ProductDetailsDB();
-
+  bool showSpinner = true;
   List<MenuModel?> categoryList = [];
   List<MenuModel?> newArrivalList = [];
   List<MenuModel?> newArrivalMenu = [];
@@ -120,6 +123,7 @@ class _ExplorePageState extends State<ExplorePage>
   AnimationController? _controller;
   GoogleMapController? newGoogleMapController;
   Duration? _duration = Duration(milliseconds: 500);
+  OrderDB orderDB = OrderDB();
 
   customizeStatusAndNavigationBar() {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -295,6 +299,12 @@ class _ExplorePageState extends State<ExplorePage>
   TextEditingController locationController = TextEditingController();
   List<PredictedPlaces?> placesPredictedList = [];
   var textController = TextEditingController();
+  List<NewOrderModel> orderList = [];
+  int pending = 0;
+  int progress = 0;
+  int delivered = 0;
+  int cancelled = 0;
+  int total = 0;
 
 
   void onCameraMove(CameraPosition position) async {
@@ -3612,6 +3622,110 @@ class _ExplorePageState extends State<ExplorePage>
           lng,
         ),
         zoom: 18)));
+  }
+
+
+  void fetchOrderListWithLoader() async {
+    try {
+      setState(() {
+        showSpinner = true;
+      });
+      NetworkUtility networkUtility = NetworkUtility();
+      Response? response = await networkUtility.getDataWithAuth(
+          url: '${FETCH_LIST_OF_ORDERS_BY_EMAIL}/${userProfileModel!.email}',
+          auth: 'Bearer $ACCESS_TOKEN');
+      print("************");
+
+      print("The url: ${FETCH_LIST_OF_ORDERS_BY_EMAIL}/${userProfileModel!.email}");
+
+      debugPrint('order response: ${response!.body}');
+
+      print("UserModel email: ${userProfileModel!.email}");
+      if (response.statusCode == 200 && response != null) {
+        //parse data received
+        var data = jsonDecode(response.body);
+
+        //order data
+        var orderData = data['data'] as List;
+        print("The order data: ${orderData}");
+        if (orderData.isNotEmpty) {
+          //clear db
+          await orderDB.deleteAll();
+          setState(() {
+            progress = 0;
+            pending = 0;
+            delivered = 0;
+            cancelled = 0;
+            total = 0;
+
+          });
+          if (orderList != null) orderList.clear();
+          for (int i = 0; i < orderData.length; i++) {
+            NewOrderModel orderModel = new NewOrderModel(
+              orderBy: orderData[i]['orderBy'],
+              orderEmail: orderData[i]['orderEmail'].toString(),
+              orderNo: orderData[i]['orderNo'].toString(),
+              orderPhone: orderData[i]['orderPhone'].toString(),
+              orderBranch: orderData[i]['orderBranch'].toString(),
+              channel: orderData[i]['channel'].toString(),
+              orderLon: orderData[i]['orderLon'],
+              orderLat: orderData[i]['orderLat'],
+              orderTotalAmount: orderData[i]['orderTotalAmount'],
+              orderAddress: orderData[i]['orderAddress'],
+              orderQuantity: orderData[i]['orderQuantity'],
+              paymentStatus: orderData[i]['paymentStatus'].toString(),
+              deliveryOption: orderData[i]['deliveryOption'].toString(),
+              orderStatus: orderData[i]['orderStatus'].toString(),
+              eta: orderData[i]['eta'].toString(),
+              distance: orderData[i]['distance'].toString(),
+              dispatcher: orderData[i]['dispatcher'].toString(),
+              dispatcherPhone: orderData[i]['dispatcherPhone'].toString(),
+            );
+
+            setState(() {
+              total = pending + progress + delivered + cancelled;
+            });
+
+
+            //save to local db
+            await orderDB.insertObject(orderModel);
+            setState(() {
+              if (orderList != null) orderList.add(orderModel);
+            });
+
+            print("OrderList: ${orderList.length}");
+            print(
+                "Dispatcher phone number : ${orderModel.dispatcherPhone!.length}");
+          }
+
+        }
+      } else {
+        UtilityService().showMessage(
+          message: 'Sorry, an error occurred while fetching data',
+          context: _scaffoldKey.currentContext,
+          icon: const Icon(
+            Icons.cancel,
+            color: Colors.redAccent,
+          ),
+        );
+      }
+      setState(() {
+        showSpinner = false;
+      });
+    } catch (e) {
+      debugPrint('fetch order list data error: $e');
+      setState(() {
+        showSpinner = false;
+      });
+      UtilityService().showMessage(
+        message: 'Sorry, an error occurred while order list',
+        context: _scaffoldKey.currentContext,
+        icon: const Icon(
+          Icons.cancel,
+          color: Colors.redAccent,
+        ),
+      );
+    }
   }
 
 }
